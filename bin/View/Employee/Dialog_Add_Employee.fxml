@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="665.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Employee.Controller_Add_Employee">
+   <children>
+      
+      <AnchorPane layoutX="37.0" layoutY="14.0" prefHeight="563.0" prefWidth="594.0">
+         <children>
+            <TextField fx:id="first_name" layoutX="25.0" layoutY="100.0" prefHeight="25.0" prefWidth="159.0" text="" />
+            <TextField fx:id="middle_name" layoutX="200.0" layoutY="100.0" />
+            <TextField fx:id="username" layoutX="25.0" layoutY="156.0" prefHeight="25.0" prefWidth="159.0" />
+            <Label layoutX="28.0" layoutY="82.0" text="First Name *">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="last_name" layoutX="394.0" layoutY="100.0" />
+            <Label layoutX="28.0" text="Create an account">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <Label layoutX="200.0" layoutY="82.0" text="Middle Name">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="394.0" layoutY="82.0" text="Last Name* ">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="27.0" layoutY="136.0" text="Choose your Username*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="26.0" layoutY="190.0" text="Create a password*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="198.0" layoutY="190.0" text="Confirm your password*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="26.0" layoutY="243.0" text="Category*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox id="cat" fx:id="category" layoutX="25.0" layoutY="263.0" prefHeight="25.0" prefWidth="159.0">
+                <items>
+        
+              <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Administrator" />
+          <String fx:value="Medical Officer" />
+          <String fx:value="Receptionist" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+
+            <Label layoutX="22.0" layoutY="301.0" text="Birthday Month*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox id="bir" fx:id="birth_month" layoutX="24.0" layoutY="319.0" prefHeight="25.0" prefWidth="159.0">
+                <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="January" />
+          <String fx:value="February" />
+          <String fx:value="March" />
+          <String fx:value="April" />
+          <String fx:value="May" />
+          <String fx:value="June" />
+          <String fx:value="July" />
+          <String fx:value="August" />
+           <String fx:value="September" />
+            <String fx:value="October" />
+             <String fx:value="November" />
+              <String fx:value="December" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+
+            <TextField fx:id="birth_year" layoutX="294.0" layoutY="319.0" />
+            <ComboBox id="ms" fx:id="marital_status" layoutX="24.0" layoutY="372.0" prefHeight="25.0" prefWidth="159.0">
+                                    <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Single" />
+          <String fx:value="Married" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+
+            <Label layoutX="21.0" layoutY="352.0" text="Marital Status">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="296.0" layoutY="301.0" text="Year*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="200.0" layoutY="301.0" prefHeight="20.0" prefWidth="37.0" text="Day*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Separator blendMode="DARKEN" layoutX="24.0" layoutY="52.0" opacity="0.41" prefHeight="3.0" prefWidth="468.0" />
+            <PasswordField fx:id="password" layoutX="26.0" layoutY="210.0" prefHeight="25.0" prefWidth="159.0" text="" />
+            <PasswordField fx:id="password_confirm" layoutX="198.0" layoutY="210.0" prefHeight="25.0" prefWidth="173.0" text="" />
+            <Label layoutX="32.0" layoutY="404.0" prefHeight="20.0" prefWidth="101.0" text="Designation*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="designation" layoutX="26.0" layoutY="424.0" prefHeight="25.0" prefWidth="159.0" />
+            <Label layoutX="202.0" layoutY="404.0" prefHeight="20.0" prefWidth="56.0" text="Salary*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="salary" layoutX="198.0" layoutY="424.0" prefHeight="25.0" prefWidth="174.0" />
+            <Label layoutX="32.0" layoutY="458.0" prefHeight="20.0" prefWidth="101.0" text="Contact No.*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="contact_no" layoutX="28.0" layoutY="478.0" prefHeight="25.0" prefWidth="159.0" />
+            <Label layoutX="32.0" layoutY="514.0" prefHeight="20.0" prefWidth="101.0" text="Address *">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="202.0" layoutY="458.0" prefHeight="20.0" prefWidth="101.0" text="State*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="394.0" layoutY="458.0" prefHeight="20.0" prefWidth="101.0" text="City*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="state" layoutX="200.0" layoutY="478.0" prefHeight="20.0" prefWidth="168.0">
+               <items>
+                  <FXCollections fx:factory="observableArrayList">
+                     <String fx:value="Andhra Pradesh" />
+                     <String fx:value="Arunachal Pradesh" />
+                     <String fx:value="Assam" />
+                     <String fx:value="Bihar" />
+                     <String fx:value="Chhattisgarh" />
+                     <String fx:value="Goa" />
+                     <String fx:value="Gujarat" />
+                     <String fx:value="Harayana" />
+                     <String fx:value="Himachal Pradesh" />
+                     <String fx:value="Jammu and Kashmir" />
+                     <String fx:value="Jharkhand" />
+                     <String fx:value="Karnataka" />
+                     <String fx:value="Kerala" />
+                     <String fx:value="Madhya Pradesh" />
+                     <String fx:value="Maharashtra" />
+                     <String fx:value="Manipur" />
+                     <String fx:value="Meghalaya" />
+                     <String fx:value="Mizoram" />
+                     <String fx:value="Nagaland" />
+                     <String fx:value="Odisha" />
+                     <String fx:value="Punjab" />
+                     <String fx:value="Rajasthan" />
+                     <String fx:value="Sikkim" />
+                     <String fx:value="Tamil Nadu" />
+                     <String fx:value="Telangana" />
+                     <String fx:value="Tripura" />
+                     <String fx:value="Uttar Pradesh" />
+                     <String fx:value="Uttarakhand" />
+                     <String fx:value="West Bengal" />
+
+                  </FXCollections>
+               </items>
+            </ComboBox>
+            <TextField fx:id="city" layoutX="394.0" layoutY="478.0" prefHeight="25.0" prefWidth="174.0" />
+            <TextArea fx:id="address" layoutX="28.0" layoutY="534.0" prefHeight="51.0" prefWidth="286.0" />
+            <Label fx:id="password_label" layoutX="373.0" layoutY="214.0" prefHeight="17.0" prefWidth="144.0" text=" " textFill="#ee0f0f" />
+            <Label fx:id="contact_no_label" layoutX="87.0" layoutY="506.0" prefHeight="17.0" prefWidth="200.0" text=" " textFill="#e80b0b" />
+            <Label layoutX="32.0" layoutY="55.0" text="*Mandatory Fields" textFill="#e12d2d" />
+            <DatePicker fx:id="date_of_joining" layoutX="200.0" layoutY="263.0" prefHeight="25.0" prefWidth="168.0" />
+            <Label layoutX="202.0" layoutY="243.0" prefHeight="20.0" prefWidth="127.0" text="Date of Joining*">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="birth_day" layoutX="203.0" layoutY="319.0" prefHeight="25.0" prefWidth="67.0">
+             <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="1" />
+          <String fx:value="2" />
+          <String fx:value="3" />
+          <String fx:value="4" />
+          <String fx:value="5" />
+          <String fx:value="6" />
+          <String fx:value="7" />
+          <String fx:value="8" />
+          <String fx:value="9" />
+          <String fx:value="10" />
+          <String fx:value="11" />
+          <String fx:value="12" />
+          <String fx:value="13" />
+          <String fx:value="14" />
+          <String fx:value="15" />
+          <String fx:value="16" />
+          <String fx:value="17" />
+          <String fx:value="18" />
+          <String fx:value="19" />
+          <String fx:value="20" />
+          <String fx:value="21" />
+          <String fx:value="22" />
+          <String fx:value="23" />
+          <String fx:value="24" />
+          <String fx:value="25" />
+          <String fx:value="26" />
+          <String fx:value="27" />
+          <String fx:value="28" />
+          <String fx:value="29" />
+          <String fx:value="30" />
+          <String fx:value="31" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+            
+         </children>
+      </AnchorPane>
+      <Separator prefWidth="200.0" />
+      <ButtonBar layoutX="221.0" layoutY="606.0" prefHeight="40.0" prefWidth="286.0">
+        <buttons>
+            <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" prefHeight="23.0" text="Save">
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant color="#aae881" />
+                     </light>
+                  </Lighting>
+               </effect>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" text="CLEAR" textFill="#111110">
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant color="#eb6f6f" />
+                     </light>
+                  </Lighting>
+               </effect>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+            </Button>
+          <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
+        </buttons>
+      </ButtonBar>
+      
+      
+      
+   </children>
+</AnchorPane>
