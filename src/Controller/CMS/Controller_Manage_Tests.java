@@ -1,8 +1,13 @@
 package Controller.CMS;
 
 import java.net.URL;
-import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
 import Model.CMS.Tests_Info;
@@ -27,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+@SuppressWarnings("deprecation")
 public class Controller_Manage_Tests implements Initializable
 {
 	private Main mainApp;
@@ -72,11 +78,11 @@ public class Controller_Manage_Tests implements Initializable
 		s_no_col.setSortable(false);
 		tests_type_col.setCellValueFactory(cellData -> cellData.getValue().get_test_name());
 		table_view.setItems(testsList);
-		showSelectedFees(null);
-		table_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showSelectedFees(newValue));
+		showSelectedTest(null);
+		table_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showSelectedTest(newValue));
 	}
 	
-	private void showSelectedFees(Tests_Info tests_info)
+	private void showSelectedTest(Tests_Info tests_info)
 	{
 		if(tests_info == null)
 		{
@@ -92,7 +98,7 @@ public class Controller_Manage_Tests implements Initializable
 			tests_id.setVisible(true);
 			tests_type.setVisible(true);
 			
-			tests_id.setText("Nothing");
+			tests_id.setText(tests_info.get_test_id().getValue());
 			tests_type.setText(tests_info.get_test_name().getValue());
 			
 			tests_id.setWrapText(true);
@@ -124,7 +130,7 @@ public class Controller_Manage_Tests implements Initializable
 			{
 				refreshTableView();
 				table_view.getSelectionModel().select(test_info);
-				showSelectedFees(test_info);
+				showSelectedTest(test_info);
 			}
 		}
 	}
@@ -154,7 +160,7 @@ public class Controller_Manage_Tests implements Initializable
 			dialogStage.setScene(scene);
 			Controller_Add_Tests controller = loader.getController();
 			System.out.println("Hi!!\n");
-			controller.setAppStage(mainApp, dialogStage);
+			controller.setAppStage(dialogStage);
 			controller.setTest(test_info);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
@@ -173,29 +179,112 @@ public class Controller_Manage_Tests implements Initializable
 		int selectedIndex = table_view.getSelectionModel().getSelectedIndex();
 		if(selectedIndex >= 0)
 		{
+			Tests_Info test = table_view.getItems().get(selectedIndex);
+			
+			boolean db_del = DelDB(test);
+			if(db_del == false)
+			{
+				return ;
+			}
+
 			Tests_Info test_info = table_view.getItems().remove(selectedIndex);
-			System.out.println("Test Type deleted: " + test_info.get_test_name().getValue());
+			System.out.println("Fees Type deleted: " + test_info.get_test_name().getValue());
 		}
 		else
 		{
 			Alert alert = new Alert(AlertType.WARNING);
 			alert.initOwner(primaryStage);
 			alert.setTitle("Nothing has been selected...");
-			alert.setHeaderText("No Test Selected");
+			alert.setHeaderText("No Medicine Selected");
 			alert.setContentText("Please select a medicine in the table.");
 			
 			alert.showAndWait();
 		}
 	}
-
+	
 	private void getFromDB()
 	{
-		Tests_Info f1 = new Tests_Info("Test1");
-		Tests_Info f2 = new Tests_Info("Test2");
-		testsList.add(f1);
-		testsList.add(f2);
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return ;
+		}
+		else
+		{
+			try
+			{
+				String query = "SELECT * FROM Test_Info;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next())
+				{
+					Tests_Info test_info = new Tests_Info(rs.getString("test_name"));
+					test_info.setID(rs.getString("test_id"));
+					testsList.add(test_info);
+				}
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(primaryStage)
+	    		.title(" ALERT ")
+	    		.masthead(" Database is not setup ")
+	    		.message("Items could not be loaded... ")
+	    		.showWarning();
+				return ;
+			}
+		}
 	}
 	
+	private boolean DelDB(Tests_Info test) 
+	{
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		try
+		{
+			String query = "DELETE FROM Test_Info WHERE test_id=?;";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, test.get_test_id().getValue());
+			int no = stmt.executeUpdate();
+			System.out.println("No.of rows deleted: " + no);
+			stmt.close();
+		}
+		catch(SQLException E)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" SQlException encountered ")
+    		.message("Item could not be deleted ")
+    		.showWarning();
+			return false;
+		}
+		return true;
+	}
+
 	public void setMainApp(Main main)
 	{
 		this.mainApp = main;

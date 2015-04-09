@@ -1,8 +1,15 @@
 package Controller.CMS;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import org.controlsfx.dialog.Dialogs;
+
+import application.Main;
 import Model.CMS.Remarks_Info;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,11 +21,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+@SuppressWarnings("deprecation")
 public class Controller_Add_Remarks implements Initializable
 {
 	private Stage stage;
 	private boolean isDone = false;
-	private Remarks_Info remark_info;
+	private Remarks_Info remark_info, original_remark_info;
+	private Integer ADD = 0, EDIT = 1, OTHER = 2;
+	private Integer mode = OTHER;
 	
 	@FXML private TextArea remark_eng = new TextArea();
 	
@@ -49,22 +59,130 @@ public class Controller_Add_Remarks implements Initializable
 			remark_info.setEnglishText(remark_eng.getText());
 			remark_info.setGujaratiText(remark_guj.getText());
 			remark_info.setContext(remark_context.getText());
-			String id = generateID();
-			remark_info.setRemarkID(id);
-			storeToDB(remark_info);
+			isDone = storeToDB(remark_info);
 			stage.close();
 		}
 	}
 	
-	private void storeToDB(Remarks_Info remark_info) 
+	private boolean storeToDB(Remarks_Info remark_info) 
 	{
-		// TODO Auto-generated method stub
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		
+		if(mode == ADD)
+		{
+			String id = generateID();
+			remark_info.setRemarkID(id);
+			
+			try
+			{
+				String query = "INSERT INTO Remarks VALUES(?, ?, ?, ?);";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, remark_info.getRemarkID().getValue());
+				stmt.setString(2, remark_info.get_english_text().getValue());
+				stmt.setString(3, remark_info.get_gujarati_text().getValue());
+				stmt.setString(4, remark_info.get_context().getValue());
+				System.out.println(query);
+				original_remark_info.setEnglishText(remark_info.get_english_text().getValue());
+				original_remark_info.setGujaratiText(remark_info.get_gujarati_text().getValue());
+				original_remark_info.setContext(remark_info.get_context().getValue());
+				original_remark_info.setRemarkID(remark_info.getRemarkID().getValue());
+				int no = stmt.executeUpdate(query);
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Item could not be added... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else if(mode == EDIT)
+		{
+			try
+			{
+				String query = "UPDATE Remarks SET English=?, Gujarati=?, Context=? WHERE remark_id=?;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(4, remark_info.getRemarkID().getValue());
+				stmt.setString(1, remark_info.get_english_text().getValue());
+				stmt.setString(2, remark_info.get_gujarati_text().getValue());
+				stmt.setString(3, remark_info.get_context().getValue());
+				System.out.println(query);
+				int no = stmt.executeUpdate(query);
+				original_remark_info.setEnglishText(remark_info.get_english_text().getValue());
+				original_remark_info.setGujaratiText(remark_info.get_gujarati_text().getValue());
+				original_remark_info.setContext(remark_info.get_context().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Information could not be saved... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else
+		{
+			System.out.println("Mode is not valid...");
+			return false;
+		}
+		return true;
 	}
 
 	private String generateID() 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT remark_id FROM Remarks ORDER BY remark_id;";
+		System.out.println(query);
+		int i = 1;
+		try
+		{
+			PreparedStatement stmt = Main.getConnection().prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+			System.out.println("Hello");
+			while(rs.next())
+			{
+				System.out.println(rs.getString("remark_id"));
+				if(Integer.parseInt(rs.getString("remark_id")) > i)
+				{
+					return Integer.toString(i);
+				}
+				System.out.println(rs.getString(1) + "\t" + i);
+				i += 1;
+			}
+			stmt.close();
+		}
+		catch(SQLException E)
+		{
+			System.out.println("Exception1");
+			E.printStackTrace();
+		}
+		return Integer.toString(i);
 	}
 
 	@FXML
@@ -98,7 +216,8 @@ public class Controller_Add_Remarks implements Initializable
 	public void setRemark(Remarks_Info remark_info) 
 	{
 		System.out.println("Setting....");
-		this.remark_info = remark_info;
+		this.original_remark_info = remark_info;
+		this.remark_info = Remarks_Info.clone(original_remark_info);
 		if(remark_info.get_english_text() != null)
 		{
 			remark_eng.setText(remark_info.get_english_text().getValue());
@@ -106,11 +225,18 @@ public class Controller_Add_Remarks implements Initializable
 		if(remark_info.get_gujarati_text() != null)
 		{
 			remark_guj.setText(remark_info.get_gujarati_text().getValue());
-			remark_trans.setText(remark_info.get_gujarati_text().getValue());
 		}
 		if(remark_info.get_context() != null)
 		{
-			remark_context.setText(remark_info.get_context().getValue());		
+			remark_context.setText(remark_info.get_context().getValue());
+		}
+		if(remark_info.getRemarkID() == null)
+		{
+			mode = ADD;
+		}
+		else
+		{
+			mode = EDIT;
 		}
 	}
 	

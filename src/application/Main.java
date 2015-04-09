@@ -1,12 +1,14 @@
 package application;
 	
 import java.io.IOException;
+import java.sql.Connection;
 
 import Controller.CMS.*;
 import Controller.Employee.Controller_Add_Employee;
 import Controller.Root.Controller_Dashboard;
 import Controller.Root.Controller_Root_Layout;
-import Model.CMS.Employee_Info;
+import Controller.Prescription.Controller_Search_Patient;
+import Model.Employee.Employee_Info;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,73 +19,90 @@ import javafx.scene.layout.BorderPane;
 
 public class Main 
 {
-	private Stage primaryStage;
-	private BorderPane root_layout;
-	private Employee_Info employee_info;
+	private static Stage primaryStage;
+	private static BorderPane root_layout;
+	private static Employee_Info employee_info;
 	
-	private String USER_NAME = "user";
-	private String PASSWORD = "password";
-	private String IP = "10.100.57.33";
-	private String PORT = "1433";
-	private String DBNAME = "sen";
+	private static String USER_NAME = "";
+	private static String PASSWORD = "";
+	private static String IP = "";
+	private static String PORT = "";
+	private static String DBNAME = "";
 	
-	public String getUserName()
+	private static Connection conn = null;
+	
+	public static BorderPane getRootLayout()
 	{
-		return this.USER_NAME;
+		return root_layout;
 	}
 	
-	public String getIP()
+	public static Connection getConnection()
 	{
-		return this.IP;
+		return conn;
 	}
 	
-	public String getPort()
+	public static void setConnection(Connection con)
 	{
-		return this.PORT;
+		conn = con;
 	}
 	
-	public String getDBName()
+	public static String getUserName()
 	{
-		return this.DBNAME;
+		return USER_NAME;
 	}
 	
-	public String getPassword()
+	public static String getIP()
 	{
-		return this.PASSWORD;
+		return IP;
 	}
 	
-	public void setIP(String IP)
+	public static String getPort()
 	{
-		this.IP = IP;
+		return PORT;
 	}
 	
-	public void setPort(String port)
+	public static String getDBName()
 	{
-		this.PORT = port;
+		return DBNAME;
 	}
 	
-	public void setDbName(String DBName)
+	public static String getPassword()
 	{
-		this.DBNAME = DBName;
+		return PASSWORD;
 	}
 	
-	public void setUsername(String username)
+	public static void setIP(String IP)
 	{
-		this.USER_NAME = username;
+		Main.IP = IP;
 	}
 	
-	public void setpassword(String password)
+	public static void setPort(String port)
 	{
-		this.PASSWORD = password;
+		Main.PORT = port;
+	}
+	
+	public static void setDbName(String DBName)
+	{
+		Main.DBNAME = DBName;
+	}
+	
+	public static void setUsername(String username)
+	{
+		Main.USER_NAME = username;
+	}
+	
+	public static void setpassword(String password)
+	{
+		Main.PASSWORD = password;
 	}
 	
 	public void start(Stage primaryStage, Employee_Info employee_info) 
 	{
 		try 
 		{
-			this.primaryStage = primaryStage;
+			Main.primaryStage = primaryStage;
 			initRootLayout();
-			this.employee_info = employee_info;
+			Main.employee_info = employee_info;
 			showDashboard();
 		} 
 		catch(Exception e) 
@@ -221,51 +240,53 @@ public class Main
 		}
 	}
 	
-	public boolean showAddPatient(Employee_Info patient_info) 
+	public void showAddPatient() 
 	{
-		// TODO Auto-generated method stub
-		System.out.println("Adding patient dialog");
-		try
-		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/View/Employee/Dialog_Add_Employee.fxml"));
-			AnchorPane page = (AnchorPane) loader.load();
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Add New Employee");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
-			Controller_Add_Employee controller = loader.getController();
-			System.out.println("Hi!!\n");
-			controller.setStage(dialogStage);
-			controller.setPatient(patient_info);
-			dialogStage.showAndWait();
-			return controller.isSaveClicked();
-		}
-		catch(IOException E)
-		{
-			E.printStackTrace();
-		}
-		return false;
+		// TODO:
 	}
 
 	public void showSearchPatient() 
 	{
-		// TODO Auto-generated method stub
-		
+		System.out.println("Showing Database");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/Search/Search_Patient.fxml"));
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Search_Patient controller = loader.getController();
+			controller.setMainApp(this);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}		
 	}
 
 	public void createPrescription() 
 	{
-		// TODO Auto-generated method stub
+		//TODO	
 		
 	}
 
 	public void searchPrescription() 
 	{
-		// TODO Auto-generated method stub
-		
+		System.out.println("Choose the patient");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			System.out.println("1");
+			loader.setLocation(Main.class.getResource("/View/Prescription/Search_Patient.fxml"));
+			System.out.println("2");
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Search_Patient controller = loader.getController();
+			controller.setMainApp(this);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}			
 	}
 
 	public void createReceipt() 
@@ -310,10 +331,33 @@ public class Main
 		
 	}
 
-	public void addEmployee() 
+	public boolean addEmployee(Employee_Info emp_info) 
 	{
 		// TODO Auto-generated method stub
-		
+		System.out.println("Adding patient dialog");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/Employee/Dialog_Add_Employee.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Add New Employee");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			Controller_Add_Employee controller = loader.getController();
+			System.out.println("Hi!!\n");
+			controller.setStage(dialogStage);
+			controller.setEmployee(emp_info);
+			dialogStage.showAndWait();
+			return controller.isSaveClicked();
+		}
+		catch(IOException E)
+		{
+			E.printStackTrace();
+		}
+		return false;
 	}
 
 	public void searchEmployee()
@@ -324,7 +368,7 @@ public class Main
 	
 	public Stage getStage()
 	{
-		return this.primaryStage;
+		return Main.primaryStage;
 	}
 	
 	public Main()

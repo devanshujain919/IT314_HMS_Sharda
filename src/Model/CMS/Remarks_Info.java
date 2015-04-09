@@ -35,6 +35,7 @@ public class Remarks_Info
 	 * Getters and setters
 	 */
 	
+	
 	public void setRemarkID(String id)
 	{
 		this.remark_id = new SimpleStringProperty(id);
@@ -73,5 +74,27 @@ public class Remarks_Info
 	public StringProperty get_context()
 	{
 		return this.remark_context;
+	}
+	
+	public static Remarks_Info clone(Remarks_Info remarks_info)
+	{
+		Remarks_Info rem_info = new Remarks_Info();
+		if(remarks_info.get_context() != null)
+		{
+			rem_info.setContext(remarks_info.get_context().getValue());
+		}
+		if(remarks_info.get_english_text() != null)
+		{
+			rem_info.setContext(remarks_info.get_english_text().getValue());
+		}
+		if(remarks_info.get_gujarati_text() != null)
+		{
+			rem_info.setContext(remarks_info.get_gujarati_text().getValue());
+		}
+		if(remarks_info.getRemarkID() != null)
+		{
+			rem_info.setRemarkID(remarks_info.getRemarkID().getValue());
+		}
+		return rem_info;
 	}
 }

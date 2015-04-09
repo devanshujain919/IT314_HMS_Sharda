@@ -3,7 +3,7 @@ package application;
 import java.io.IOException;
 
 import Controller.Login.Controller_Login;
-import Model.CMS.Employee_Info;
+import Model.Employee.Employee_Info;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,17 +18,9 @@ public class Login extends Application
 	
 	private AnchorPane anchor_pane;
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws ClassNotFoundException
 	{
-		try 
-		{
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-		}
-		catch (ClassNotFoundException E) 
-		{
-			System.out.println("Driver not found");
-			E.printStackTrace();
-		}
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 		launch(args);
 	}
 	

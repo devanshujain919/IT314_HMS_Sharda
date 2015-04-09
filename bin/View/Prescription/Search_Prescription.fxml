@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="anchor_pane" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Prescription.Controller_Search_Prescription">
+   <children>
+      <Label text="Search for Prescription" AnchorPane.leftAnchor="24.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font size="57.0" />
+         </font>
+      </Label>
+      <Separator prefHeight="10.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="110.0" />
+      <SplitPane dividerPositions="0.4326647564469914" prefHeight="474.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
+        <items>
+          <AnchorPane fx:id="anchor_left" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TreeView fx:id="tree_view" layoutX="1.0" layoutY="66.0" prefHeight="514.0" prefWidth="299.0" />
+                  <Label layoutX="5.0" layoutY="9.0" text="Patient's Name: " />
+                  <TextField fx:id="patient_name" layoutX="113.0" layoutY="4.0" prefHeight="26.0" prefWidth="183.0" />
+                  <Label layoutX="7.0" layoutY="42.0" text="Patient's ID: " />
+                  <TextField fx:id="patient_id" layoutX="113.0" layoutY="37.0" prefHeight="26.0" prefWidth="183.0" />
+               </children>
+            </AnchorPane>
+          <AnchorPane fx:id="anchor_right" minHeight="0.0" minWidth="0.0" prefHeight="472.0" prefWidth="310.0">
+               <children>
+                  <BorderPane fx:id="border_pane" layoutX="67.0" layoutY="75.0" prefHeight="578.0" prefWidth="392.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

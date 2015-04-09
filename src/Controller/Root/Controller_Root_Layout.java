@@ -3,7 +3,7 @@ package Controller.Root;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import Model.CMS.Employee_Info;
+import Model.Employee.Employee_Info;
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -99,7 +99,7 @@ public class Controller_Root_Layout implements Initializable
 					System.out.println("Calling it");
 					mainApp.showDashboard();
 				}
-				else if(mitem_str.equalsIgnoreCase("Connect to database"))
+				else if(mitem_str.equalsIgnoreCase("Database Connectivity"))
 				{
 					mainApp.showDatabase();
 				}
@@ -123,8 +123,7 @@ public class Controller_Root_Layout implements Initializable
 				
 				else if(mitem_str.equalsIgnoreCase("Add a Patient"))
 				{
-					System.out.println("Calling...");
-					mainApp.showAddPatient(new Employee_Info("devanshu", "jain", "xyz", "abc"));
+					mainApp.showAddPatient();
 				}
 				else if(mitem_str.equalsIgnoreCase("Search for a Patient"))
 				{
@@ -170,7 +169,7 @@ public class Controller_Root_Layout implements Initializable
 				
 				else if(mitem_str.equalsIgnoreCase("Add an Employee"))
 				{
-					mainApp.addEmployee();
+					mainApp.addEmployee(new Employee_Info("", "", "", ""));
 				}
 				else if(mitem_str.equalsIgnoreCase("Search for an Employee"))
 				{

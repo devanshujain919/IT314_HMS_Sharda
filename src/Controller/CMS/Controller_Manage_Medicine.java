@@ -2,9 +2,12 @@ package Controller.CMS;
 
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.Arrays;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
 import Model.CMS.Medicine_Info;
@@ -24,10 +27,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+@SuppressWarnings("deprecation")
 public class Controller_Manage_Medicine implements Initializable
 {
 	private ObservableList<Medicine_Info> medicineList = FXCollections.observableArrayList();
@@ -68,17 +71,88 @@ public class Controller_Manage_Medicine implements Initializable
 	
 	@FXML Label med_remarks_label = new Label();
 	
-	public void getFromDB()
+	private boolean DelDB(Medicine_Info med_info) 
 	{
-		Medicine_Info m1 = new Medicine_Info("ABC1", "XYZ1", "123");
-		Medicine_Info m2 = new Medicine_Info("ABC2", "XYZ2", "345");
-		medicineList.add(m1);
-		medicineList.add(m2);
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		try
+		{
+			String query = "DELETE FROM Medicine WHERE medicine_id=?;";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, med_info.get_med_id().getValue());
+			int no = stmt.executeUpdate();
+			System.out.println("No.of rows deleted: " + no);
+			stmt.close();
+		}
+		catch(SQLException E)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" SQlException encountered ")
+    		.message("Item could not be deleted ")
+    		.showWarning();
+			return false;
+		}
+		return true;
 	}
 	
-	public void storeToDB()
+	public void getFromDB()
 	{
 		
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return ;
+		}
+		else
+		{
+			try
+			{
+				String query = "SELECT * FROM Fee_type;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery(query);
+				while(rs.next())
+				{
+					Medicine_Info med_info = new Medicine_Info(rs.getString("medicine_name"), rs.getString("company"), rs.getString("other_remarks"));
+					med_info.set_med_id(rs.getString("medicine_ID"));
+					medicineList.add(med_info);
+				}
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(primaryStage)
+	    		.title(" ALERT ")
+	    		.masthead(" Database is not setup ")
+	    		.message("Items could not be loaded.. ")
+	    		.showWarning();
+				return ;
+			}
+		}
 	}
 
 	@Override
@@ -128,7 +202,7 @@ public class Controller_Manage_Medicine implements Initializable
 			med_company.setVisible(true);
 			med_remarks.setVisible(true);
 						
-			med_id.setText("Nothing");
+			med_id.setText(med_info.get_med_id().getValue());
 			med_name.setText(med_info.get_med_name().getValue());
 			med_company.setText(med_info.get_med_company().getValue());
 			
@@ -219,8 +293,16 @@ public class Controller_Manage_Medicine implements Initializable
 		int selectedIndex = table_view.getSelectionModel().getSelectedIndex();
 		if(selectedIndex >= 0)
 		{
+			Medicine_Info med = table_view.getItems().get(selectedIndex);
+			
+			boolean db_del = DelDB(med);
+			if(db_del == false)
+			{
+				return ;
+			}
+
 			Medicine_Info med_info = table_view.getItems().remove(selectedIndex);
-			System.out.println("Medicine deleted: " + med_info.get_med_name().getValue());
+			System.out.println("Fees Type deleted: " + med_info.get_med_name().getValue());
 		}
 		else
 		{

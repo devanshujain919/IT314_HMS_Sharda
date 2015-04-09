@@ -50,4 +50,18 @@ public class Tests_Info
 	{
 		return this.test_name;
 	}
+	
+	public static Tests_Info clone(Tests_Info test_info)
+	{
+		Tests_Info test = new Tests_Info();
+		if(test_info.get_test_id() != null)
+		{
+			test.setID(test_info.get_test_id().getValue());
+		}
+		if(test_info.get_test_name() != null)
+		{
+			test.setName(test_info.get_test_name().getValue());
+		}
+		return test;
+	}
 }

@@ -50,4 +50,19 @@ public class Fees_Info
 	{
 		return this.fee_name;
 	}
+	
+	public static Fees_Info clone(Fees_Info fee_info)
+	{
+		Fees_Info fee = new Fees_Info();
+		if(fee_info.get_fees_name() != null)
+		{
+			fee.setName(fee_info.get_fees_name().getValue());
+		}
+		if(fee_info.get_fees_id() != null)
+		{
+			fee.setID(fee_info.get_fees_id().getValue());
+		}
+		return fee;
+		
+	}
 }

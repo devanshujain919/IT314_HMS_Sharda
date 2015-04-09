@@ -22,6 +22,7 @@ public class Controller_Manage_Database implements Initializable
 {
 	private Main mainApp;
 	private Stage stage;
+	private Connection conn = null;
 	
 	@FXML Label ip_addr_label = new Label();
 	
@@ -48,11 +49,12 @@ public class Controller_Manage_Database implements Initializable
 	{
 		if(isInputValid())
 		{
-			mainApp.setIP(ip_addr.getText());
-			mainApp.setPort(port_no.getText());
-			mainApp.setDbName(db_name.getText());
-			mainApp.setUsername(username.getText());
-			mainApp.setpassword(password.getText());
+			Main.setIP(ip_addr.getText());
+			Main.setPort(port_no.getText());
+			Main.setDbName(db_name.getText());
+			Main.setUsername(username.getText());
+			Main.setpassword(password.getText());
+			Main.setConnection(conn);
 		}
 	}
 
@@ -69,7 +71,7 @@ public class Controller_Manage_Database implements Initializable
 	@FXML
 	private void handle_btn_cancel()
 	{
-		
+		//TODO
 	}
 	
 	@Override
@@ -109,7 +111,9 @@ public class Controller_Manage_Database implements Initializable
 		}
 		try
 		{
-			Connection conn = DriverManager.getConnection("jdbc:sqlserver://" + ip_addr.getText() + "\\SQLEXPRESS" + ":" + port_no.getText() + ";databaseName=" + db_name.getText(), username.getText(), password.getText());
+			String query = "jdbc:sqlserver://" + ip_addr.getText() + "\\SQLEXPRESS" + ":" + port_no.getText() + ";databaseName=" + db_name.getText();
+			System.out.println(query);
+			conn = DriverManager.getConnection(query, username.getText(), password.getText());
 			System.out.println("Connected...");
 			
 			DatabaseMetaData md = conn.getMetaData();
@@ -120,7 +124,6 @@ public class Controller_Manage_Database implements Initializable
 				System.out.println(rs.getString(3));
 			}
 			
-			conn.close();
 		}
 		catch(SQLException E)
 		{

@@ -2,14 +2,15 @@ package Controller.CMS;
 
 import java.net.URL;
 import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 
+import org.controlsfx.dialog.Dialogs;
+
 import application.Main;
-import Model.*;
 import Model.CMS.Tests_Info;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,12 +21,14 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
+@SuppressWarnings("deprecation")
 public class Controller_Add_Tests implements Initializable
 {
 	private Stage stage;
-	private Main mainApp;
 	private boolean isDone = false;
-	private Tests_Info tests_info;
+	private Tests_Info tests_info, original_tests_info;
+	private Integer ADD = 0, EDIT = 1, OTHER = 2;
+	private Integer mode = OTHER;
 	
 	@FXML private TextArea test_type = new TextArea();
 	
@@ -44,79 +47,114 @@ public class Controller_Add_Tests implements Initializable
 		{
 			isDone = true;
 			tests_info.setName(test_type.getText());
-			String id = generateID();
-			
-			System.out.println("Generated ID: " + id);
-			
-			tests_info.setID(id);
-			
-			System.out.println("Inserting into database...");
-			
-			//storeToDB(tests_info);
-			
-			System.out.println("Stored in the database");
-			
+			isDone = storeToDB();
 			stage.close();
 		}
 	}
 	
-	private void storeToDB(Tests_Info tests_info)
+	private boolean storeToDB()
 	{
-		try
+		Connection con = Main.getConnection();
+		if(con == null)
 		{
-			Connection conn = DriverManager.getConnection("jdbc:sqlserver://" + mainApp.getIP() + "\\SQLEXPRESS" + ":" + mainApp.getPort() + ";databaseName=" + mainApp.getDBName(), mainApp.getUserName(), mainApp.getPassword());
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
 			
-			Statement stmt = conn.createStatement();
-			String query = "INSERT INTO Test_Info VALUES(\'" + tests_info.get_test_id() + "\', \'" + tests_info.get_test_name() + "\')";
-			stmt.executeUpdate(query);
-			
-			conn.close();
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
 		}
-		catch(SQLException E)
+		
+		if(mode == ADD)
 		{
-			E.printStackTrace();
+			String id = generateID();
+			tests_info.setID(id);
+			try
+			{
+				String query = "INSERT INTO Test_Info VALUES(?, ?);";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, tests_info.get_test_id().getValue());
+				stmt.setString(2, tests_info.get_test_name().getValue());
+				int no = stmt.executeUpdate(query);
+				original_tests_info.setName(tests_info.get_test_name().getValue());
+				original_tests_info.setID(tests_info.get_test_id().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Item could not be added... ")
+	    		.showWarning();
+				return false;
+			}
 		}
+		else if(mode == EDIT)
+		{
+			try
+			{
+				String query = "UPDATE Test_Info SET test_name=? WHERE test_id=?;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(2, tests_info.get_test_id().getValue());
+				stmt.setString(1, tests_info.get_test_name().getValue());
+				int no = stmt.executeUpdate(query);
+				original_tests_info.setName(tests_info.get_test_name().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Information could not be saved... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else
+		{
+			System.out.println("Mode is not valid...");
+			return false;
+		}
+		return true;
 	}
 
 	private String generateID() 
 	{
-		String retValue = "";
-		
+		String query = "SELECT test_id FROM Test_Info ORDER BY test_id;";
+		int i = 1;
 		try
 		{
-			Connection conn = DriverManager.getConnection("jdbc:sqlserver://" + mainApp.getIP() + "\\SQLEXPRESS" + ":" + mainApp.getPort() + ";databaseName=" + mainApp.getDBName(), mainApp.getUserName(), mainApp.getPassword());
-			
-			Statement stmt = conn.createStatement();
-			
-			String q = "DELETE FROM Test_Info WHERE 1=1";
-			stmt.executeUpdate(q);
-			
-			String query = "SELECT * FROM Test_Info ORDER BY test_id";
+			Statement stmt = Main.getConnection().createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			
-			int i = 1;
 			
 			while(rs.next())
 			{
-				int test_id = Integer.parseInt(rs.getString("test_id"));
-				String test_name = rs.getString("test_name");
-				
-				System.out.println(test_id + "\t" + test_name);
-				if(test_id != i)
+				if(Integer.parseInt(rs.getString(1)) != i)
 				{
-					retValue = Integer.toString(i);
+					return Integer.toString(i);
 				}
-				i ++;
+				i += 1;
 			}
-			
-			conn.close(); 
 		}
 		catch(SQLException E)
 		{
 			E.printStackTrace();
 		}
-		
-		return retValue;
+		return Integer.toString(i);
 	}
 
 	@FXML
@@ -145,17 +183,24 @@ public class Controller_Add_Tests implements Initializable
 	public void setTest(Tests_Info tests_info) 
 	{
 		System.out.println("Setting....");
-		this.tests_info = tests_info;
+		this.original_tests_info = tests_info;
+		this.tests_info = Tests_Info.clone(original_tests_info);
 		if(tests_info.get_test_name() != null)
 		{
 			test_type.setText(tests_info.get_test_name().getValue());
 		}
+		if(tests_info.get_test_id() == null)
+		{
+			mode = ADD;
+		}
+		else
+		{
+			mode = EDIT;
+		}
 	}
 		
-	public void setAppStage(Main mainApp, Stage stage)
+	public void setAppStage(Stage stage)
 	{
-		System.out.println("Hi!! 2 time\n");
-		this.mainApp = mainApp;
 		this.stage = stage;
 	}
 	

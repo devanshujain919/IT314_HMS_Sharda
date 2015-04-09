@@ -1,9 +1,15 @@
 package Controller.CMS;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import Model.*;
+import org.controlsfx.dialog.Dialogs;
+
+import application.Main;
 import Model.CMS.Fees_Info;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,11 +25,14 @@ import javafx.stage.Stage;
  * Author: Devanshu Jain
  */
 
+@SuppressWarnings("deprecation")
 public class Controller_Add_Fees implements Initializable
 {
 	private Stage stage;
 	private boolean isDone = false;
-	private Fees_Info fees_info;
+	private Fees_Info fees_info, original_fees_info;
+	private Integer ADD = 0, EDIT = 1, OTHER = 2;
+	private Integer mode = OTHER;
 	
 	@FXML private TextArea fees_type = new TextArea();
 	
@@ -42,22 +51,114 @@ public class Controller_Add_Fees implements Initializable
 		{
 			isDone = true;
 			fees_info.setName(fees_type.getText());
-			String id = generateID();
-			fees_info.setID(id);
-			storeToDB(fees_info);
+			isDone = storeToDB();
 			stage.close();
 		}
 	}
 	
-	private void storeToDB(Fees_Info fees_info2)
+	private boolean storeToDB()
 	{
-		// TODO Auto-generated method stub
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		
+		if(mode == ADD)
+		{
+			String id = generateID();
+			fees_info.setID(id);
+			try
+			{
+				String query = "INSERT INTO Fee_type VALUES(?, ?)";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, fees_info.get_fees_id().getValue());
+				stmt.setString(2, fees_info.get_fees_name().getValue());
+				int no = stmt.executeUpdate();
+				original_fees_info.setName(fees_info.get_fees_name().getValue());
+				original_fees_info.setID(fees_info.get_fees_id().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Item could not be added... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else if(mode == EDIT)
+		{
+			try
+			{
+				String query = "UPDATE Fee_type SET fee_name=? WHERE fee_id=?;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, fees_info.get_fees_name().getValue());
+				stmt.setString(2, fees_info.get_fees_id().getValue());
+				int no = stmt.executeUpdate(query);
+				original_fees_info.setName(fees_info.get_fees_name().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Information could not be saved... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else
+		{
+			System.out.println("Mode is not valid...");
+			return false;
+		}
+		return true;
 	}
 
 	private String generateID() 
 	{
-		//TODO
-		return "1";
+		String query = "SELECT fee_id FROM Fee_type ORDER BY fee_id;";
+		int i = 1;
+		try
+		{
+			PreparedStatement stmt = Main.getConnection().prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next())
+			{
+				if(Integer.parseInt(rs.getString(1)) != i)
+				{
+					return Integer.toString(i);
+				}
+				i += 1;
+			}
+		}
+		catch(SQLException E)
+		{
+			E.printStackTrace();
+		}
+		return Integer.toString(i);
 	}
 
 	@FXML
@@ -86,10 +187,19 @@ public class Controller_Add_Fees implements Initializable
 	public void setFees(Fees_Info fees_info) 
 	{
 		System.out.println("Setting....");
-		this.fees_info = fees_info;
+		this.original_fees_info = fees_info;
+		this.fees_info = Fees_Info.clone(original_fees_info);
 		if(fees_info.get_fees_name() != null)
 		{
 			fees_type.setText(fees_info.get_fees_name().getValue());
+		}
+		if(fees_info.get_fees_id() == null)
+		{
+			mode = ADD;
+		}
+		else
+		{
+			mode = EDIT;
 		}
 	}
 		

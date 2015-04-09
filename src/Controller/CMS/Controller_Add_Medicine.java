@@ -1,8 +1,15 @@
 package Controller.CMS;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import org.controlsfx.dialog.Dialogs;
+
+import application.Main;
 import Model.CMS.Medicine_Info;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,11 +20,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
+@SuppressWarnings("deprecation")
 public class Controller_Add_Medicine implements Initializable
 {
 	private Stage stage;
 	private boolean isDone = false;
-	private Medicine_Info medicine_details;
+	private Medicine_Info medicine_details, original_medicine_details;
+	private Integer ADD = 0, EDIT = 1, OTHER = 2;
+	private Integer mode = OTHER;
+
 	
 	@FXML private TextArea medicine_name = new TextArea();
 	
@@ -46,22 +57,121 @@ public class Controller_Add_Medicine implements Initializable
 			medicine_details.set_med_name(medicine_name.getText());
 			medicine_details.set_med_cmpy(medicine_company.getText());
 			medicine_details.set_med_remarks(medicine_remarks.getText());
-			String id = generateID();
-			medicine_details.set_med_id(id);
-			storeToDB(medicine_details);
+			isDone = storeToDB();
 			stage.close();
 		}
 	}
 	
-	private void storeToDB(Medicine_Info medicine_details2) 
+	private boolean storeToDB() 
 	{
-		// TODO Auto-generated method stub
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		
+		if(mode == ADD)
+		{
+			
+			try
+			{
+				String id = generateID();
+				medicine_details.set_med_id(id);
+				String query = "INSERT INTO Medicine VALUES(?, ?, ?, ?)";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, medicine_details.get_med_id().getValue());
+				stmt.setString(2, medicine_details.get_med_name().getValue());
+				stmt.setString(3, medicine_details.get_med_company().getValue());
+				stmt.setString(4, medicine_details.get_med_remarks().getValue());
+				int no = stmt.executeUpdate();
+				original_medicine_details.set_med_name(medicine_details.get_med_name().getValue());
+				original_medicine_details.set_med_cmpy(medicine_details.get_med_company().getValue());
+				original_medicine_details.set_med_remarks(medicine_details.get_med_remarks().getValue());
+				original_medicine_details.set_med_id(medicine_details.get_med_id().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Item could not be added... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else if(mode == EDIT)
+		{
+			try
+			{
+				String query = "UPDATE Medicine SET medicine_name=?, company=?, other_remarks=? WHERE medicine_id=?;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.setString(1, medicine_details.get_med_name().getValue());
+				stmt.setString(2, medicine_details.get_med_company().getValue());
+				stmt.setString(3, medicine_details.get_med_remarks().getValue());
+				stmt.setString(4, medicine_details.get_med_id().getValue());
+				int no = stmt.executeUpdate();
+				original_medicine_details.set_med_name(medicine_details.get_med_name().getValue());
+				System.out.println("No of rows updated: " + no);
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" SQlException encountered ")
+	    		.message("Information could not be saved... ")
+	    		.showWarning();
+				return false;
+			}
+		}
+		else
+		{
+			System.out.println("Mode is not valid...");
+			return false;
+		}
+		return true;
 	}
 
 	private String generateID()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		String query = "SELECT mecicine_id FROM Medicine ORDER BY medicine_id;";
+		int i = 1;
+		try
+		{
+			PreparedStatement stmt = Main.getConnection().prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+			
+			while(rs.next())
+			{
+				if(Integer.parseInt(rs.getString(1)) != i)
+				{
+					return Integer.toString(i);
+				}
+				i += 1;
+			}
+		}
+		catch(SQLException E)
+		{
+			E.printStackTrace();
+		}
+		return Integer.toString(i);
 	}
 
 	@FXML
@@ -92,18 +202,28 @@ public class Controller_Add_Medicine implements Initializable
 	public void setMedicine(Medicine_Info med_info) 
 	{
 		System.out.println("Setting....");
-		this.medicine_details = med_info;
-		if(medicine_details.get_med_name() != null)
+		this.original_medicine_details = med_info;
+		this.medicine_details = Medicine_Info.clone(original_medicine_details);
+		if(med_info.get_med_name() != null)
 		{
-			medicine_name.setText(medicine_details.get_med_name().getValue());
+			medicine_name.setText(med_info.get_med_name().getValue());			
 		}
-		if(medicine_details.get_med_company() != null)
+		if(med_info.get_med_company() != null)
 		{
-			medicine_company.setText(medicine_details.get_med_company().getValue());
+			medicine_company.setText(med_info.get_med_company().getValue());			
 		}
-		if(medicine_details.get_med_remarks() != null)
+		if(med_info.get_med_remarks() != null)
 		{
-			medicine_remarks.setText(medicine_details.get_med_remarks().getValue());		
+			medicine_remarks.setText(med_info.get_med_remarks().getValue());			
+		}		
+		
+		if(med_info.get_med_id() == null)
+		{
+			mode = ADD;
+		}
+		else
+		{
+			mode = EDIT;
 		}
 	}
 		

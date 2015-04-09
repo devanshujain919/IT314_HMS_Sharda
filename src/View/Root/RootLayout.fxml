@@ -37,7 +37,7 @@
               <MenuItem fx:id="search_test_menu" mnemonicParsing="false" text="Search for Tests" />
             </items>
           </Menu>
-          <Menu fx:id="menu_account" mnemonicParsing="false" text="Patients">
+          <Menu fx:id="menu_account" mnemonicParsing="false" text="Account">
             <items>
               <MenuItem fx:id="manage_account_menu" mnemonicParsing="false" text="Manage Account" />
             </items>

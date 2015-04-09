@@ -74,4 +74,26 @@ public class Medicine_Info
 	{
 		return this.other_remarks;
 	}
+	
+	public static Medicine_Info clone(Medicine_Info med_info)
+	{
+		Medicine_Info med_info2 = new Medicine_Info();
+		if(med_info.get_med_name() != null)
+		{
+			med_info2.set_med_name(med_info.get_med_name().getValue());
+		}
+		if(med_info.get_med_company() != null)
+		{
+			med_info2.set_med_cmpy(med_info.get_med_company().getValue());
+		}
+		if(med_info.get_med_remarks() != null)
+		{
+			med_info2.set_med_remarks(med_info.get_med_remarks().getValue());
+		}
+		if(med_info.get_med_id() != null)
+		{
+			med_info2.set_med_id(med_info.get_med_id().getValue());
+		}
+		return med_info2;
+	}
 }

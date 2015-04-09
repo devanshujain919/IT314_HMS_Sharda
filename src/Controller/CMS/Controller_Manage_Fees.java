@@ -1,8 +1,13 @@
 package Controller.CMS;
 
 import java.net.URL;
-import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
 import Model.CMS.Fees_Info;
@@ -27,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+@SuppressWarnings("deprecation")
 public class Controller_Manage_Fees implements Initializable
 {
 	private Main mainApp;
@@ -92,7 +98,7 @@ public class Controller_Manage_Fees implements Initializable
 			fees_id.setVisible(true);
 			fees_type.setVisible(true);
 			
-			fees_id.setText("Nothing");
+			fees_id.setText(fee_info.get_fees_id().getValue());
 			fees_type.setText(fee_info.get_fees_name().getValue());
 			
 			fees_id.setWrapText(true);
@@ -128,7 +134,7 @@ public class Controller_Manage_Fees implements Initializable
 			}
 		}
 	}
-	
+
 	private void refreshTableView() 
 	{
 		for(TableColumn tc : table_view.getColumns())
@@ -173,6 +179,14 @@ public class Controller_Manage_Fees implements Initializable
 		int selectedIndex = table_view.getSelectionModel().getSelectedIndex();
 		if(selectedIndex >= 0)
 		{
+			Fees_Info fee = table_view.getItems().get(selectedIndex);
+			
+			boolean db_del = DelDB(fee);
+			if(db_del == false)
+			{
+				return ;
+			}
+
 			Fees_Info fee_info = table_view.getItems().remove(selectedIndex);
 			System.out.println("Fees Type deleted: " + fee_info.get_fees_name().getValue());
 		}
@@ -187,13 +201,95 @@ public class Controller_Manage_Fees implements Initializable
 			alert.showAndWait();
 		}
 	}
+	
+	/*
+	 * --------------------------------------------------------------------------------------
+	 * DATABSE OPERATIONS
+	 * @author: Devanshu Jain
+	 * --------------------------------------------------------------------------------------
+	 */
+	
+	private boolean DelDB(Fees_Info fee) 
+	{
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		PreparedStatement stmt = null;
+		try
+		{
+			String query = "DELETE FROM Fee_type WHERE fee_id=?;";
+			stmt = con.prepareStatement(query);
+			stmt.setString(1, fee.get_fees_id().getValue());
+			int no = stmt.executeUpdate(query);
+			System.out.println("No.of rows deleted: " + no);
+		}
+		catch(SQLException E)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" SQlException encountered ")
+    		.message("Item could not be deleted ")
+    		.showWarning();
+			return false;
+		}
+		return true;
+	}
 
 	private void getFromDB()
 	{
-		Fees_Info f1 = new Fees_Info("Consultancy Fee");
-		Fees_Info f2 = new Fees_Info("Oxygen Fees");
-		feesList.add(f1);
-		feesList.add(f2);
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return ;
+		}
+		else
+		{
+			try
+			{
+				String query = "SELECT * FROM Fee_type;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next())
+				{
+					Fees_Info fee_info = new Fees_Info(rs.getString("fee_name"));
+					fee_info.setID(rs.getString("fee_id"));
+					feesList.add(fee_info);
+				}
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(primaryStage)
+	    		.title(" ALERT ")
+	    		.masthead(" Database is not setup ")
+	    		.message("Items could not be loaded... ")
+	    		.showWarning();
+				return ;
+			}
+		}
 	}
 	
 	public void setMainApp(Main main)

@@ -8,7 +8,7 @@ package Controller.Root;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import Model.CMS.Employee_Info;
+import Model.Employee.Employee_Info;
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

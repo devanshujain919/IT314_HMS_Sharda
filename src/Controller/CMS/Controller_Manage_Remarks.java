@@ -1,7 +1,13 @@
 package Controller.CMS;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
 import Model.CMS.Remarks_Info;
@@ -25,6 +31,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+@SuppressWarnings("deprecation")
 public class Controller_Manage_Remarks implements Initializable
 {
 	private ObservableList<Remarks_Info> remarksList = FXCollections.observableArrayList();
@@ -65,14 +72,6 @@ public class Controller_Manage_Remarks implements Initializable
 	
 	@FXML Label remark_context_label = new Label();
 	
-	public void getFromDB()
-	{
-		Remarks_Info r1 = new Remarks_Info("Disease", "rog", "death");
-		Remarks_Info r2 = new Remarks_Info("Disease2", "rog biju", "death 2");
-		remarksList.add(r1);
-		remarksList.add(r2);
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) 
 	{		
@@ -124,7 +123,7 @@ public class Controller_Manage_Remarks implements Initializable
 			remark_guj.setVisible(true);
 			remark_context.setVisible(true);
 						
-			remark_id.setText("Nothing");
+			remark_id.setText(remark_info.getRemarkID().getValue());
 			remark_eng.setText(remark_info.get_english_text().getValue());
 			remark_guj.setText(remark_info.get_gujarati_text().getValue());
 			remark_context.setText(remark_info.get_context().getValue());
@@ -188,13 +187,13 @@ public class Controller_Manage_Remarks implements Initializable
 		int selectedIndex = table_view.getSelectionModel().getSelectedIndex();
 		if(selectedIndex >= 0)
 		{
-			Remarks_Info remark_info = table_view.getItems().get(selectedIndex);
-			boolean isSaveClicked = showDialogAddRemark(remark_info);
+			Remarks_Info rem_info = table_view.getItems().get(selectedIndex);
+			boolean isSaveClicked = showDialogAddRemark(rem_info);
 			if(isSaveClicked)
 			{
 				refreshTableView();
-				table_view.getSelectionModel().select(remark_info);
-				showSelectedRemark(remark_info);
+				table_view.getSelectionModel().select(rem_info);
+				showSelectedRemark(rem_info);
 			}
 		}
 	}
@@ -214,8 +213,16 @@ public class Controller_Manage_Remarks implements Initializable
 		int selectedIndex = table_view.getSelectionModel().getSelectedIndex();
 		if(selectedIndex >= 0)
 		{
-			Remarks_Info remark_info = table_view.getItems().remove(selectedIndex);
-			System.out.println("Medicine deleted: " + remark_info.get_english_text().getValue());
+			Remarks_Info rem = table_view.getItems().get(selectedIndex);
+			
+			boolean db_del = DelDB(rem);
+			if(db_del == false)
+			{
+				return ;
+			}
+
+			Remarks_Info rem_info = table_view.getItems().remove(selectedIndex);
+			System.out.println("Reamrk deleted: " + rem_info.get_english_text().getValue());
 		}
 		else
 		{
@@ -223,11 +230,94 @@ public class Controller_Manage_Remarks implements Initializable
 			alert.initOwner(primaryStage);
 			alert.setTitle("Nothing has been selected...");
 			alert.setHeaderText("No Medicine Selected");
-			alert.setContentText("Please select a medicine in the table.");
+			alert.setContentText("Please select a remark in the table.");
 			
 			alert.showAndWait();
 		}
 	}
+
+	private boolean DelDB(Remarks_Info rem) 
+	{
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Main.setConnection(null);
+			Main.setUsername("");
+			Main.setPort("");
+			Main.setpassword("");
+			Main.setDbName("");
+			Main.setIP("");
+			
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return false;
+		}
+		try
+		{
+			String query = "DELETE FROM Remarks WHERE remark_id=?;";
+			PreparedStatement stmt = con.prepareStatement(query);
+			stmt.setString(1, rem.getRemarkID().getValue());
+			int no = stmt.executeUpdate();
+			System.out.println("No.of rows deleted: " + no);
+		}
+		catch(SQLException E)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" SQlException encountered ")
+    		.message("Item could not be deleted ")
+    		.showWarning();
+			return false;
+		}
+		return true;
+	}
+	
+	public void getFromDB()
+	{
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Dialogs.create()
+    		.owner(primaryStage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return ;
+		}
+		else
+		{
+			try
+			{
+				String query = "SELECT * FROM Remarks;";
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next())
+				{
+					Remarks_Info rem_info = new Remarks_Info(rs.getString("English"), rs.getString("Gujarati"), rs.getString("Context"));
+					rem_info.setRemarkID(rs.getString("remark_id"));
+					remarksList.add(rem_info);
+				}
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(primaryStage)
+	    		.title(" ALERT ")
+	    		.masthead(" Database is not setup ")
+	    		.message("Items could not be loaded... ")
+	    		.showWarning();
+				return ;
+			}
+		}
+	}
+
 
 	public void setMainApp(Main main) 
 	{
