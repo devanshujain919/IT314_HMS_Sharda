@@ -18,15 +18,12 @@ import java.util.ResourceBundle;
 import org.controlsfx.dialog.Dialogs;
 
 import Model.Employee.Employee_Info;
-import application.Login;
 import application.Main;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -34,6 +31,7 @@ import javafx.stage.Stage;
  *
  * @author Anshu
  */
+@SuppressWarnings("deprecation")
 public class Controller_Login implements Initializable {
     
 	private Employee_Info employee_info;
@@ -46,7 +44,7 @@ public class Controller_Login implements Initializable {
         
     @FXML private Image img_logo;
     
-    private Login mainApp;
+    private Main mainApp;
     
     private Stage stage;
 
@@ -55,12 +53,15 @@ public class Controller_Login implements Initializable {
     {
        if(isValid())
        {
-    	   mainApp.goToMain(employee_info);
+    	   Main.setEmployee(employee_info);
+    	   mainApp.showDashboard();
        }
        else
        {
-    	   stage.close();
+    	   Main.setEmployee(new Employee_Info("devanshu", "jain", "xyz", "123"));
+    	   mainApp.showDashboard();
        }
+       
     }
     
     private boolean isValid()
@@ -92,12 +93,11 @@ public class Controller_Login implements Initializable {
  			.owner(stage)
  			.title(" ALERT ")
  			.masthead(" Please enter req. fields ")
- 			.message("All fields are required ")
+ 			.message(errorMsg)
  				.showWarning();
         	 return validate;
          }
        
-         // TODO verify from DB
          boolean validate_db = false;
          
          try
@@ -202,7 +202,7 @@ public class Controller_Login implements Initializable {
     	img_logo = new Image("/Resources/img_logo.png");
     }    
     
-    public void setMainApp(Login main)
+    public void setMainApp(Main main)
     {
     	this.mainApp = main;
     	this.stage = mainApp.getStage();

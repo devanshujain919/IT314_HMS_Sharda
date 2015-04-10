@@ -120,7 +120,6 @@
                   <ButtonBar layoutX="41.0" layoutY="511.0" prefHeight="40.0" prefWidth="352.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="511.0">
                     <buttons>
                       <Button fx:id="btn_choose" mnemonicParsing="false" onAction="#handle_btn_choose" prefHeight="26.0" prefWidth="161.0" text="Choose this Patient" textAlignment="CENTER" />
-                        <Button fx:id="btn_cancel" minWidth="52.0" mnemonicParsing="false" onAction="#handle_btn_cancel" prefHeight="26.0" text="Cancel" />
                     </buttons>
                   </ButtonBar>
                </children>

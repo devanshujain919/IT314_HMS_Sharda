@@ -52,7 +52,7 @@ public class Controller_Search_Patient implements Initializable
 	@FXML TextArea emergency_name, emergency_relation, emergency_contact;
 	@FXML TextArea address, city, state;	
 	
-	@FXML Button btn_choose, btn_cancel;
+	@FXML Button btn_choose;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -77,13 +77,22 @@ public class Controller_Search_Patient implements Initializable
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) 
 			{
-				if(newValue.length() > 3)
+				if(newValue.length() >= 3 || newValue.length() < oldValue.length())
 				{
 					System.out.println("More than 3");
 					// TODO: Logic to select relevant patientLists from allPatients
+					
 					patientList.clear();
 					System.out.println(patientList.size());
-					patientList.addAll(allPatients.subList(0, allPatients.size()/count));
+					
+					for(Patient_Info p : allPatients)
+					{
+						if(p.getFirst_name().getValue().contains(newValue))
+						{
+							patientList.add(p);
+						}
+					}
+					
 					System.out.println(patientList.size());
 					if(newValue.length() > oldValue.length())
 					{
@@ -106,7 +115,6 @@ public class Controller_Search_Patient implements Initializable
 	@FXML
 	private void handle_btn_choose()
 	{
-		//TODO
 		System.out.println("Showing Search Prescription");
 		try
 		{
@@ -125,13 +133,7 @@ public class Controller_Search_Patient implements Initializable
 			E.printStackTrace();
 		}
 	}
-	
-	@FXML
-	private void handle_btn_cancel()
-	{
-		//TODO
-	}
-	
+		
 	private void refreshTableView() 
 	{
 		for(TableColumn tc : table_view.getColumns())

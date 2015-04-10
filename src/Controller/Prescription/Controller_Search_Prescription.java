@@ -1,5 +1,6 @@
 package Controller.Prescription;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -13,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -67,9 +69,21 @@ public class Controller_Search_Prescription implements Initializable
                 			TreeItem<Prescription> selectedItem = new_val;
                 			System.out.println("Selected Text : " + selectedItem.getValue());
                 			// 	do what ever you want
-                			
-                			                			
-                			
+                			try
+                			{
+	                			FXMLLoader loader = new FXMLLoader();
+	                			loader.setLocation(getClass().getResource("/View/Prescription/ShowPrescription.fxml"));
+	                			AnchorPane anc_pane = (AnchorPane) loader.load();
+	                			border_pane.setCenter(anc_pane);
+	                			anc_pane.prefWidthProperty().bind(border_pane.prefWidthProperty());
+	                			anc_pane.prefHeightProperty().bind(border_pane.prefHeightProperty());
+	                			Controller_Show_Prescription controller = loader.getController();
+	                			controller.setPrescription(selectedItem.getValue());
+                			}
+                			catch(IOException E)
+                			{
+                				E.printStackTrace();
+                			}
                 		}
 
 					});
@@ -94,13 +108,13 @@ public class Controller_Search_Prescription implements Initializable
 		//TODO
 		Prescription p1 = new Prescription();
 		p1.setDate(LocalDate.of(1994, 10, 18));
-		p1.setDisease(new SimpleStringProperty("Proness"));
+		p1.setSymptoms(new SimpleStringProperty("Proness"));
 		p1.setPat_id(new SimpleStringProperty("1"));
 		p1.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
 		
 		Prescription p2 = new Prescription();
 		p2.setDate(LocalDate.of(2015, 10, 15));
-		p2.setDisease(new SimpleStringProperty("Beemari"));
+		p2.setSymptoms(new SimpleStringProperty("Beemari"));
 		p2.setPat_id(new SimpleStringProperty("2"));
 		p2.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
 		

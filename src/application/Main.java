@@ -7,8 +7,10 @@ import Controller.CMS.*;
 import Controller.Employee.Controller_Add_Employee;
 import Controller.Root.Controller_Dashboard;
 import Controller.Root.Controller_Root_Layout;
+import Controller.Login.Controller_Login;
 import Controller.Prescription.Controller_Search_Patient;
 import Model.Employee.Employee_Info;
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,7 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 
-public class Main 
+public class Main extends Application
 {
 	private static Stage primaryStage;
 	private static BorderPane root_layout;
@@ -30,6 +32,16 @@ public class Main
 	private static String DBNAME = "";
 	
 	private static Connection conn = null;
+	
+	public static Employee_Info getEmployee()
+	{
+		return Main.employee_info;
+	}
+	
+	public static void setEmployee(Employee_Info emp_info)
+	{
+		Main.employee_info = emp_info;
+	}
 	
 	public static BorderPane getRootLayout()
 	{
@@ -96,14 +108,14 @@ public class Main
 		Main.PASSWORD = password;
 	}
 	
-	public void start(Stage primaryStage, Employee_Info employee_info) 
+	@Override
+	public void start(Stage primaryStage) 
 	{
 		try 
 		{
 			Main.primaryStage = primaryStage;
 			initRootLayout();
-			Main.employee_info = employee_info;
-			showDashboard();
+			showLogin();
 		} 
 		catch(Exception e) 
 		{
@@ -127,6 +139,23 @@ public class Main
 			controller.setStage(this);
 		}
 		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+	}
+	
+	public void showLogin()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader(); 
+			loader.setLocation(getClass().getResource("/View/Auth/Login.fxml"));
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Login controller = loader.getController();
+			controller.setMainApp(this);
+		}
+		catch(IOException E)
 		{
 			E.printStackTrace();
 		}
@@ -206,6 +235,10 @@ public class Main
 	
 	public void showDashboard()
 	{
+		if(Main.employee_info == null)
+		{
+			return ;
+		}
 		try
 		{
 			FXMLLoader loader = new FXMLLoader();
@@ -375,4 +408,10 @@ public class Main
 	{
 		
 	}
+	
+	public static void main(String[] args)
+	{
+		launch(args);
+	}
+	
 }

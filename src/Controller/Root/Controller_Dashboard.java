@@ -45,11 +45,15 @@ public class Controller_Dashboard implements Initializable
     @FXML
     private void edit_profile() 
     {
-        System.out.println("edit profile is clicked!!!");
+        //TODO 
+    	System.out.println("Edit profile is clicked...");
     }
     @FXML
     private void logout() 
     {
+    	//TODO
+    	Main.setEmployee(null);
+    	mainApp.showLogin();
         System.out.println("logout is clicked!!!");
     }
     @FXML

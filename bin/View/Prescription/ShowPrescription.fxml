@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Prescription.Controller_Show_Prescription">
    <children>
       <Label layoutX="144.0" layoutY="47.0" text="Show Prescription" AnchorPane.leftAnchor="121.0" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="20.0">
          <font>
@@ -37,7 +36,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
-            <Label prefHeight="75.0" prefWidth="330.0" text="Disease" GridPane.rowIndex="2">
+            <Label prefHeight="75.0" prefWidth="330.0" text="Symptoms" GridPane.rowIndex="2">
                <font>
                   <Font size="17.0" />
                </font>
@@ -49,7 +48,7 @@
             </Label>
             <TextArea fx:id="pres_date" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
             <TextArea fx:id="pres_follow" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextArea fx:id="pres_disease" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextArea fx:id="pres_symptoms" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <TextArea fx:id="pres_remarks" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
