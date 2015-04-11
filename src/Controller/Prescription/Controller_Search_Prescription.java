@@ -1,9 +1,12 @@
 package Controller.Prescription;
 
 import java.net.URL;
+import java.security.AllPermission;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,7 +98,10 @@ public class Controller_Search_Prescription implements Initializable
 		Prescription pres_info = new Prescription();
 		pres_info.setPat_id(pat_info.getPat_id());
 		pres_info.setDate(LocalDate.now());
-		pres_info.setTime(new SimpleStringProperty(Integer.toString(Calendar.getInstance().HOUR_OF_DAY)));
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		String time = sdf.format(cal.getTime());
+		pres_info.setTime(new SimpleStringProperty(time));
 		boolean isSaveClicked = showDialogAddPrescription(pres_info);
 		
 		if(isSaveClicked)
@@ -257,10 +263,10 @@ public class Controller_Search_Prescription implements Initializable
 			return;
 		}
 		Prescription pres_info = new Prescription();
-		showDialogAddMedicine(pres_info);
+		showDialogSearchMedicine(pres_info);
 	}
 	
-	private void showDialogAddMedicine(Prescription pres_info) 
+	private void showDialogSearchMedicine(Prescription pres_info) 
 	{
 		try
 		{
@@ -336,6 +342,52 @@ public class Controller_Search_Prescription implements Initializable
 		
 		prescriptionList.add(p1);
 		prescriptionList.add(p2);
+		
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return ;
+		}
+		else
+		{
+			PreparedStatement stmt = null;
+			try
+			{
+				String query = "SELECT * FROM Prescription;";
+				stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next())
+				{
+					Prescription p = new Prescription();
+					p.setPat_id(new SimpleStringProperty(rs.getString("pat_ID")));
+					p.setDate(rs.getDate("date").toLocalDate());
+					p.setTime(new SimpleStringProperty(rs.getTime("time").toString()));
+					p.setFollow_up_date(rs.getDate("follow_up_date").toLocalDate());
+					p.setDisease(new SimpleStringProperty(rs.getString("disease")));
+					p.setRemarks(new SimpleStringProperty(rs.getString("remarks")));
+					prescriptionList.add(p);
+				}
+				stmt.close();
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" Database is not setup ")
+	    		.message("Items could not be loaded... ")
+	    		.showWarning();
+				return ;
+			}
+		}
+		
+		
 	}
 	
 		

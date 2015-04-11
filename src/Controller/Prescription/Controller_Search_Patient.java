@@ -155,16 +155,7 @@ public class Controller_Search_Patient implements Initializable
 	
 	private void getFromDB()
 	{
-		for(int i = 0 ; i < 100 ; i ++)
-		{
-			Patient_Info p1 = new Patient_Info();
-			p1.setPat_id(new SimpleStringProperty(Integer.toString(i)));
-			p1.setFirst_name(new SimpleStringProperty("Devanshu" + i));
-			p1.setLast_name(new SimpleStringProperty("Jain" + i));
-			
-			patientList.add(p1);
-			allPatients.add(p1);
-		}
+		//TODO
 		
 		Connection con = Main.getConnection();
 		if(con == null)

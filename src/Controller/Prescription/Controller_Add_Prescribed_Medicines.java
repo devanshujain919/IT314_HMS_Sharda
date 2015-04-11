@@ -37,7 +37,6 @@ import javafx.stage.Stage;
 @SuppressWarnings("deprecation")
 public class Controller_Add_Prescribed_Medicines implements Initializable
 {
-	private Patient_Info pat_info;
 	private static int flag = 0;
 	private Stage stage;
 	private boolean isDone = false;
@@ -301,7 +300,9 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 
 	public void setPrescription(Medicine_Prescribed med_pres_info, Patient_Info pat_info)
 	{
-		this.pat_info = pat_info;
+
+		this.date.setText(med_pres_info.getDate().toString());
+		this.time.setText(med_pres_info.getTime().getValue());
 		
 		this.patient_id.setText(pat_info.getPat_id().getValue());
 		this.patient_name.setText(pat_info.getFirst_name().getValue());
@@ -455,13 +456,13 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 			}
 		});
 				
-		Medicine_Info m1 = new Medicine_Info("paracetamol", "company_a", "beemari");
-		m1.set_med_id("1");
-		medicineList.add(m1);
-		
-		Medicine_Info m2 = new Medicine_Info("amol", "company_b", "beemari_2");
-		m2.set_med_id("2");
-		medicineList.add(m2);
+//		Medicine_Info m1 = new Medicine_Info("paracetamol", "company_a", "beemari");
+//		m1.set_med_id("1");
+//		medicineList.add(m1);
+//		
+//		Medicine_Info m2 = new Medicine_Info("amol", "company_b", "beemari_2");
+//		m2.set_med_id("2");
+//		medicineList.add(m2);
 		
 		System.out.println("Hello");
 		
