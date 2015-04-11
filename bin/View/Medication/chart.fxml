@@ -44,7 +44,7 @@
                   <Button fx:id="buttonBack" mnemonicParsing="false" onAction="#goHome" text="Back" />
                </children>
             </HBox>
-            <Label layoutX="40.0" layoutY="6.0" prefHeight="35.0" prefWidth="195.0" text="NURSING CHART">
+            <Label layoutX="40.0" layoutY="6.0" text="NURSING CHART">
                <font>
                   <Font size="24.0" />
                </font>

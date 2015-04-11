@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.Dialogs;
@@ -115,6 +114,17 @@ public class Controller_Search_Patient implements Initializable
 	@FXML
 	private void handle_btn_choose()
 	{
+		int selectedIndex = table_view.getSelectionModel().getSelectedIndex();
+		if(selectedIndex < 0)
+		{
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Please select a patient ")
+    		.message("Need to select a patient to show prescriptions")
+    		.showWarning();
+			return ;
+		}
 		System.out.println("Showing Search Prescription");
 		try
 		{

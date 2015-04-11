@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
@@ -30,6 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.DatePicker;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 @SuppressWarnings("deprecation")
@@ -68,6 +70,8 @@ public class Controller_Add_Employee implements Initializable
 	
 	@FXML private Label password_label;
 	@FXML private Label contact_no_label;
+	
+	@FXML private Image img_add_user;
 	    
 	private Stage stage;  
 
@@ -362,8 +366,8 @@ public class Controller_Add_Employee implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        
-       
+    	System.out.println("Hello");
+        //img_add_user = new Image("/Resources/add-user-icon.png");
     }
 
 	public void setStage(Stage dialogStage) 

@@ -2,6 +2,7 @@ package Model.Patient;
 
 import java.time.LocalDate;
 
+import Model.CMS.Medicine_Info;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -10,22 +11,24 @@ public class Medicine_Prescribed
 	private StringProperty pat_id;
 	private LocalDate date;
 	private StringProperty time;
-	private StringProperty medicine_ID;
+	private Medicine_Info medicine;
 	private StringProperty morning_amt, noon_amt, evening_amt;
-	private StringProperty remark;
+	private StringProperty morning_meal, noon_meal, evening_meal;
 	
 	public Medicine_Prescribed()
 	{
 		this.pat_id = new SimpleStringProperty("");
 		this.date = LocalDate.now();
 		this.time = new SimpleStringProperty("");
-		this.medicine_ID = new SimpleStringProperty("");
+		this.medicine = new Medicine_Info();
 		this.morning_amt = new SimpleStringProperty("");
 		this.noon_amt = new SimpleStringProperty("");
 		this.evening_amt = new SimpleStringProperty("");
-		this.remark = new SimpleStringProperty("");
+		this.morning_meal = new SimpleStringProperty("");
+		this.noon_meal = new SimpleStringProperty("");
+		this.evening_meal = new SimpleStringProperty("");
 	}
-
+	
 	public StringProperty getPat_id() {
 		return pat_id;
 	}
@@ -50,12 +53,12 @@ public class Medicine_Prescribed
 		this.time = time;
 	}
 
-	public StringProperty getMedicine_ID() {
-		return medicine_ID;
+	public Medicine_Info getMedicine() {
+		return medicine;
 	}
 
-	public void setMedicine_ID(StringProperty medicine_ID) {
-		this.medicine_ID = medicine_ID;
+	public void setMedicine(Medicine_Info medicine) {
+		this.medicine = medicine;
 	}
 
 	public StringProperty getMorning_amt() {
@@ -82,12 +85,49 @@ public class Medicine_Prescribed
 		this.evening_amt = evening_amt;
 	}
 
-	public StringProperty getRemark() {
-		return remark;
+	public StringProperty getMorning_meal() {
+		return morning_meal;
 	}
 
-	public void setRemark(StringProperty remark) {
-		this.remark = remark;
+	public void setMorning_meal(StringProperty morning_meal) {
+		this.morning_meal = morning_meal;
+	}
+
+	public StringProperty getNoon_meal() {
+		return noon_meal;
+	}
+
+	public void setNoon_meal(StringProperty noon_meal) {
+		this.noon_meal = noon_meal;
+	}
+
+	public StringProperty getEvening_meal() {
+		return evening_meal;
+	}
+
+	public void setEvening_meal(StringProperty evening_meal) {
+		this.evening_meal = evening_meal;
+	}
+	
+	public static Medicine_Prescribed clone(Medicine_Prescribed med_pres)
+	{
+		Medicine_Prescribed med_pres_info = new Medicine_Prescribed();
+		med_pres_info.setPat_id(med_pres.getPat_id());
+		med_pres_info.setDate(med_pres.getDate());
+		med_pres_info.setTime(med_pres.getTime());
+		med_pres_info.setMorning_amt(med_pres.getMorning_amt());
+		med_pres_info.setNoon_amt(med_pres.getNoon_amt());
+		med_pres_info.setEvening_amt(med_pres.getEvening_amt());
+		med_pres_info.setMorning_meal(med_pres.getMorning_meal());
+		med_pres_info.setNoon_meal(med_pres.getNoon_meal());
+		med_pres_info.setEvening_meal(med_pres.getEvening_meal());
+		
+		return med_pres_info;
+	}
+	
+	public String toString()
+	{
+		return this.medicine.toString();
 	}
 	
 	

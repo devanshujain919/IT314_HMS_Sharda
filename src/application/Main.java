@@ -367,11 +367,12 @@ public class Main extends Application
 	public boolean addEmployee(Employee_Info emp_info) 
 	{
 		// TODO Auto-generated method stub
-		System.out.println("Adding patient dialog");
+		System.out.println("Adding employee dialog");
 		try
 		{
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(Main.class.getResource("/View/Employee/Dialog_Add_Employee.fxml"));
+			System.out.println("hello2");
 			AnchorPane page = (AnchorPane) loader.load();
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Add New Employee");

@@ -29,6 +29,7 @@ public class Medicine_Info
 		this.medicine_company = new SimpleStringProperty(med_cmpy);
 		this.medicine_name = new SimpleStringProperty(med_name);
 		this.other_remarks = new SimpleStringProperty(remarks);
+		this.medicine_id = new SimpleStringProperty("");
 	}
 	
 	/*
@@ -95,5 +96,11 @@ public class Medicine_Info
 			med_info2.set_med_id(med_info.get_med_id().getValue());
 		}
 		return med_info2;
+	}
+	
+	
+	public String toString()
+	{
+		return this.medicine_name.getValue();
 	}
 }
