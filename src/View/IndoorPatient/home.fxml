@@ -117,13 +117,10 @@
                   <Label layoutX="15.0" layoutY="53.0" prefHeight="26.0" prefWidth="49.0" text="Name: " />
                   <TextField fx:id="name" layoutX="64.0" layoutY="53.0" prefHeight="26.0" prefWidth="204.0" />
                   <Label fx:id="id_placeholder" layoutX="393.0" layoutY="58.0" text="Label" />
-                  <ButtonBar layoutX="41.0" layoutY="511.0" prefHeight="40.0" prefWidth="352.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="511.0">
-                    <buttons>
-                        <Button fx:id="btn_test" mnemonicParsing="false" onAction="#get_reports" text="Test Report" />
-                        <Button fx:id="btn_chart" mnemonicParsing="false" onAction="#get_chart" text="Nursing Chart" />
-                        <Button fx:id="btn_report" mnemonicParsing="false" text="Case Report" />
-                    </buttons>
-                  </ButtonBar>
+                  <Button fx:id="btn_print_medication" layoutX="46.0" layoutY="538.0" mnemonicParsing="false" text="Print Medications" />
+                  <Button fx:id="btn_test" layoutX="306.0" layoutY="496.0" mnemonicParsing="false" onAction="#get_reports" text="Test Report" />
+                  <Button fx:id="btn_chart" layoutX="46.0" layoutY="496.0" mnemonicParsing="false" onAction="#get_chart" prefHeight="26.0" prefWidth="131.0" text="Nursing Chart" />
+                  <Button fx:id="btn_print_test" layoutX="306.0" layoutY="538.0" mnemonicParsing="false" onAction="#get_reports" text="Print Test Reports" />
                </children>
             </AnchorPane>
         </items>
