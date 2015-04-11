@@ -116,6 +116,11 @@
                   <Label layoutX="15.0" layoutY="53.0" prefHeight="26.0" prefWidth="49.0" text="Name: " />
                   <TextField fx:id="name" layoutX="64.0" layoutY="53.0" prefHeight="26.0" prefWidth="204.0" />
                   <Label fx:id="id_placeholder" layoutX="393.0" layoutY="58.0" text="Label" />
+                  <ButtonBar layoutX="148.0" layoutY="504.0" prefHeight="40.0" prefWidth="204.0" AnchorPane.leftAnchor="144.0" AnchorPane.rightAnchor="144.0">
+                    <buttons>
+                      <Button fx:id="btn_admitted_patient" mnemonicParsing="false" onAction="#handle_btn_admitted_patient" text="See the admitted patients" />
+                    </buttons>
+                  </ButtonBar>
                </children>
             </AnchorPane>
         </items>

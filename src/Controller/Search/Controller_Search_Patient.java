@@ -20,6 +20,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -48,6 +49,8 @@ public class Controller_Search_Patient implements Initializable
 	@FXML TextArea birth_date, sex, marital_status, phone;
 	@FXML TextArea emergency_name, emergency_relation, emergency_contact;
 	@FXML TextArea address, city, state;	
+	
+	@FXML Button btn_admitted_patient = new Button();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -205,6 +208,12 @@ public class Controller_Search_Patient implements Initializable
 			city.setText(pat_info.getCity().getValue());
 			state.setText(pat_info.getState().getValue());			
 		}
+	}
+	
+	@FXML
+	private void handle_btn_admitted_patient()
+	{
+		
 	}
 	
 	public void setMainApp(Main main)

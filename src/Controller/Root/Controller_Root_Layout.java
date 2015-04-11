@@ -36,10 +36,7 @@ public class Controller_Root_Layout implements Initializable
 	@FXML MenuItem search_prescription_menu = new MenuItem();
 	@FXML MenuItem add_receipt_menu = new MenuItem();
 	@FXML MenuItem search_receipt_menu = new MenuItem();
-	@FXML MenuItem add_medication_menu = new MenuItem();
-	@FXML MenuItem search_medication_menu = new MenuItem();
-	@FXML MenuItem add_test_menu = new MenuItem();
-	@FXML MenuItem search_test_menu = new MenuItem();
+	@FXML MenuItem manage_indoor_patients = new MenuItem();
 	
 	@FXML Menu menu_account = new Menu();
 	@FXML MenuItem manage_account_menu = new MenuItem();
@@ -72,10 +69,7 @@ public class Controller_Root_Layout implements Initializable
 		search_prescription_menu.setOnAction(action);
 		add_receipt_menu.setOnAction(action);
 		search_receipt_menu.setOnAction(action);
-		add_medication_menu.setOnAction(action);
-		search_medication_menu.setOnAction(action);
-		add_test_menu.setOnAction(action);
-		search_test_menu.setOnAction(action);
+		manage_indoor_patients.setOnAction(action);
 		
 		manage_account_menu.setOnAction(action);
 		
@@ -145,21 +139,9 @@ public class Controller_Root_Layout implements Initializable
 				{
 					mainApp.searchReceipt();
 				}
-				else if(mitem_str.equalsIgnoreCase("Add Medications"))
+				else if(mitem_str.equalsIgnoreCase("Manage Indoor Patients"))
 				{
-					mainApp.addMedications();
-				}
-				else if(mitem_str.equalsIgnoreCase("Search for Medications"))
-				{
-					mainApp.searchMedications();
-				}
-				else if(mitem_str.equalsIgnoreCase("Add Tests"))
-				{
-					mainApp.addTests();
-				}
-				else if(mitem_str.equalsIgnoreCase("Search for Tests"))
-				{
-					mainApp.searchTests();
+					mainApp.manage_indoor_patient();
 				}
 				
 				else if(mitem_str.equalsIgnoreCase("Manage Account"))

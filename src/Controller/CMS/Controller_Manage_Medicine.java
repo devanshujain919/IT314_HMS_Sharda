@@ -131,7 +131,7 @@ public class Controller_Manage_Medicine implements Initializable
 		{
 			try
 			{
-				String query = "SELECT * FROM Fee_type;";
+				String query = "SELECT * FROM Medicine;";
 				PreparedStatement stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery(query);
 				while(rs.next())

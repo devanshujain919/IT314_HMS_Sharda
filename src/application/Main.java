@@ -7,6 +7,7 @@ import Controller.CMS.*;
 import Controller.Employee.Controller_Add_Employee;
 import Controller.Root.Controller_Dashboard;
 import Controller.Root.Controller_Root_Layout;
+import Controller.IndoorPatient.HomeController;
 import Controller.Login.Controller_Login;
 import Controller.Prescription.Controller_Search_Patient;
 import Model.Employee.Employee_Info;
@@ -30,6 +31,8 @@ public class Main extends Application
 	private static String IP = "";
 	private static String PORT = "";
 	private static String DBNAME = "";
+	
+	private Stage stage;
 	
 	private static Connection conn = null;
 	
@@ -334,30 +337,27 @@ public class Main extends Application
 		
 	}
 
-	public void addMedications() 
+	public void manage_indoor_patient()
 	{
-		// TODO Auto-generated method stub
-		
+		//TODO
+		System.out.println("Manage Indoor patient");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			System.out.println("1");
+			loader.setLocation(Main.class.getResource("/View/IndoorPatient/home.fxml"));
+			System.out.println("2");
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			HomeController controller = loader.getController();
+			controller.setMainApp(this);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}	
 	}
-
-	public void searchMedications() 
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void addTests()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void searchTests()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	public void manageAccount() 
 	{
 		// TODO Auto-generated method stub

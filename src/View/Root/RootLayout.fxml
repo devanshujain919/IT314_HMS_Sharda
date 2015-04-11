@@ -31,10 +31,7 @@
               <MenuItem fx:id="search_prescription_menu" mnemonicParsing="false" text="Search for a Prescription" />
               <MenuItem fx:id="add_receipt_menu" mnemonicParsing="false" text="Create a Receipt" />
               <MenuItem fx:id="search_receipt_menu" mnemonicParsing="false" text="Search for a Receipt" />
-              <MenuItem fx:id="add_medication_menu" mnemonicParsing="false" text="Add Medications" />
-              <MenuItem fx:id="search_medication_menu" mnemonicParsing="false" text="Search for Medications" />
-              <MenuItem fx:id="add_test_menu" mnemonicParsing="false" text="Add Tests" />
-              <MenuItem fx:id="search_test_menu" mnemonicParsing="false" text="Search for Tests" />
+              <MenuItem fx:id="manage_indoor_patients" mnemonicParsing="false" text="Manage Indoor Patients" />
             </items>
           </Menu>
           <Menu fx:id="menu_account" mnemonicParsing="false" text="Account">
