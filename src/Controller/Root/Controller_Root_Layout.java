@@ -32,18 +32,15 @@ public class Controller_Root_Layout implements Initializable
 	@FXML Menu menu_patient = new Menu();
 	@FXML MenuItem add_patient_menu = new MenuItem();
 	@FXML MenuItem search_patient_menu = new MenuItem();
-	@FXML MenuItem add_prescription_menu = new MenuItem();
-	@FXML MenuItem search_prescription_menu = new MenuItem();
-	@FXML MenuItem add_receipt_menu = new MenuItem();
-	@FXML MenuItem search_receipt_menu = new MenuItem();
-	@FXML MenuItem manage_indoor_patients = new MenuItem();
+	@FXML MenuItem manage_prescriptions_menu = new MenuItem();
+	@FXML MenuItem manage_receipts_menu = new MenuItem();
+	@FXML MenuItem manage_indoor_patients_menu = new MenuItem();
 	
 	@FXML Menu menu_account = new Menu();
 	@FXML MenuItem manage_account_menu = new MenuItem();
 	
 	@FXML Menu menu_employee_mgmt = new Menu();
-	@FXML MenuItem add_employee_menu = new MenuItem();
-	@FXML MenuItem search_employee_menu = new MenuItem();
+	@FXML MenuItem manage_employees_menu = new MenuItem();
 
 	public void setStage(Main mainApp)
 	{
@@ -65,16 +62,13 @@ public class Controller_Root_Layout implements Initializable
 		
 		add_patient_menu.setOnAction(action);
 		search_patient_menu.setOnAction(action);
-		add_prescription_menu.setOnAction(action);
-		search_prescription_menu.setOnAction(action);
-		add_receipt_menu.setOnAction(action);
-		search_receipt_menu.setOnAction(action);
-		manage_indoor_patients.setOnAction(action);
+		manage_prescriptions_menu.setOnAction(action);
+		manage_receipts_menu.setOnAction(action);
+		manage_indoor_patients_menu.setOnAction(action);
 		
 		manage_account_menu.setOnAction(action);
 		
-		add_employee_menu.setOnAction(action);
-		search_employee_menu.setOnAction(action);
+		manage_employees_menu.setOnAction(action);
 	}
 
 	@FXML
@@ -123,21 +117,13 @@ public class Controller_Root_Layout implements Initializable
 				{
 					mainApp.showSearchPatient();
 				}
-				else if(mitem_str.equalsIgnoreCase("Create a Prescription"))
+				else if(mitem_str.equalsIgnoreCase("Manage Prescriptions"))
 				{
-					mainApp.createPrescription();
+					mainApp.managePrescription();
 				}
-				else if(mitem_str.equalsIgnoreCase("Search for a Prescription"))
+				else if(mitem_str.equalsIgnoreCase("Manage Receipts"))
 				{
-					mainApp.searchPrescription();
-				}
-				else if(mitem_str.equalsIgnoreCase("Create a Receipt"))
-				{
-					mainApp.createReceipt();
-				}
-				else if(mitem_str.equalsIgnoreCase("Search for a Receipt"))
-				{
-					mainApp.searchReceipt();
+					mainApp.manageReceipt();
 				}
 				else if(mitem_str.equalsIgnoreCase("Manage Indoor Patients"))
 				{
@@ -149,15 +135,11 @@ public class Controller_Root_Layout implements Initializable
 					mainApp.manageAccount();
 				}
 				
-				else if(mitem_str.equalsIgnoreCase("Add an Employee"))
+				else if(mitem_str.equalsIgnoreCase("Manage Employees"))
 				{
-					mainApp.addEmployee(new Employee_Info("", "", "", ""));
+					mainApp.manageEmployee();
 				}
-				else if(mitem_str.equalsIgnoreCase("Search for an Employee"))
-				{
-					mainApp.searchEmployee();
-				}
-				
+
 				else
 				{
 					System.out.println("False alarm...");

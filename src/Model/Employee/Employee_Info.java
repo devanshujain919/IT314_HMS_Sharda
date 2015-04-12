@@ -1,6 +1,5 @@
 package Model.Employee;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -13,24 +12,22 @@ public class Employee_Info
 	private StringProperty designation, salary;
 	private LocalDate date_of_joining;
 	private StringProperty category;
-	private StringProperty birth_day, birth_month, birth_year;
+	private StringProperty birth_date;
 	private StringProperty marital_status;
 	private StringProperty contact_no, state, city, address;
 	
-	public Employee_Info(String first_name, String last_name, String username, String password)
+	public Employee_Info()
 	{
-		this.first_name = new SimpleStringProperty(first_name);
-		this.last_name = new SimpleStringProperty(last_name);
-		this.username = new SimpleStringProperty(username);
-		this.password = new SimpleStringProperty(password);
+		this.first_name = new SimpleStringProperty("");
+		this.last_name = new SimpleStringProperty("");
+		this.username = new SimpleStringProperty("");
+		this.password = new SimpleStringProperty("");
 		this.id = new SimpleStringProperty("");
 		this.middle_name = new SimpleStringProperty("");
 		this.designation = new SimpleStringProperty("");
 		this.salary = new SimpleStringProperty("");
 		this.category = new SimpleStringProperty("");
-		this.birth_year = new SimpleStringProperty("");
-		this.birth_month = new SimpleStringProperty("");
-		this.birth_day = new SimpleStringProperty("");
+		this.birth_date = new SimpleStringProperty("");
 		this.marital_status = new SimpleStringProperty("");
 		this.contact_no = new SimpleStringProperty("");
 		this.state = new SimpleStringProperty("");
@@ -119,28 +116,12 @@ public class Employee_Info
 		this.category = category;
 	}
 
-	public StringProperty getBirth_day() {
-		return birth_day;
+	public StringProperty getBirth_date() {
+		return birth_date;
 	}
 
-	public void setBirth_day(StringProperty birth_day) {
-		this.birth_day = birth_day;
-	}
-
-	public StringProperty getBirth_month() {
-		return birth_month;
-	}
-
-	public void setBirth_month(StringProperty birth_month) {
-		this.birth_month = birth_month;
-	}
-
-	public StringProperty getBirth_year() {
-		return birth_year;
-	}
-
-	public void setBirth_year(StringProperty birth_year) {
-		this.birth_year = birth_year;
+	public void setBirth_date(StringProperty birth_date) {
+		this.birth_date = birth_date;
 	}
 
 	public StringProperty getMarital_status() {

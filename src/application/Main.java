@@ -3,11 +3,12 @@ package application;
 import java.io.IOException;
 import java.sql.Connection;
 
+import Controller.AdmitPatient.Controller_Indoor_Patient;
 import Controller.CMS.*;
 import Controller.Employee.Controller_Add_Employee;
+import Controller.Employee.Controller_Search_Employee;
 import Controller.Root.Controller_Dashboard;
 import Controller.Root.Controller_Root_Layout;
-import Controller.IndoorPatient.HomeController;
 import Controller.Login.Controller_Login;
 import Controller.Prescription.Controller_Search_Patient;
 import Model.Employee.Employee_Info;
@@ -23,7 +24,7 @@ import javafx.scene.layout.BorderPane;
 public class Main extends Application
 {
 	private static Stage primaryStage;
-	private static BorderPane root_layout;
+	private static BorderPane root_layout = null;
 	private static Employee_Info employee_info;
 	
 	private static String USER_NAME = "";
@@ -58,7 +59,7 @@ public class Main extends Application
 	
 	public static void setConnection(Connection con)
 	{
-		conn = con;
+		Main.conn = con;
 	}
 	
 	public static String getUserName()
@@ -117,7 +118,6 @@ public class Main extends Application
 		try 
 		{
 			Main.primaryStage = primaryStage;
-			initRootLayout();
 			showLogin();
 		} 
 		catch(Exception e) 
@@ -151,30 +151,26 @@ public class Main extends Application
 	{
 		try
 		{
-			FXMLLoader loader = new FXMLLoader(); 
-			loader.setLocation(getClass().getResource("/View/Auth/Login.fxml"));
-			AnchorPane anchor_pane = (AnchorPane) loader.load();
-			root_layout.setCenter(anchor_pane);
-			Controller_Login controller = loader.getController();
-			controller.setMainApp(this);
-		}
-		catch(IOException E)
-		{
-			E.printStackTrace();
-		}
-	}
-
-	public void showMedicines()
-	{
-		System.out.println("Showing Medicines");
-		try
-		{
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/View/CMS/Medicine_Info.fxml"));
-			AnchorPane anchor_pane = (AnchorPane) loader.load();
-			root_layout.setCenter(anchor_pane);
-			Controller_Manage_Medicine controller = loader.getController();
-			controller.setMainApp(this);
+			loader.setLocation(Main.class.getResource("/View/Auth/Login.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Add Database Details");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(stage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			Controller_Login controller = loader.getController();
+			System.out.println("Hi!!\n");
+			controller.setStage(dialogStage);
+			dialogStage.showAndWait();
+			boolean isDone = controller.returnIsDone();
+			if(isDone || true)
+			{
+				Main.employee_info = controller.retEmp();
+				initRootLayout();
+				showDashboard();
+			}
 		}
 		catch(Exception E)
 		{
@@ -182,6 +178,52 @@ public class Main extends Application
 		}
 	}
 	
+	public void showDashboard()
+	{
+		if(Main.employee_info == null)
+		{
+			return ;
+		}
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/Root/Dashboard.fxml"));
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Dashboard controller = loader.getController();
+			controller.setMainApp(this, employee_info);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+	}
+	
+	public void showDatabase() 
+	{
+		System.out.println("Showing Database");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/CMS/Database_Connectivity_Screen.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Add Database Details");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(stage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			Controller_Manage_Database controller = loader.getController();
+			System.out.println("Hi!!\n");
+			controller.setStage(dialogStage);
+			dialogStage.showAndWait();
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+	}
+
 	public void showRemarks()
 	{
 		System.out.println("Showing Remarks");
@@ -192,6 +234,24 @@ public class Main extends Application
 			AnchorPane anchor_pane = (AnchorPane) loader.load();
 			root_layout.setCenter(anchor_pane);
 			Controller_Manage_Remarks controller = loader.getController();
+			controller.setMainApp(this);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+	}
+	
+	public void showMedicines()
+	{
+		System.out.println("Showing Medicines");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/CMS/Medicine_Info.fxml"));
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Manage_Medicine controller = loader.getController();
 			controller.setMainApp(this);
 		}
 		catch(Exception E)
@@ -236,45 +296,12 @@ public class Main extends Application
 		}
 	}
 	
-	public void showDashboard()
-	{
-		if(Main.employee_info == null)
-		{
-			return ;
-		}
-		try
-		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/View/Root/Dashboard.fxml"));
-			AnchorPane anchor_pane = (AnchorPane) loader.load();
-			root_layout.setCenter(anchor_pane);
-			Controller_Dashboard controller = loader.getController();
-			controller.setMainApp(this, employee_info);
-		}
-		catch(Exception E)
-		{
-			E.printStackTrace();
-		}
-	}
 	
-	public void showDatabase() 
-	{
-		System.out.println("Showing Database");
-		try
-		{
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/View/CMS/Database_Connectivity_Screen.fxml"));
-			AnchorPane anchor_pane = (AnchorPane) loader.load();
-			root_layout.setCenter(anchor_pane);
-			Controller_Manage_Database controller = loader.getController();
-			controller.setMainApp(this);
-			controller.setForm(IP, PORT, DBNAME, USER_NAME, PASSWORD);
-		}
-		catch(Exception E)
-		{
-			E.printStackTrace();
-		}
-	}
+	/*
+	 * Patient Related items
+	 * Add a patient
+	 * Search for a patient
+	 */
 	
 	public void showAddPatient() 
 	{
@@ -298,14 +325,14 @@ public class Main extends Application
 			E.printStackTrace();
 		}		
 	}
+	
+	/*
+	 * Prescription
+	 * Receipts
+	 * Indoor Patients
+	 */
 
-	public void createPrescription() 
-	{
-		//TODO	
-		
-	}
-
-	public void searchPrescription() 
+	public void managePrescription() 
 	{
 		System.out.println("Choose the patient");
 		try
@@ -325,18 +352,12 @@ public class Main extends Application
 		}			
 	}
 
-	public void createReceipt() 
+	public void manageReceipt() 
 	{
 		// TODO Auto-generated method stub
 		
 	}
-
-	public void searchReceipt()
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	public void manage_indoor_patient()
 	{
 		//TODO
@@ -345,11 +366,11 @@ public class Main extends Application
 		{
 			FXMLLoader loader = new FXMLLoader();
 			System.out.println("1");
-			loader.setLocation(Main.class.getResource("/View/IndoorPatient/home.fxml"));
+			loader.setLocation(Main.class.getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
 			System.out.println("2");
 			AnchorPane anchor_pane = (AnchorPane) loader.load();
 			root_layout.setCenter(anchor_pane);
-			HomeController controller = loader.getController();
+			Controller_Indoor_Patient controller = loader.getController();
 			controller.setMainApp(this);
 		}
 		catch(Exception E)
@@ -357,47 +378,40 @@ public class Main extends Application
 			E.printStackTrace();
 		}	
 	}
+
+	/*
+	 * Manage Accounts
+	 */
 	
 	public void manageAccount() 
 	{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/*
+	 * Manage Employees
+	 */
 
-	public boolean addEmployee(Employee_Info emp_info) 
+	public void manageEmployee()
 	{
 		// TODO Auto-generated method stub
-		System.out.println("Adding employee dialog");
+		System.out.println("Manage Employees");
 		try
 		{
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/View/Employee/Dialog_Add_Employee.fxml"));
-			System.out.println("hello2");
-			AnchorPane page = (AnchorPane) loader.load();
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Add New Employee");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			dialogStage.setScene(scene);
-			Controller_Add_Employee controller = loader.getController();
-			System.out.println("Hi!!\n");
-			controller.setStage(dialogStage);
-			controller.setEmployee(emp_info);
-			dialogStage.showAndWait();
-			return controller.isSaveClicked();
+			System.out.println("1");
+			loader.setLocation(Main.class.getResource("/View/Employee/SearchEmployee.fxml"));
+			System.out.println("2");
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Search_Employee controller = loader.getController();
+			controller.setMainApp(this);
 		}
-		catch(IOException E)
+		catch(Exception E)
 		{
 			E.printStackTrace();
-		}
-		return false;
-	}
-
-	public void searchEmployee()
-	{
-		// TODO Auto-generated method stub
-		
+		}	
 	}
 	
 	public Stage getStage()

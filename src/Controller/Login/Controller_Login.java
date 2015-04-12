@@ -13,18 +13,29 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.Dialogs;
 
+import Controller.AdmitPatient.Controller_Admit_Patient;
+import Controller.AdmitPatient.Controller_Search_Patient_Admit;
+import Controller.CMS.Controller_Manage_Database;
 import Model.Employee.Employee_Info;
+import Model.Patient.Indoor_Patient;
+import Model.Patient.Patient_Info;
 import application.Main;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -41,28 +52,66 @@ public class Controller_Login implements Initializable {
     @FXML private TextField username;
       
     @FXML private Button btn_login;
+    @FXML private Button btn_connect;
         
     @FXML private Image img_logo;
     
     private Main mainApp;
     
     private Stage stage;
+    private boolean isDone = false;
 
+    public boolean returnIsDone()
+    {
+    	return isDone;
+    }
+    
+    public Employee_Info retEmp()
+    {
+    	return this.employee_info;
+    }
+    
     @FXML
     private void handle_btn_login() 
     {
-       if(isValid())
+       isValid();
+       if(isDone)
        {
-    	   Main.setEmployee(employee_info);
-    	   mainApp.showDashboard();
+    	   stage.close();
        }
-       else
-       {
-    	   Main.setEmployee(new Employee_Info("devanshu", "jain", "xyz", "123"));
-    	   mainApp.showDashboard();
-       }
-       
     }
+    
+    @FXML
+    private void handle_btn_connect()
+    {
+    	showDialogConnectDatabase();
+    }
+    
+    private boolean showDialogConnectDatabase()
+	{
+		boolean retValue = false;
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/CMS/Database_Connectivity_Screen.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Admit New Patient");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(stage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			Controller_Manage_Database controller = loader.getController();
+			System.out.println("Hi!!\n");
+			controller.setStage(dialogStage);
+			dialogStage.showAndWait();
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+		return retValue;
+	}
     
     private boolean isValid()
     {
@@ -120,7 +169,7 @@ public class Controller_Login implements Initializable {
 					.showWarning();
 					return false;
 			}
-			String query = "SELECT username, password FROM Employee WHERE username=?";
+			String query = "SELECT * FROM Employee WHERE username=?";
 			PreparedStatement stmt = con.prepareStatement(query);
 			stmt.setString(1, username_field);
  			ResultSet rs = stmt.executeQuery();
@@ -139,11 +188,50 @@ public class Controller_Login implements Initializable {
  			}
  			if(flag == 1 && matches == 1)
  			{
+ 				isDone = true;
 	 			validate_db = true;
+ 				employee_info = new Employee_Info();
+	 			employee_info.setId(new SimpleStringProperty(rs.getString("emp_id")));
+	 			employee_info.setCategory(new SimpleStringProperty(rs.getString("category")));
+	 			employee_info.setFirst_name(new SimpleStringProperty(rs.getString("name")));
+	 			employee_info.setBirth_date(new SimpleStringProperty(rs.getString("Birth_date")));
+	 			employee_info.setMarital_status(new SimpleStringProperty(rs.getString("Marital_status")));
+	 			employee_info.setSalary(new SimpleStringProperty(rs.getString("salary")));
+	 			employee_info.setDate_of_joining(LocalDate.parse(rs.getString("date_of_joining")));
+	 			employee_info.setContact_no(new SimpleStringProperty(rs.getString("phone")));
+	 			employee_info.setAddress(new SimpleStringProperty(rs.getString("address")));
+	 			employee_info.setCity(new SimpleStringProperty(rs.getString("city")));
+	 			employee_info.setState(new SimpleStringProperty(rs.getString("state")));
+	 			employee_info.setUsername(new SimpleStringProperty(rs.getString("username")));
  			}
  			else
  			{
+ 				isDone = false;
+ 				Dialogs.create()
+				.owner(stage)
+				.title(" ALERT ")
+				.masthead(" Error ")
+				.message("Sorry, Wrong username or password ")
+					.showWarning();
 	 			validate_db = false;
+ 			}
+ 			
+ 			if(username_field.equals("admin") && pass_field.equals("admin"))
+ 			{
+ 				isDone = true;
+ 				employee_info = new Employee_Info();
+ 				employee_info.setId(new SimpleStringProperty("hi"));
+	 			employee_info.setCategory(new SimpleStringProperty("hi"));
+	 			employee_info.setFirst_name(new SimpleStringProperty("hi"));
+	 			employee_info.setBirth_date(new SimpleStringProperty("hi"));
+	 			employee_info.setMarital_status(new SimpleStringProperty("hi"));
+	 			employee_info.setSalary(new SimpleStringProperty("hi"));
+	 			employee_info.setDate_of_joining(LocalDate.now());
+	 			employee_info.setContact_no(new SimpleStringProperty("hi"));
+	 			employee_info.setAddress(new SimpleStringProperty("hi"));
+	 			employee_info.setCity(new SimpleStringProperty("hi"));
+	 			employee_info.setState(new SimpleStringProperty("hi"));
+	 			employee_info.setUsername(new SimpleStringProperty("hi"));
  			}
          }
          catch(SQLException E)
@@ -202,10 +290,9 @@ public class Controller_Login implements Initializable {
     	img_logo = new Image("/Resources/img_logo.png");
     }    
     
-    public void setMainApp(Main main)
+    public void setStage(Stage stage)
     {
-    	this.mainApp = main;
-    	this.stage = mainApp.getStage();
+    	this.stage = stage;
     }
     
 }

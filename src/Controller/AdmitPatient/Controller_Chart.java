@@ -1,4 +1,4 @@
-package Controller.IndoorPatient;
+package Controller.AdmitPatient;
 
 import java.io.IOException;
 import java.net.URL;
@@ -89,7 +89,7 @@ public class Controller_Chart implements Initializable
     @FXML
     private void newEntry(ActionEvent e) throws IOException 
     {
-        Parent add_chart = FXMLLoader.load(getClass().getResource("/View/Indoorpatient/addChart.fxml"));
+        Parent add_chart = FXMLLoader.load(getClass().getResource("/View/AdmitPatient/addChart.fxml"));
         Scene scene_add_chart = new Scene(add_chart);
         Stage stage_chart = (Stage) buttonNew.getScene().getWindow();
         stage_chart.setScene(scene_add_chart);
@@ -127,9 +127,9 @@ public class Controller_Chart implements Initializable
             {
 	            String query = "Delete From Medication Where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;";
 	            stmt = con.prepareStatement(query);
-	            stmt.setString(1, HomeController.pat_info.getPat_id().getValue());
-	            stmt.setString(2, HomeController.dateID);
-	            stmt.setString(3, HomeController.timeID);
+	            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+	            stmt.setString(2, Controller_Indoor_Patient.dateID);
+	            stmt.setString(3, Controller_Indoor_Patient.timeID);
 	            stmt.setString(4, rs.getString("medicine_ID"));
 	            handle();
 	            int no = stmt.executeUpdate();
@@ -150,7 +150,7 @@ public class Controller_Chart implements Initializable
     @FXML
     private void goHome(ActionEvent e) throws IOException
     {
-        Parent home = FXMLLoader.load(getClass().getResource("/View/IndoorPatient/home.fxml"));
+        Parent home = FXMLLoader.load(getClass().getResource("/View/AdmitPatient/Controller_Indoor_Patient.fxml"));
         Scene scene_home = new Scene(home);
         Stage stage_home = (Stage) buttonNew.getScene().getWindow();
         stage_home.setScene(scene_home);
@@ -182,12 +182,9 @@ public class Controller_Chart implements Initializable
                   //  tableChart.setItems(data);
                     TreeItem<String> selected_time = treeviewDate.getSelectionModel().getSelectedItem();
                     TreeItem<String>  selected_date = selected_time.getParent();
-                    HomeController.dateID = selected_date.getValue();
-                    HomeController.timeID = selected_time.getValue();
-                    
-                    
-                    
-                    
+                    Controller_Indoor_Patient.dateID = selected_date.getValue();
+                    Controller_Indoor_Patient.timeID = selected_time.getValue();
+                 
                     Connection con = Main.getConnection();
             		if(con == null)
             		{
@@ -208,9 +205,9 @@ public class Controller_Chart implements Initializable
             		PreparedStatement stmt = null;
             		try
             		{
-            			String q = "Select medicine_ID,amount,remark  from Medication where pat_ID = ? and date = ? and time = ?;" ;
+            			String q = "Select medicine_ID,amount,remark from Medication where pat_ID = ? and date = ? and time = ?;" ;
             			stmt = con.prepareStatement(q);
-            			stmt.setString(1, HomeController.pat_info.getPat_id().getValue());
+            			stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
             			stmt.setString(2, selected_date.getValue());
             			stmt.setString(3, selected_time.getValue());
             			ResultSet rs = stmt.executeQuery();
@@ -250,7 +247,7 @@ public class Controller_Chart implements Initializable
                 if(event.getClickCount() > 1)
                 {
                    Meds m = tableChart.getSelectionModel().getSelectedItem();
-                   HomeController.medName = m.medname;
+                   Controller_Indoor_Patient.medName = m.medname;
                 }
                 
             }
@@ -295,9 +292,9 @@ public class Controller_Chart implements Initializable
 		                String query = "Update Medication set medicine_ID = ? where pat_ID = ? and date = ? and time = ?" ;
 		                stmt = con.prepareStatement(query);
 		                stmt.setString(1, rs.getString("medicine_ID"));
-		                stmt.setString(2, HomeController.pat_info.getPat_id().getValue());
-		                stmt.setString(3, HomeController.dateID);
-		                stmt.setString(4, HomeController.timeID);
+		                stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+		                stmt.setString(3, Controller_Indoor_Patient.dateID);
+		                stmt.setString(4, Controller_Indoor_Patient.timeID);
 		                int no = stmt.executeUpdate();
 		                System.out.println("No of affected rows: " + no);
 	                }
@@ -342,16 +339,16 @@ public class Controller_Chart implements Initializable
 					{
 						String q = "Select medicine_ID from Medicine where medicine_name = ?;";
 						stmt = con.prepareStatement(q);
-						stmt.setString(1, HomeController.medName);
+						stmt.setString(1, Controller_Indoor_Patient.medName);
 		                ResultSet rs = stmt.executeQuery();
 	                    while(rs.next())
 	                    {
 		                    String query = "Update Medication set amount = ? where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;" ;
 		                    stmt = con.prepareStatement(query);
 		                    stmt.setString(1, event.getNewValue());
-		                    stmt.setString(2, HomeController.pat_info.getPat_id().getValue());
-		                    stmt.setString(3, HomeController.dateID);
-		                    stmt.setString(4, HomeController.timeID);
+		                    stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+		                    stmt.setString(3, Controller_Indoor_Patient.dateID);
+		                    stmt.setString(4, Controller_Indoor_Patient.timeID);
 		                    stmt.setString(5, rs.getString("medicine_ID"));
 		                    int no = stmt.executeUpdate();
 		                    System.out.println("No of rows updated: " + no);
@@ -395,16 +392,16 @@ public class Controller_Chart implements Initializable
 					{
 						String q = "Select medicine_ID from Medicine where medicine_name = ?;";
 						stmt = con.prepareStatement(q);
-						stmt.setString(1, HomeController.medName);
+						stmt.setString(1, Controller_Indoor_Patient.medName);
 	                    ResultSet rs = stmt.executeQuery();
 	                    while(rs.next())
 	                    {
 		                    String query = "Update Medication set remark = ? where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;" ;
 		                    stmt = con.prepareStatement(query);
 		                    stmt.setString(1, event.getNewValue());
-		                    stmt.setString(2, HomeController.pat_info.getPat_id().getValue());
-		                    stmt.setString(3, HomeController.dateID);
-		                    stmt.setString(4, HomeController.timeID);
+		                    stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+		                    stmt.setString(3, Controller_Indoor_Patient.dateID);
+		                    stmt.setString(4, Controller_Indoor_Patient.timeID);
 		                    stmt.setString(5, rs.getString("medicine_ID"));
 		                    int no = stmt.executeUpdate();
 		                    System.out.println("No of rows affected: " + no);
@@ -451,7 +448,7 @@ public class Controller_Chart implements Initializable
 		{
 			String query = "Select distinct date from Medication where pat_ID=?;";
 			stmt = con.prepareStatement(query);
-			stmt.setString(1, HomeController.pat_info.getPat_id().getValue());
+			stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next())
             {
@@ -461,7 +458,7 @@ public class Controller_Chart implements Initializable
                 String q2 = "Select distinct time from Medication where pat_ID=? and date=?;";
                 stmt = con.prepareStatement(q2);
                 
-                stmt.setString(1, HomeController.pat_info.getPat_id().getValue());
+                stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
                 stmt.setString(2, rs.getString("date"));
                 
                 ResultSet rs1 = stmt.executeQuery();

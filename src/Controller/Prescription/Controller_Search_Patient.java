@@ -79,7 +79,6 @@ public class Controller_Search_Patient implements Initializable
 				if(newValue.length() >= 3 || newValue.length() < oldValue.length())
 				{
 					System.out.println("More than 3");
-					// TODO: Logic to select relevant patientLists from allPatients
 					
 					patientList.clear();
 					System.out.println(patientList.size());
@@ -136,7 +135,7 @@ public class Controller_Search_Patient implements Initializable
 			Main.getRootLayout().setCenter(anchor_pane);
 			Controller_Search_Prescription controller = loader.getController();
 			controller.setMainApp(mainApp);
-			controller.setPatient(table_view.getSelectionModel().getSelectedItem());
+			controller.setPatient(table_view.getSelectionModel().getSelectedItem(), "MANAGE_PRESCRIPTIONS");
 		}
 		catch(Exception E)
 		{
@@ -155,8 +154,7 @@ public class Controller_Search_Patient implements Initializable
 	
 	private void getFromDB()
 	{
-		//TODO
-		
+
 		Connection con = Main.getConnection();
 		if(con == null)
 		{
@@ -173,16 +171,29 @@ public class Controller_Search_Patient implements Initializable
 			PreparedStatement stmt = null;
 			try
 			{
-				String query = "SELECT * FROM Patient_Info;";
+				String query = "SELECT * FROM Patient;";
 				stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{
+					System.out.println("hello");
 					Patient_Info pat_info = new Patient_Info();
-					pat_info.setPat_id(new SimpleStringProperty(rs.getString("pat_id")));
+					pat_info.setFirst_name(new SimpleStringProperty(rs.getString("name")));
+	                pat_info.setAddress(new SimpleStringProperty(rs.getString("Address")));
+	                pat_info.setBirth_date((rs.getDate("Birth_date").toLocalDate()));
+	                pat_info.setCity(new SimpleStringProperty(rs.getString("City")));
+	                pat_info.setState(new SimpleStringProperty(rs.getString("State")));
+	                pat_info.setEmergency_contact(new SimpleStringProperty(rs.getString("Emergency_contact")));
+	                pat_info.setEmergency_name(new SimpleStringProperty(rs.getString("Emergency_name")));
+	                pat_info.setEmergency_relation(new SimpleStringProperty(rs.getString("Emergency_relation")));
+	                pat_info.setMarital_status(new SimpleStringProperty(rs.getString("Marital_status")));
+	                pat_info.setPhone(new SimpleStringProperty(rs.getString("Phone")));
+	                pat_info.setSex(new SimpleStringProperty(rs.getString("Sex")));
+	                pat_info.setPat_id(new SimpleStringProperty(rs.getString("pat_ID")));
 					allPatients.add(pat_info);
 				}
-				stmt.close();
+				patientList.addAll(allPatients);
+				System.out.println(patientList.size());
 			}
 			catch(SQLException E)
 			{

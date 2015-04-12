@@ -77,6 +77,7 @@ public class Controller_Add_Prescription implements Initializable
 	
 	private boolean storeToDB()
 	{
+		System.out.println("Saving....");
 		Connection con = Main.getConnection();
 		if(con == null)
 		{
@@ -108,6 +109,7 @@ public class Controller_Add_Prescription implements Initializable
 				stmt.setString(4, pres_info.getFollow_up_date().toString());
 				stmt.setString(5, pres_info.getDisease().getValue());
 				stmt.setString(6, pres_info.getRemarks().getValue());
+				System.out.println(stmt.toString());
 				int no = stmt.executeUpdate();
 				original_pres_info.setDisease(pres_info.getDisease());
 				original_pres_info.setFollow_up_date(pres_info.getFollow_up_date());
@@ -174,7 +176,7 @@ public class Controller_Add_Prescription implements Initializable
 		this.stage = dialogStage;
 	}
 
-	public void setPrescription(Prescription pres_info)
+	public void setPrescription(Prescription pres_info, int mode)
 	{
 		System.out.println("Setting....");
 		this.original_pres_info = pres_info;
@@ -195,14 +197,7 @@ public class Controller_Add_Prescription implements Initializable
 		{
 			pres_follow_date.setValue(pres_info.getFollow_up_date());
 		}
-		if(pres_info.getPat_id() == null)
-		{
-			mode = ADD;
-		}
-		else
-		{
-			mode = EDIT;
-		}
+		this.mode = mode;
 	}
 
 	@Override

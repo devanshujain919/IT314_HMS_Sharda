@@ -67,6 +67,18 @@ public class Indoor_Patient
 	public void setRoomNo(StringProperty roomNo) {
 		this.roomNo = roomNo;
 	}
+
+	public static Indoor_Patient clone(Indoor_Patient ind_pat_info) 
+	{
+		Indoor_Patient ind_pat_info_2 = new Indoor_Patient();
+		ind_pat_info_2.setPat_id(ind_pat_info.getPat_id());
+		ind_pat_info_2.setDate_of_admission(ind_pat_info.getDate_of_admission());
+		ind_pat_info_2.setTime_of_admission(ind_pat_info.getTime_of_admission());
+		ind_pat_info_2.setDate_of_discharge(ind_pat_info.getDate_of_discharge());
+		ind_pat_info_2.setTime_of_discharge(ind_pat_info.getTime_of_discharge());
+		ind_pat_info_2.setRoomNo(ind_pat_info.getRoomNo());
+		return ind_pat_info_2;
+	}
 	
 	
 	

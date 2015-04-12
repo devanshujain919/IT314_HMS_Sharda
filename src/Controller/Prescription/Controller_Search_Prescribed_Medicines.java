@@ -72,6 +72,8 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 	@FXML Button btn_edit = new Button();
 	@FXML Button btn_del = new Button();
 	
+	@FXML Button btn_back = new Button();
+	
 	@FXML TextField patient_name = new TextField(), patient_id = new TextField();
 	
 	@Override
@@ -316,12 +318,12 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 
 	private void getFromDB()
 	{
-		Medicine_Prescribed mp1 = new Medicine_Prescribed();
-		mp1.setDate(LocalDate.of(1994, 10, 18));
-		mp1.setPat_id(new SimpleStringProperty("1"));
-		mp1.setMedicine(new Medicine_Info("blah", "blah", "hlaj"));
-				
-		prescriptionList.add(mp1);
+//		Medicine_Prescribed mp1 = new Medicine_Prescribed();
+//		mp1.setDate(LocalDate.of(1994, 10, 18));
+//		mp1.setPat_id(new SimpleStringProperty("1"));
+//		mp1.setMedicine(new Medicine_Info("blah", "blah", "hlaj"));
+//				
+//		prescriptionList.add(mp1);
 		
 		Connection con = Main.getConnection();
 		if(con == null)
@@ -352,24 +354,30 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 					mi.set_med_remarks(rs.getString("other_remarks"));
 					medicineList.add(mi);
 				}
+				System.out.println("its 1");
 				
+				stmt_prescribed_med.setString(1, pat_info.getPat_id().getValue());
+				System.out.println(stmt_prescribed_med.toString());
 				ResultSet rs2 = stmt_prescribed_med.executeQuery();
 				while(rs2.next())
 				{
 					Medicine_Prescribed mp = new Medicine_Prescribed();
+					System.out.println("its 1.1");
 					mp.setDate(rs2.getDate("date").toLocalDate());
+					System.out.println("its 1.2");
 					mp.setTime(new SimpleStringProperty(rs2.getString("time")));
 					mp.setPat_id(new SimpleStringProperty(rs2.getString("pat_ID")));
 					for(Medicine_Info mi : medicineList)
 					{
-						if(mi.get_med_id().equals(rs2.getString("medicine_id")))
+						if(mi.get_med_id().equals(rs2.getString("medicine_ID")))
 						{
 							mp.setMedicine(mi);
 						}
 					}
+					System.out.println("its 2");
 					mp.setMorning_amt(new SimpleStringProperty(rs2.getString("morning_amt")));
-					mp.setNoon_amt(new SimpleStringProperty(rs2.getString("noon_amt")));
-					mp.setEvening_amt(new SimpleStringProperty(rs2.getString("evening_amt")));
+					mp.setNoon_amt(new SimpleStringProperty(rs2.getString("noon_amount")));
+					mp.setEvening_amt(new SimpleStringProperty(rs2.getString("evening_amount")));
 					mp.setMorning_meal(new SimpleStringProperty(rs2.getString("is_morning")));
 					mp.setNoon_meal(new SimpleStringProperty(rs2.getString("is_noon")));
 					mp.setEvening_meal(new SimpleStringProperty(rs2.getString("is_evening")));
@@ -384,6 +392,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 	    		.masthead(" Problem in the connection ")
 	    		.message("Please set up the connection again.")
 	    		.showWarning();
+				System.out.println("Setting nullllll");
 				Main.setConnection(null);
 				Main.setDbName("");
 				Main.setUsername("");
@@ -393,5 +402,26 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 		}
 	}
 	
+	@FXML
+	private void handle_btn_back()
+	{
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			System.out.println("1");
+			loader.setLocation(Main.class.getResource("/View/Prescription/Search_Prescribed_Medicines.fxml"));
+			System.out.println("2");
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			Main.getRootLayout().setCenter(anchor_pane);
+			Controller_Search_Prescription controller = loader.getController();
+			controller.setMainApp(mainApp);
+			controller.setPatient(pat_info, "MANAGING_PRESCRIPTIONS");
+			Main.getRootLayout().setCenter(anchor_pane);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+	}
 	
 }

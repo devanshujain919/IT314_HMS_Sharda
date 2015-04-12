@@ -1,4 +1,4 @@
-package Controller.Search;
+package Controller.AdmitPatient;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
+import Controller.CMS.Controller_Add_Tests;
+import Model.Patient.Indoor_Patient;
 import Model.Patient.Patient_Info;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,7 +21,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -27,11 +31,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 @SuppressWarnings("deprecation")
-public class Controller_Search_Patient implements Initializable
+public class Controller_Search_Patient_Admit implements Initializable
 {
 	private ObservableList<Patient_Info> patientList = FXCollections.observableArrayList();
 	private ObservableList<Patient_Info> allPatients = FXCollections.observableArrayList();
@@ -50,7 +56,8 @@ public class Controller_Search_Patient implements Initializable
 	@FXML TextArea emergency_name, emergency_relation, emergency_contact;
 	@FXML TextArea address, city, state;	
 	
-	@FXML Button btn_admitted_patient = new Button();
+	@FXML Button btn_admit_patient = new Button();
+	@FXML Button btn_cancel = new Button();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -75,13 +82,22 @@ public class Controller_Search_Patient implements Initializable
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) 
 			{
-				if(newValue.length() > 3)
+				if(newValue.length() >= 3 || newValue.length() < oldValue.length())
 				{
 					System.out.println("More than 3");
-					// TODO: Logic to select relevant patientLists from allPatients
+				
 					patientList.clear();
 					System.out.println(patientList.size());
-					patientList.addAll(allPatients.subList(0, allPatients.size()/count));
+					String str1=newValue.toUpperCase();
+                                        
+					for(Patient_Info p : allPatients)
+					{
+						if(p.getFirst_name().getValue().toUpperCase().contains(str1))
+						{
+							patientList.add(p);
+						}
+					}
+					
 					System.out.println(patientList.size());
 					if(newValue.length() > oldValue.length())
 					{
@@ -112,17 +128,6 @@ public class Controller_Search_Patient implements Initializable
 	
 	private void getFromDB()
 	{
-		for(int i = 0 ; i < 100 ; i ++)
-		{
-			Patient_Info p1 = new Patient_Info();
-			p1.setPat_id(new SimpleStringProperty(Integer.toString(i)));
-			p1.setFirst_name(new SimpleStringProperty("Devanshu" + i));
-			p1.setLast_name(new SimpleStringProperty("Jain" + i));
-			
-			patientList.add(p1);
-			allPatients.add(p1);
-		}
-		
 		Connection con = Main.getConnection();
 		if(con == null)
 		{
@@ -211,15 +216,84 @@ public class Controller_Search_Patient implements Initializable
 	}
 	
 	@FXML
-	private void handle_btn_admitted_patient()
+	private void handle_btn_admit_patient()
 	{
+		Patient_Info pat_info = table_view.getSelectionModel().getSelectedItem();
+		Indoor_Patient ind_pat_info = new Indoor_Patient();
+		ind_pat_info.setPat_id(pat_info.getPat_id());
+		boolean isSaveClicked = showDialogAdmitPatient(ind_pat_info, pat_info.getFirst_name().getValue());
 		
+		if(isSaveClicked)
+		{
+			//TODO: reloading the page
+			
+			try
+			{
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(Main.class.getResource("/View/AdmitPatient/Search_Patient.fxml"));
+				AnchorPane anchor_pane = (AnchorPane) loader.load();
+				Main.getRootLayout().setCenter(anchor_pane);
+				Controller_Search_Patient_Admit controller = loader.getController();
+				controller.setMainApp(mainApp);
+			}
+			catch(Exception E)
+			{
+				E.printStackTrace();
+			}
+		}
+	}
+	
+	private boolean showDialogAdmitPatient(Indoor_Patient ind_pat_info, String name)
+	{
+		boolean retValue = false;
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/AdmitPatient/Dialog_Admit_Patient.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Admit New Patient");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(stage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			Controller_Admit_Patient controller = loader.getController();
+			System.out.println("Hi!!\n");
+			controller.setStage(dialogStage);
+			controller.setDetails(ind_pat_info, name);
+			dialogStage.showAndWait();
+			return controller.isSaveClicked();
+			
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}
+		return retValue;
 	}
 	
 	public void setMainApp(Main main)
 	{
 		this.mainApp = main;
 		this.stage = mainApp.getStage();
+	}
+	
+	public void handle_btn_cancel()
+	{
+		//TODO
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			Main.getRootLayout().setCenter(anchor_pane);
+			Controller_Indoor_Patient controller = loader.getController();
+			controller.setMainApp(mainApp);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}	
 	}
 	
 }

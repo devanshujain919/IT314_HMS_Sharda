@@ -49,6 +49,8 @@ public class Controller_Search_Prescription implements Initializable
 	private Stage stage;
 	private Main mainApp;
 	
+	private String incoming = "";
+	
 	@FXML TableView<Prescription> table_view = new TableView<Prescription> ();
 	@FXML TableColumn<Prescription, String> s_no_col = new TableColumn<Prescription, String> ();
 	@FXML TableColumn<Prescription, String> date_col = new TableColumn<Prescription, String> ();
@@ -64,6 +66,8 @@ public class Controller_Search_Prescription implements Initializable
 	@FXML Button btn_edit_pres = new Button();
 	@FXML Button btn_see_med = new Button();
 	@FXML Button btn_del_pres = new Button();
+	
+	@FXML Button btn_back = new Button();
 	
 	@FXML TextField patient_name = new TextField(), patient_id = new TextField();
 	
@@ -102,7 +106,7 @@ public class Controller_Search_Prescription implements Initializable
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		String time = sdf.format(cal.getTime());
 		pres_info.setTime(new SimpleStringProperty(time));
-		boolean isSaveClicked = showDialogAddPrescription(pres_info);
+		boolean isSaveClicked = showDialogAddPrescription(pres_info, 0);
 		
 		if(isSaveClicked)
 		{
@@ -112,7 +116,7 @@ public class Controller_Search_Prescription implements Initializable
 		System.out.println("WTF");
 	}
 	
-	private boolean showDialogAddPrescription(Prescription pres_info)
+	private boolean showDialogAddPrescription(Prescription pres_info, int mode)
 	{
 		boolean retValue = false;
 		try
@@ -129,7 +133,7 @@ public class Controller_Search_Prescription implements Initializable
 			Controller_Add_Prescription controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
-			controller.setPrescription(pres_info);
+			controller.setPrescription(pres_info, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 			
@@ -158,7 +162,7 @@ public class Controller_Search_Prescription implements Initializable
 		}
 		
 		Prescription pres_info = table_view.getItems().get(selectedIndex);
-		boolean isSaveClicked = showDialogAddPrescription(pres_info);
+		boolean isSaveClicked = showDialogAddPrescription(pres_info, 1);
 		if(isSaveClicked)
 		{
 			refreshTableView();
@@ -209,6 +213,7 @@ public class Controller_Search_Prescription implements Initializable
 		Connection con = Main.getConnection();
 		if(con == null)
 		{
+			System.out.println("Setting null");
 			Main.setConnection(null);
 			Main.setUsername("");
 			Main.setPort("");
@@ -309,12 +314,13 @@ public class Controller_Search_Prescription implements Initializable
 		}
 	}
 	
-	public void setPatient(Patient_Info pat_info)
+	public void setPatient(Patient_Info pat_info, String incoming)
 	{
 		this.pat_info = pat_info;
 		System.out.println("Setting");
 		patient_id.setText(pat_info.getPat_id().getValue());
 		patient_name.setText(pat_info.getFirst_name().getValue() + ", " + pat_info.getLast_name().getValue());
+		this.incoming = incoming;
 	}
 	
 	public void setMainApp(Main main)
@@ -326,22 +332,22 @@ public class Controller_Search_Prescription implements Initializable
 	private void getFromDB()
 	{
 		//TODO
-		Prescription p1 = new Prescription();
-		p1.setDate(LocalDate.of(1994, 10, 18));
-		p1.setTime(new SimpleStringProperty(Calendar.getInstance().HOUR_OF_DAY + ":" + Calendar.getInstance().MINUTE + ":" + Calendar.getInstance().SECOND));
-		p1.setDisease(new SimpleStringProperty("Proness"));
-		p1.setPat_id(new SimpleStringProperty("1"));
-		p1.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
-		
-		Prescription p2 = new Prescription();
-		p2.setDate(LocalDate.of(2015, 10, 15));
-		p2.setTime(new SimpleStringProperty(Calendar.getInstance().HOUR_OF_DAY + ":" + Calendar.getInstance().MINUTE + ":" + Calendar.getInstance().SECOND));
-		p2.setDisease(new SimpleStringProperty("Beemari"));
-		p2.setPat_id(new SimpleStringProperty("2"));
-		p2.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
-		
-		prescriptionList.add(p1);
-		prescriptionList.add(p2);
+//		Prescription p1 = new Prescription();
+//		p1.setDate(LocalDate.of(1994, 10, 18));
+//		p1.setTime(new SimpleStringProperty(Calendar.getInstance().HOUR_OF_DAY + ":" + Calendar.getInstance().MINUTE + ":" + Calendar.getInstance().SECOND));
+//		p1.setDisease(new SimpleStringProperty("Proness"));
+//		p1.setPat_id(new SimpleStringProperty("1"));
+//		p1.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
+//		
+//		Prescription p2 = new Prescription();
+//		p2.setDate(LocalDate.of(2015, 10, 15));
+//		p2.setTime(new SimpleStringProperty(Calendar.getInstance().HOUR_OF_DAY + ":" + Calendar.getInstance().MINUTE + ":" + Calendar.getInstance().SECOND));
+//		p2.setDisease(new SimpleStringProperty("Beemari"));
+//		p2.setPat_id(new SimpleStringProperty("2"));
+//		p2.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
+//		
+//		prescriptionList.add(p1);
+//		prescriptionList.add(p2);
 		
 		Connection con = Main.getConnection();
 		if(con == null)
@@ -390,6 +396,31 @@ public class Controller_Search_Prescription implements Initializable
 		
 	}
 	
-		
+	@FXML
+	private void handle_btn_back()
+	{
+		if(incoming.equals("INDOOR_DISCHARGE"))
+		{
+			stage.close();
+		}
+		else if(incoming.equals("MANAGE_PRESCRIPTIONS"))
+		{
+			try
+			{
+				FXMLLoader loader = new FXMLLoader();
+				System.out.println("1");
+				loader.setLocation(Main.class.getResource("/View/Prescription/Search_Patient.fxml"));
+				System.out.println("2");
+				AnchorPane anchor_pane = (AnchorPane) loader.load();
+				Main.getRootLayout().setCenter(anchor_pane);
+				Controller_Search_Patient controller = loader.getController();
+				controller.setMainApp(mainApp);
+			}
+			catch(Exception E)
+			{
+				E.printStackTrace();
+			}
+		}
+	}		
 	
 }

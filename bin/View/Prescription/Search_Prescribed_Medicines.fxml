@@ -63,11 +63,12 @@
                         <TextArea fx:id="evening_amt" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
-                  <ButtonBar layoutX="92.0" layoutY="452.0" prefHeight="40.0" prefWidth="200.0">
+                  <ButtonBar layoutX="13.0" layoutY="452.0" prefHeight="40.0" prefWidth="200.0">
                     <buttons>
                       <Button fx:id="btn_add" mnemonicParsing="false" onAction="#handle_btn_add" text="Add New " />
                         <Button fx:id="btn_edit" mnemonicParsing="false" onAction="#handle_btn_edit" text="Edit" />
                         <Button fx:id="btn_del" mnemonicParsing="false" onAction="#handle_btn_del" text="Delete" />
+                        <Button fx:id="btn_back" mnemonicParsing="false" onAction="#handle_btn_back" text="Back" />
                     </buttons>
                   </ButtonBar>
                </children>

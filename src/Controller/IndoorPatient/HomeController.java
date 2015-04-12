@@ -101,8 +101,7 @@ public class HomeController implements Initializable
 				if(newValue.length() >= 3 || newValue.length() < oldValue.length())
 				{
 					System.out.println("More than 3");
-					// TODO: Logic to select relevant patientLists from allPatients
-					
+				
 					patientList.clear();
 					System.out.println(patientList.size());
 					String str1=newValue.toUpperCase();
@@ -205,7 +204,8 @@ public class HomeController implements Initializable
 			PreparedStatement stmt = null;
 			try
 			{
-				String query = "SELECT * FROM Indoor_patient;";
+				String query = "SELECT * FROM Patient p WHERE p.pat_ID = (SELECT ip.pat_ID FROM Indoor_patient ip);";
+				System.out.println(query);
 				stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
@@ -232,6 +232,7 @@ public class HomeController implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.title(" ALERT ")
 	    		.masthead(" Database is not setup ")

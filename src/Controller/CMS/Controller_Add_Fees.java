@@ -112,7 +112,7 @@ public class Controller_Add_Fees implements Initializable
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, fees_info.get_fees_name().getValue());
 				stmt.setString(2, fees_info.get_fees_id().getValue());
-				int no = stmt.executeUpdate(query);
+				int no = stmt.executeUpdate();
 				original_fees_info.setName(fees_info.get_fees_name().getValue());
 				System.out.println("No of rows updated: " + no);
 				stmt.close();

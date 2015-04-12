@@ -43,28 +43,17 @@ public class Controller_Add_Employee implements Initializable
 	private static int ADD=1, EDIT=2, OTHER=3;
 	private static int mode = OTHER;
 	
-	@FXML private TextField first_name, middle_name, last_name;
-	
-	@FXML private TextField username;
-	@FXML private PasswordField password, password_confirm;
-	
-	@FXML private ComboBox category;
-	
-	@FXML private DatePicker date_of_joining;
-	
-	@FXML private ComboBox birth_month, birth_day;
-	
-	@FXML private TextField birth_year;
-	
-	@FXML private ComboBox marital_status;
-	
-	@FXML TextField designation, salary, contact_no;
-	
-	@FXML private ComboBox state;
-	
-	@FXML private TextField city;
-	
-	@FXML private TextArea address;
+	@FXML private TextField emp_name;	
+	@FXML private TextField emp_username;
+	@FXML private PasswordField emp_password, emp_password_confirm;
+	@FXML private ComboBox emp_category;	
+	@FXML private DatePicker emp_date_of_joining;	
+	@FXML private DatePicker emp_date_birth;
+	@FXML private ComboBox emp_marital_status;
+	@FXML private TextField emp_salary, emp_contact_no;
+	@FXML private ComboBox emp_state;
+	@FXML private TextField emp_city;
+	@FXML private TextArea emp_address;
 	
 	@FXML private Button btn_save, btn_clear, btn_cancel;
 	
@@ -88,32 +77,25 @@ public class Controller_Add_Employee implements Initializable
 
 		if (response == Dialog.ACTION_YES) 
 		{
-			first_name.setText("");
-			middle_name.setText("");
-			last_name.setText("");
+			emp_name.setText("");
 			
-			username.setText("");
-			password.setText("");
-			password_confirm.setText("");
-			
-			birth_day.setValue(null);
-			birth_month.setValue(null);
-			birth_year.setText("");
-			
-			date_of_joining.setValue(null);
-			category.setValue(null);
-			
-			marital_status.setValue(null);
-			state.setValue(null);
-			city.setText("");
-			designation.setText("");
-			salary.setText("");
-			contact_no.setText("");
-			
-			address.setText("");
+			emp_username.setText("");
+			emp_password.setText("");
+			emp_password_confirm.setText("");
+			emp_date_birth.setValue(null);
+			emp_date_of_joining.setValue(null);
+			emp_category.setValue(null);
+			emp_marital_status.setValue(null);
+			emp_state.setValue(null);
+			emp_city.setText("");
+			emp_salary.setText("");
+			emp_contact_no.setText("");
+			emp_address.setText("");
 			
 			password_label.setText("");
-			contact_no.setText("");
+			emp_contact_no.setText("");
+			emp_password.setText("");
+			emp_password_confirm.setText("");
 		}
 	    else 
 	    {
@@ -126,20 +108,21 @@ public class Controller_Add_Employee implements Initializable
     {
     	if(isValid())
     	{
-    		this.employee_info.setFirst_name(new SimpleStringProperty(first_name.getText()));
-    		this.employee_info.setMiddle_name(new SimpleStringProperty(middle_name.getText()));
-    		this.employee_info.setLast_name(new SimpleStringProperty(last_name.getText()));
-    		this.employee_info.setAddress(new SimpleStringProperty(address.getText()));
-    		this.employee_info.setBirth_day(new SimpleStringProperty(birth_day.getValue().toString()));
-    		this.employee_info.setMarital_status(new SimpleStringProperty(marital_status.getValue().toString()));
-    		this.employee_info.setSalary(new SimpleStringProperty(salary.getText()));
-    		this.employee_info.setDate_of_joining(date_of_joining.getValue());
-    		this.employee_info.setContact_no(new SimpleStringProperty(contact_no.getText()));
-    		this.employee_info.setCity(new SimpleStringProperty(city.getText()));
-    		this.employee_info.setState(new SimpleStringProperty(state.getValue().toString()));
-    		this.employee_info.setUsername(new SimpleStringProperty(username.getText()));
-    		this.employee_info.setPassword(new SimpleStringProperty(password.getText()));
-    		this.employee_info.setId(new SimpleStringProperty("1"));
+    		this.employee_info.setFirst_name(new SimpleStringProperty(emp_name.getText()));
+    		this.employee_info.setAddress(new SimpleStringProperty(emp_address.getText()));
+    		this.employee_info.setBirth_date(new SimpleStringProperty(emp_date_birth.getValue().toString()));
+    		this.employee_info.setMarital_status(new SimpleStringProperty(emp_marital_status.getValue().toString()));
+    		this.employee_info.setSalary(new SimpleStringProperty(emp_salary.getText()));
+    		this.employee_info.setDate_of_joining(emp_date_of_joining.getValue());
+    		this.employee_info.setContact_no(new SimpleStringProperty(emp_contact_no.getText()));
+    		this.employee_info.setCity(new SimpleStringProperty(emp_city.getText()));
+    		this.employee_info.setState(new SimpleStringProperty(emp_state.getValue().toString()));
+    		this.employee_info.setUsername(new SimpleStringProperty(emp_username.getText()));
+    		this.employee_info.setPassword(new SimpleStringProperty(emp_password.getText()));
+    		
+    		String id = generateID();
+    		
+    		this.employee_info.setId(new SimpleStringProperty(id));
     		
     		boolean isDone = storeToDB();
     		
@@ -147,14 +130,20 @@ public class Controller_Add_Employee implements Initializable
     	}
     }
     
-    private boolean storeToDB()
+    private String generateID() 
+    {
+    	//TODO: get the id
+    	return null;
+	}
+
+	private boolean storeToDB()
     {
     	String id = employee_info.getId().getValue();
 		String category = employee_info.getCategory().getValue();
 		String First_Name = employee_info.getFirst_name().getValue();
 		String Last_Name = employee_info.getLast_name().getValue();
 		String Middle_Name = employee_info.getMiddle_name().getValue();
-		String Birth_Date = employee_info.getBirth_day().getValue();
+		String Birth_Date = employee_info.getBirth_date().getValue();
 		String Marital_status = employee_info.getMarital_status().getValue();
 		String salary = employee_info.getSalary().getValue();
 		String date_of_joining = employee_info.getDate_of_joining().toString();
@@ -310,8 +299,8 @@ public class Controller_Add_Employee implements Initializable
     {
     	boolean retValue = true;
     	
-        String pass = password.getText();
-        String pass_confirm = password_confirm.getText();
+        String pass = emp_password.getText();
+        String pass_confirm = emp_password_confirm.getText();
 
         if(!pass.equals(pass_confirm))
         {
@@ -319,7 +308,7 @@ public class Controller_Add_Employee implements Initializable
            retValue = false;
         }
         
-        int len = contact_no.getText().length();
+        int len = emp_contact_no.getText().length();
         
         if(!(len==10))
         {
@@ -327,25 +316,20 @@ public class Controller_Add_Employee implements Initializable
              retValue = false;
         }
         
-        String firstName = first_name.getText();
-        String lastName = last_name.getText();
-        String userName = username.getText();
+        String firstName = emp_name.getText();
+        String userName = emp_username.getText();
+        String stateName = (String) emp_state.getValue();
+        String cityName = emp_city.getText();
+        String addressVal = emp_address.getText();
         
-        String stateName = (String) state.getValue();
-        String cityName = city.getText();
-        String addressVal = address.getText();
+        String categoryName = (String) emp_category.getValue();
+        LocalDate dateOfJoin = emp_date_of_joining.getValue();
         
-        String categoryName = (String) category.getValue();
-        LocalDate dateOfJoin = date_of_joining.getValue();
+        String birthDate = emp_date_birth.getValue().toString();
         
-        String birthMonth = (String) birth_month.getValue();
-        String birthDay = (String) birth_day.getValue();
-        String birthYear = birth_year.getText();
+        String salaryVal = emp_salary.getText();
         
-        String designationVal = designation.getText();
-        String salaryVal = salary.getText();
-        
-        if(userName.equals("") || firstName.equals("") || stateName.equals("") || cityName.equals("") || addressVal.equals("") || categoryName.equals("") || dateOfJoin.equals("") || birthDay.equals("") || birthMonth.equals("") || birthYear.equals("") || designationVal.equals("") || salaryVal.equals(""))
+        if(userName.equals("") || firstName.equals("") || stateName.equals("") || cityName.equals("") || addressVal.equals("") || categoryName.equals("") || dateOfJoin.equals("") || birthDate.equals("") || salaryVal.equals(""))
         {
         	retValue = false;
         	Dialogs.create()
@@ -355,7 +339,7 @@ public class Controller_Add_Employee implements Initializable
         		.message("Mandatory field is empty ")
         		.showWarning();
         }
-        if(password.equals("") && mode == ADD)
+        if(pass.equals("") && mode == ADD)
         {
         	retValue = false;
         }
@@ -366,8 +350,7 @@ public class Controller_Add_Employee implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-    	System.out.println("Hello");
-        //img_add_user = new Image("/Resources/add-user-icon.png");
+    	img_add_user = new Image("/Resources/add-user-icon.png");
     }
 
 	public void setStage(Stage dialogStage) 
@@ -388,28 +371,22 @@ public class Controller_Add_Employee implements Initializable
 			System.out.println("Hello1");
 			this.employee_info = employee_info;
 			
-			first_name.setText(employee_info.getFirst_name().getValue());
-			middle_name.setText(employee_info.getMiddle_name().getValue());
-			last_name.setText(employee_info.getLast_name().getValue());
+			emp_name.setText(employee_info.getFirst_name().getValue());
 			
-			username.setText(employee_info.getUsername().getValue());
-			password.setText("");
+			emp_username.setText(employee_info.getUsername().getValue());
+			emp_password.setText("");
 			
-			designation.setText(employee_info.getDesignation().getValue());
-			salary.setText(employee_info.getSalary().getValue());
-			category.setValue(employee_info.getCategory().getValue());
+			emp_salary.setText(employee_info.getSalary().getValue());
+			emp_category.setValue(employee_info.getCategory().getValue());
+						
+			emp_marital_status.setValue(employee_info.getMarital_status().getValue());
+			emp_contact_no.setText(employee_info.getContact_no().getValue());
+			emp_state.setValue(employee_info.getState().getValue());
+			emp_city.setText(employee_info.getCity().getValue());
+			emp_address.setText(employee_info.getAddress().getValue());
 			
-			birth_year.setText(employee_info.getBirth_year().getValue());
-			birth_day.setValue(employee_info.getBirth_day().getValue());
-			birth_month.setValue(employee_info.getBirth_month().getValue());
-			
-			marital_status.setValue(employee_info.getMarital_status().getValue());
-			contact_no.setText(employee_info.getContact_no().getValue());
-			state.setValue(employee_info.getState().getValue());
-			city.setText(employee_info.getCity().getValue());
-			address.setText(employee_info.getAddress().getValue());
-			
-			date_of_joining.setValue(employee_info.getDate_of_joining());
+			emp_date_birth.setValue(LocalDate.parse(employee_info.getBirth_date().getValue()));
+			emp_date_of_joining.setValue(employee_info.getDate_of_joining());
 		}
 	}
 	

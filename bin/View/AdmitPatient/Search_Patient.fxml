@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Search.Controller_Search_Patient">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AdmitPatient.Controller_Search_Patient_Admit">
    <children>
       <Label layoutX="150.0" layoutY="70.0" text="Search for a Patient" AnchorPane.leftAnchor="101.0" AnchorPane.rightAnchor="101.0" AnchorPane.topAnchor="20.0">
          <font>
@@ -116,9 +116,10 @@
                   <Label layoutX="15.0" layoutY="53.0" prefHeight="26.0" prefWidth="49.0" text="Name: " />
                   <TextField fx:id="name" layoutX="64.0" layoutY="53.0" prefHeight="26.0" prefWidth="204.0" />
                   <Label fx:id="id_placeholder" layoutX="393.0" layoutY="58.0" text="Label" />
-                  <ButtonBar layoutX="148.0" layoutY="504.0" prefHeight="40.0" prefWidth="204.0" AnchorPane.leftAnchor="144.0" AnchorPane.rightAnchor="144.0">
+                  <ButtonBar layoutX="64.0" layoutY="504.0" prefHeight="40.0" prefWidth="306.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="122.0">
                     <buttons>
-                      <Button fx:id="btn_admitted_patient" mnemonicParsing="false" onAction="#handle_btn_admitted_patient" text="See the admitted patients" />
+                      <Button fx:id="btn_admit_patient" mnemonicParsing="false" onAction="#handle_btn_admit_patient" text="Admit this patient" />
+                        <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
                     </buttons>
                   </ButtonBar>
                </children>

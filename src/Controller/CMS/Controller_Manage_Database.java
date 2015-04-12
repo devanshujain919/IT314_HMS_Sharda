@@ -54,7 +54,12 @@ public class Controller_Manage_Database implements Initializable
 			Main.setDbName(db_name.getText());
 			Main.setUsername(username.getText());
 			Main.setpassword(password.getText());
+			if(conn == null)
+			{
+				System.out.println("How????");
+			}
 			Main.setConnection(conn);
+			stage.close();
 		}
 	}
 
@@ -72,6 +77,7 @@ public class Controller_Manage_Database implements Initializable
 	private void handle_btn_cancel()
 	{
 		//TODO
+		stage.close();
 	}
 	
 	@Override
@@ -155,10 +161,9 @@ public class Controller_Manage_Database implements Initializable
 		return retValue;
 	}
 	
-	public void setMainApp(Main main)
+	public void setStage(Stage stage)
 	{
-		this.mainApp = main;
-		this.stage = mainApp.getStage();
+		this.stage = stage;
 	}
 	
 	public void setForm(String ip, String port, String DBName, String username, String password)

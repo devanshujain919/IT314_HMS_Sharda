@@ -27,11 +27,11 @@
             <items>
               <MenuItem fx:id="add_patient_menu" mnemonicParsing="false" text="Add a Patient" />
               <MenuItem fx:id="search_patient_menu" mnemonicParsing="false" text="Search for a Patient" />
-              <MenuItem fx:id="add_prescription_menu" mnemonicParsing="false" text="Create a Prescription" />
-              <MenuItem fx:id="search_prescription_menu" mnemonicParsing="false" text="Search for a Prescription" />
-              <MenuItem fx:id="add_receipt_menu" mnemonicParsing="false" text="Create a Receipt" />
-              <MenuItem fx:id="search_receipt_menu" mnemonicParsing="false" text="Search for a Receipt" />
-              <MenuItem fx:id="manage_indoor_patients" mnemonicParsing="false" text="Manage Indoor Patients" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="manage_prescriptions_menu" mnemonicParsing="false" text="Manage Prescriptions" />
+              <MenuItem fx:id="manage_receipts_menu" mnemonicParsing="false" text="Manage Receipts" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+              <MenuItem fx:id="manage_indoor_patients_menu" mnemonicParsing="false" text="Manage Indoor Patients" />
             </items>
           </Menu>
           <Menu fx:id="menu_account" mnemonicParsing="false" text="Account">
@@ -41,8 +41,7 @@
           </Menu>
           <Menu fx:id="menu_employee_mgmt" mnemonicParsing="false" text="Employees">
             <items>
-              <MenuItem fx:id="add_employee_menu" mnemonicParsing="false" text="Add an Employee" />
-              <MenuItem fx:id="search_employee_menu" mnemonicParsing="false" text="Search for an Employee" />
+              <MenuItem fx:id="manage_employees_menu" mnemonicParsing="false" text="Manage Employees" />
             </items>
           </Menu>          
         </menus>
