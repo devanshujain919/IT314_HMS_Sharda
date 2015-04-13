@@ -41,15 +41,15 @@ public class Controller_Add_Patient implements Initializable
     @FXML
     private TextField textmiddle;
     @FXML
-    private Button textsave;
+    private Button btn_save;
     @FXML
     private Label textID;
     @FXML
     public TextField textlast;
     @FXML
-    private Button textcancel;
+    private Button btn_cancel;
     @FXML
-    private Button textclear;
+    private Button btn_clear;
     @FXML
     private DatePicker textbirth;
     @FXML
@@ -209,7 +209,7 @@ public class Controller_Add_Patient implements Initializable
     @FXML
 	private void handleButtonAction3() 
 	{
-       textmarital .getItems().addAll("Single","Married");
+       textmarital.getItems().addAll("Single","Married");
 	}
 
     @Override
@@ -358,6 +358,6 @@ public class Controller_Add_Patient implements Initializable
 	    }
 	    textstate.setText(pat_info.getState().getValue());
 	    textcity.setText(pat_info.getCity().getValue());
-	    textmarital.selectionModelProperty().setValue(pat_info.getMarital_status().getValue());
+	    textmarital.setValue(pat_info.getMarital_status().getValue());
 	}  
 }

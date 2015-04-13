@@ -1,19 +1,20 @@
 package application;
 	
-import java.io.IOException;
 import java.sql.Connection;
 
 import Controller.Account.Controller_Account_Info;
 import Controller.AdmitPatient.Controller_Indoor_Patient;
 import Controller.CMS.*;
-import Controller.Employee.Controller_Add_Employee;
 import Controller.Employee.Controller_Search_Employee;
 import Controller.Receipt.Controller_Search_Patient_Receipt;
 import Controller.Root.Controller_Dashboard;
 import Controller.Root.Controller_Root_Layout;
 import Controller.Login.Controller_Login;
-import Controller.Prescription.Controller_Search_Patient;
+import Controller.Patient.Controller_Add_Patient;
+import Controller.Patient.Controller_Search_Patient;
+import Controller.Prescription.Controller_Search_Patient_Prescription;
 import Model.Employee.Employee_Info;
+import Model.Patient.Patient_Info;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Modality;
@@ -307,8 +308,28 @@ public class Main extends Application
 	
 	public void showAddPatient() 
 	{
-		// TODO:
-		
+		System.out.println("Adding patient");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/Patient/Dialog_Add_Patient.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Add Database Details");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(stage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+			Controller_Add_Patient controller = loader.getController();
+			controller.setPatient(new Patient_Info());
+			System.out.println("Hi!!\n");
+			controller.setStage(dialogStage);
+			dialogStage.showAndWait();
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}		
 	}
 
 	public void showSearchPatient() 
@@ -317,7 +338,7 @@ public class Main extends Application
 		try
 		{
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/View/Search/Search_Patient.fxml"));
+			loader.setLocation(Main.class.getResource("/View/Patient/Search_Patient.fxml"));
 			AnchorPane anchor_pane = (AnchorPane) loader.load();
 			root_layout.setCenter(anchor_pane);
 			Controller_Search_Patient controller = loader.getController();
@@ -346,7 +367,7 @@ public class Main extends Application
 			System.out.println("2");
 			AnchorPane anchor_pane = (AnchorPane) loader.load();
 			root_layout.setCenter(anchor_pane);
-			Controller_Search_Patient controller = loader.getController();
+			Controller_Search_Patient_Prescription controller = loader.getController();
 			controller.setMainApp(this);
 		}
 		catch(Exception E)

@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
-import Controller.Prescription.Controller_Search_Patient;
+import Controller.Prescription.Controller_Search_Patient_Prescription;
 import Model.CMS.Tests_Info;
 import Model.Patient.Indoor_Patient;
 import Model.Patient.Patient_Info;

@@ -413,7 +413,7 @@ public class Controller_Search_Prescription implements Initializable
 				System.out.println("2");
 				AnchorPane anchor_pane = (AnchorPane) loader.load();
 				Main.getRootLayout().setCenter(anchor_pane);
-				Controller_Search_Patient controller = loader.getController();
+				Controller_Search_Patient_Prescription controller = loader.getController();
 				controller.setMainApp(mainApp);
 			}
 			catch(Exception E)

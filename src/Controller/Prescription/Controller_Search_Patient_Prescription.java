@@ -32,7 +32,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 @SuppressWarnings("deprecation")
-public class Controller_Search_Patient implements Initializable
+public class Controller_Search_Patient_Prescription implements Initializable
 {
 	private ObservableList<Patient_Info> patientList = FXCollections.observableArrayList();
 	private ObservableList<Patient_Info> allPatients = FXCollections.observableArrayList();

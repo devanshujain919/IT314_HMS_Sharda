@@ -55,14 +55,14 @@
       <TextField fx:id="textemerphone" layoutX="438.0" layoutY="320.0" prefHeight="26.0" prefWidth="171.0" />
       <ImageView fitHeight="77.0" fitWidth="594.0" layoutX="19.0" layoutY="14.0">
          <image>
-            <Image url="@../img_logo.png" />
+            <Image url="/Resources/img_logo.png" />
          </image>
       </ImageView>
       <ButtonBar layoutX="234.0" layoutY="590.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="165.0" AnchorPane.rightAnchor="165.0">
         <buttons>
-            <Button fx:id="textsave" mnemonicParsing="false" onAction="#handle_btn_save" text="Save" />
-            <Button fx:id="textcancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
-            <Button fx:id="textclear" mnemonicParsing="false" onAction="#handleButtonAction1" text="Clear" />
+            <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" text="Save" />
+            <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
+            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" text="Clear" />
         </buttons>
       </ButtonBar>
     </children>
