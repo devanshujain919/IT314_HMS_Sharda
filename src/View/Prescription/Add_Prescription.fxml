@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -7,19 +9,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<AnchorPane fx:controller="Controller.Prescription.Controller_Add_Prescription" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="666.0" prefWidth="619.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Prescription.Controller_Add_Prescription">
    <children>
-      <Label layoutX="280.0" layoutY="47.0" prefHeight="60.0" prefWidth="412.0" text="Add Prescription" AnchorPane.leftAnchor="140.0" AnchorPane.rightAnchor="140.0" AnchorPane.topAnchor="20.0">
+      <Label layoutX="27.0" layoutY="24.0" prefHeight="60.0" prefWidth="412.0" text="ADD PRESCRIPTION" textFill="#18ad8b" AnchorPane.leftAnchor="27.0" AnchorPane.rightAnchor="253.0" AnchorPane.topAnchor="24.0">
          <font>
-            <Font size="49.0" />
+            <Font name="Lucida Sans Demibold" size="24.0" />
          </font>
       </Label>
       <Separator layoutX="250.0" layoutY="111.0" prefHeight="10.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0" />
-      <GridPane layoutX="223.0" layoutY="260.0" prefHeight="319.0" prefWidth="660.0" AnchorPane.bottomAnchor="231.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="150.0">
+      <GridPane layoutX="-13.0" layoutY="151.0" prefHeight="285.0" prefWidth="664.0" AnchorPane.bottomAnchor="230.0" AnchorPane.leftAnchor="-13.0" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="151.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="333.0" minWidth="10.0" prefWidth="307.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="488.0" minWidth="10.0" prefWidth="369.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
@@ -31,7 +32,7 @@
          <children>
             <Label prefHeight="96.0" prefWidth="330.0" text="Date">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="13.0" />
                </font>
                <GridPane.margin>
                   <Insets left="100.0" right="100.0" />
@@ -39,15 +40,15 @@
             </Label>
             <Label prefHeight="96.0" prefWidth="330.0" text="Time" GridPane.rowIndex="1">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="13.0" />
                </font>
                <GridPane.margin>
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
             </Label>
-            <Label prefHeight="96.0" prefWidth="330.0" text="Follow up Date" GridPane.rowIndex="2">
+            <Label minWidth="-Infinity" prefHeight="57.0" prefWidth="166.0" text="Follow up Date" GridPane.rowIndex="2">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="13.0" />
                </font>
                <GridPane.margin>
                   <Insets left="100.0" right="100.0" />
@@ -55,15 +56,15 @@
             </Label>
             <Label prefHeight="96.0" prefWidth="330.0" text="Disease" GridPane.rowIndex="3">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="13.0" />
                </font>
                <GridPane.margin>
                   <Insets left="100.0" right="100.0" />
                </GridPane.margin>
             </Label>
-            <Label prefHeight="96.0" prefWidth="330.0" text="Remarks" GridPane.rowIndex="4">
+            <Label minWidth="-Infinity" prefHeight="96.0" prefWidth="330.0" text="Remarks" GridPane.rowIndex="4">
                <font>
-                  <Font size="17.0" />
+                  <Font name="System Bold" size="13.0" />
                </font>
                <padding>
                   <Insets left="100.0" right="100.0" />
@@ -73,15 +74,108 @@
             <TextArea fx:id="pres_time" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextArea fx:id="pres_disease" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <TextArea fx:id="pres_remarks" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <DatePicker fx:id="pres_follow_date" prefHeight="87.0" prefWidth="330.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <DatePicker fx:id="pres_follow_date" prefHeight="57.0" prefWidth="374.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" />
          </children>
       </GridPane>
-      <ButtonBar layoutX="229.0" layoutY="565.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
-        <buttons>
-          <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" text="Save" />
-            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" text="Clear" />
-            <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
-        </buttons>
-      </ButtonBar>
+      <Separator layoutX="27.0" layoutY="65.0" opacity="0.7" prefHeight="10.0" prefWidth="284.0">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant color="#68250e" />
+               </light>
+            </Lighting>
+         </effect>
+      </Separator>
+      <Label layoutX="27.0" layoutY="76.0" prefHeight="17.0" prefWidth="217.0" text="SHARDA MEDICAL NURSING HOME" textFill="#36a8eb">
+         <font>
+            <Font name="Berlin Sans FB" size="12.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="212.0" layoutY="71.0" prefHeight="28.0" prefWidth="28.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/504661.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
+    <Button fx:id="btn_save" layoutX="128.0" layoutY="519.0" mnemonicParsing="false" onAction="#handle_btn_save" prefHeight="25.0" prefWidth="112.0" text="Save">
+         <effect>
+            <Lighting diffuseConstant="2.0">
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant color="#a7fbdf" />
+               </light>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btn_clear" layoutX="254.0" layoutY="519.0" mnemonicParsing="false" onAction="#handle_btn_clear" prefHeight="25.0" prefWidth="112.0" text="Clear">
+         <effect>
+            <Lighting diffuseConstant="1.93" surfaceScale="1.15">
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant color="#a7fbdf" />
+               </light>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="btn_cancel" layoutX="375.0" layoutY="519.0" mnemonicParsing="false" onAction="#handle_btn_cancel" prefHeight="25.0" prefWidth="112.0" text="Cancel">
+         <effect>
+            <Lighting diffuseConstant="1.84" surfaceScale="1.27">
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant color="#91b9ff" />
+               </light>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
+      <AnchorPane prefHeight="105.0" prefWidth="112.0" />
+      <AnchorPane layoutX="310.0" layoutY="21.0" prefHeight="67.0" prefWidth="63.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/add_medicine_1.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
+      <AnchorPane layoutX="375.0" layoutY="21.0" prefHeight="67.0" prefWidth="63.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/add_prescription.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
+      <AnchorPane layoutX="438.0" layoutY="19.0" prefHeight="67.0" prefWidth="63.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resourcesprescribed_medicine%20(3).png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
    </children>
 </AnchorPane>

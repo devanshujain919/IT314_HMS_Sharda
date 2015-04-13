@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.paint.*?>
@@ -10,11 +12,6 @@
 
 <AnchorPane fx:id="anchor_pane" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CMS.Controller_Manage_Fees">
    <children>
-      <Label text="Manage Fees" AnchorPane.leftAnchor="161.0" AnchorPane.rightAnchor="161.0" AnchorPane.topAnchor="20.0">
-         <font>
-            <Font size="57.0" />
-         </font>
-      </Label>
       <Separator prefHeight="10.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="110.0" />
       <SplitPane dividerPositions="0.4339080459770115" prefHeight="474.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0">
         <items>
@@ -28,10 +25,20 @@
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
+                     <effect>
+                        <Lighting diffuseConstant="1.86" surfaceScale="0.0">
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant color="#a7e4d2" />
+                           </light>
+                        </Lighting>
+                     </effect>
                   </TableView>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="472.0" prefWidth="310.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="558.0" prefWidth="390.0">
                <children>
                   <GridPane layoutX="5.0" layoutY="200.0" prefHeight="120.0" prefWidth="332.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="140.0">
                     <columnConstraints>
@@ -43,27 +50,154 @@
                       <RowConstraints minHeight="40.0" prefHeight="70.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="fees_id_label" prefHeight="146.0" prefWidth="189.0" text="Fees ID" wrapText="true" />
-                        <Label fx:id="fees_type_label" prefHeight="170.0" prefWidth="189.0" text="Fees Type" GridPane.rowIndex="1" />
+                        <Label fx:id="fees_id_label" prefHeight="146.0" prefWidth="189.0" text="Fees ID" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
+                        <Label fx:id="fees_type_label" prefHeight="170.0" prefWidth="189.0" text="Fees Type" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
                         <TextArea fx:id="fees_type" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextArea fx:id="fees_id" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
-                  <ButtonBar layoutX="29.0" layoutY="468.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="80.0">
-                    <buttons>
-                      <Button fx:id="btn_add" mnemonicParsing="false" onAction="#handle_btn_add" prefHeight="53.0" text="Add New" wrapText="true" />
-                        <Button fx:id="btn_edit" mnemonicParsing="false" onAction="#handle_btn_edit" prefHeight="64.0" text="Edit" />
-                        <Button fx:id="btn_del" mnemonicParsing="false" onAction="#handle_btn_del" prefHeight="72.0" prefWidth="102.0" text="Delete" />
-                    </buttons>
-                  </ButtonBar>
-                  <Label layoutX="8.0" layoutY="94.0" text="Fees Type" AnchorPane.leftAnchor="131.0" AnchorPane.rightAnchor="131.0" AnchorPane.topAnchor="30.0">
+                  <Label layoutX="25.0" layoutY="21.0" prefHeight="70.0" prefWidth="343.0" text="Fees Type" textFill="#0f4c8d">
                      <font>
-                        <Font size="25.0" />
+                        <Font name="Lucida Sans Demibold" size="20.0" />
                      </font>
                   </Label>
+                  <Separator layoutX="25.0" layoutY="73.0" opacity="0.7" prefHeight="0.0" prefWidth="313.0">
+                     <effect>
+                        <Lighting>
+                           <bumpInput>
+                              <Shadow />
+                           </bumpInput>
+                           <light>
+                              <Light.Distant color="#26b6cd" />
+                           </light>
+                        </Lighting>
+                     </effect>
+                  </Separator>
+                  <ButtonBar layoutX="28.0" layoutY="409.0" prefHeight="40.0" prefWidth="336.0">
+                     <buttons>
+                        <Button fx:id="btn_add" mnemonicParsing="false" onAction="#handle_btn_add" prefHeight="30.0" text="Add New" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <effect>
+                              <Lighting diffuseConstant="1.77" surfaceScale="1.62">
+                                 <bumpInput>
+                                    <Shadow />
+                                 </bumpInput>
+                                 <light>
+                                    <Light.Distant color="#95e8cc" />
+                                 </light>
+                              </Lighting>
+                           </effect>
+                        </Button>
+                        <Button fx:id="btn_edit" mnemonicParsing="false" onAction="#handle_btn_edit" prefHeight="32.0" text="Edit">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <effect>
+                              <Lighting diffuseConstant="1.91">
+                                 <bumpInput>
+                                    <Shadow />
+                                 </bumpInput>
+                                 <light>
+                                    <Light.Distant color="#81d0b6" />
+                                 </light>
+                              </Lighting>
+                           </effect>
+                        </Button>
+                        <Button fx:id="btn_del" mnemonicParsing="false" onAction="#handle_btn_del" prefHeight="34.0" prefWidth="102.0" text="Delete">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <effect>
+                              <Lighting diffuseConstant="1.86">
+                                 <bumpInput>
+                                    <Shadow />
+                                 </bumpInput>
+                                 <light>
+                                    <Light.Distant color="#91b9ff" />
+                                 </light>
+                              </Lighting>
+                           </effect>
+                        </Button>
+                     </buttons>
+                  </ButtonBar>
+                  <AnchorPane layoutX="134.0" layoutY="39.0" prefHeight="34.0" prefWidth="36.0">
+                     <effect>
+                        <ImageInput>
+                           <source>
+                              <Image url="/Resources/add_chart.png" />
+                           </source>
+                        </ImageInput>
+                     </effect>
+                  </AnchorPane>
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
+      <Label layoutX="23.0" layoutY="25.0" prefHeight="70.0" prefWidth="565.0" text="MANAGE FEES" textFill="#18ad8b">
+         <font>
+            <Font name="Lucida Sans Demibold" size="24.0" />
+         </font>
+      </Label>
+      <Separator layoutX="23.0" layoutY="72.0" opacity="0.7" prefHeight="3.0" prefWidth="354.0">
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+               <light>
+                  <Light.Distant color="#68250e" />
+               </light>
+            </Lighting>
+         </effect>
+      </Separator>
+      <Label layoutX="23.0" layoutY="75.0" prefHeight="17.0" prefWidth="217.0" text="SHARDA MEDICAL NURSING HOME" textFill="#36a8eb">
+         <font>
+            <Font name="Berlin Sans FB" size="12.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="212.0" layoutY="71.0" prefHeight="26.0" prefWidth="28.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/504661.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
+      <AnchorPane layoutX="377.0" layoutY="29.0" prefHeight="62.0" prefWidth="65.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/add_medice_3.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
+      <AnchorPane layoutX="442.0" layoutY="29.0" prefHeight="62.0" prefWidth="65.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/medicine.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
+      <AnchorPane layoutX="507.0" layoutY="29.0" prefHeight="62.0" prefWidth="65.0">
+         <effect>
+            <ImageInput>
+               <source>
+                  <Image url="/Resources/prescribed_medicine.png" />
+               </source>
+            </ImageInput>
+         </effect>
+      </AnchorPane>
    </children>
 </AnchorPane>

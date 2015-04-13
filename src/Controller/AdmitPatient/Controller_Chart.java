@@ -61,6 +61,8 @@ public class Controller_Chart implements Initializable
     @FXML
     private TableColumn<Meds,String> columnRemark;
     @FXML
+    private TableColumn<Meds, String> med_id_col;
+    @FXML
     private TableCell name;
     @FXML
     private TableCell dosage;
@@ -119,22 +121,22 @@ public class Controller_Chart implements Initializable
 		PreparedStatement stmt = null;
 		try
 		{
-			String q2 = "Select medicine_ID from Medicine where medicine_name = ?";
-			stmt = con.prepareStatement(q2);
-			stmt.setString(1, tableChart.getSelectionModel().getSelectedItem().getMedname());
-			ResultSet rs = stmt.executeQuery();
-			while(rs.next())
-            {
-	            String query = "Delete From Medication Where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;";
-	            stmt = con.prepareStatement(query);
-	            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-	            stmt.setString(2, Controller_Indoor_Patient.dateID);
-	            stmt.setString(3, Controller_Indoor_Patient.timeID);
-	            stmt.setString(4, rs.getString("medicine_ID"));
-	            handle();
-	            int no = stmt.executeUpdate();
-	            System.out.println("Number of affected rows: " + no);
-            }
+            String query = "Delete From Medication Where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;";
+            stmt = con.prepareStatement(query);
+            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+            stmt.setString(2, Controller_Indoor_Patient.dateID);
+            stmt.setString(3, Controller_Indoor_Patient.timeID);
+            stmt.setString(4, Controller_Indoor_Patient.medID);
+            handle();
+            int no = stmt.executeUpdate();
+            System.out.println("Number of affected rows: " + no);
+            
+            Parent chart = FXMLLoader.load(getClass().getResource("/View/IndoorPatient/chart.fxml"));
+	        Scene scene_chart = new Scene(chart);
+	        Stage stage_chart = (Stage) buttonBack.getScene().getWindow();
+	        stage_chart.setScene(scene_chart);
+	        stage_chart.show();	            
+	            
 		}
 		catch(SQLException E)
 		{
@@ -169,7 +171,9 @@ public class Controller_Chart implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
-        
+    	columnName.setEditable(false);
+    	med_id_col.setEditable(false);
+    	
         treeviewDate.setOnMouseClicked(new EventHandler<MouseEvent>()
         {
             @Override
@@ -213,14 +217,14 @@ public class Controller_Chart implements Initializable
             			ResultSet rs = stmt.executeQuery();
             			while(rs.next())
                         {
-            				String q1 = "select medicine_name from Medicine where medicine_ID = ?;";
+            				String q1 = "select * from Medicine where medicine_ID = ?;";
             				stmt = con.prepareStatement(q1);
                             stmt.setString(1, rs.getString("medicine_ID"));
                             ResultSet rs2 = stmt.executeQuery();
                             System.out.println(rs.getString("medicine_ID"));
                             while(rs2.next())
                             {
-                                data.add(new Meds(rs2.getString("medicine_name"),rs.getString("amount"),rs.getString("remark")));
+                                data.add(new Meds(rs2.getString("medicine_ID"), rs2.getString("medicine_name"),rs.getString("amount"),rs.getString("remark")));
                             }
                         }
             		}
@@ -248,69 +252,17 @@ public class Controller_Chart implements Initializable
                 {
                    Meds m = tableChart.getSelectionModel().getSelectedItem();
                    Controller_Indoor_Patient.medName = m.medname;
+                   Controller_Indoor_Patient.medID = m.medid;
                 }
                 
             }
         });
+        med_id_col.setCellValueFactory(new PropertyValueFactory<>("medid"));
         columnName.setCellValueFactory(new PropertyValueFactory<>("medname"));
         columnDosage.setCellValueFactory(new PropertyValueFactory<>("dosage"));
         columnRemark.setCellValueFactory(new PropertyValueFactory<>("remark"));
    
-        columnName.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Meds, String>>() 
-        {
-		   	@Override
-	        public void handle(TableColumn.CellEditEvent<Meds, String> event)
-	        {
-		   		
-		   		Connection con = Main.getConnection();
-				if(con == null)
-				{
-					Main.setConnection(null);
-					Main.setUsername("");
-					Main.setPort("");
-					Main.setpassword("");
-					Main.setDbName("");
-					Main.setIP("");
-					
-					Dialogs.create()
-		    		.title(" ALERT ")
-		    		.masthead(" Database is not setup ")
-		    		.message("Please set up the connection ")
-		    		.showWarning();
-					return ;
-				}
-				PreparedStatement stmt = null;
-				try
-				{
-					String query1 = "Select medicine_ID from Medicine where medicine_name=?;";
-					stmt = con.prepareStatement(query1);
-					stmt.setString(1, event.getNewValue());
-	                ResultSet rs = stmt.executeQuery();
-					
-	                while(rs.next())
-	                {
-		                String query = "Update Medication set medicine_ID = ? where pat_ID = ? and date = ? and time = ?" ;
-		                stmt = con.prepareStatement(query);
-		                stmt.setString(1, rs.getString("medicine_ID"));
-		                stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-		                stmt.setString(3, Controller_Indoor_Patient.dateID);
-		                stmt.setString(4, Controller_Indoor_Patient.timeID);
-		                int no = stmt.executeUpdate();
-		                System.out.println("No of affected rows: " + no);
-	                }
-				}
-				catch(SQLException E)
-				{
-					Dialogs.create()
-		    		.title(" ALERT ")
-		    		.masthead(" SQlException encountered ")
-		    		.message("Items could not be updated ")
-		    		.showWarning();
-					return ;
-				}
-				return ;
-	        }
-		});
+        
         columnDosage.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Meds, String>>() 
         	{
         		
@@ -337,23 +289,16 @@ public class Controller_Chart implements Initializable
 					PreparedStatement stmt = null;
 					try
 					{
-						String q = "Select medicine_ID from Medicine where medicine_name = ?;";
-						stmt = con.prepareStatement(q);
-						stmt.setString(1, Controller_Indoor_Patient.medName);
-		                ResultSet rs = stmt.executeQuery();
-	                    while(rs.next())
-	                    {
-		                    String query = "Update Medication set amount = ? where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;" ;
-		                    stmt = con.prepareStatement(query);
-		                    stmt.setString(1, event.getNewValue());
-		                    stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-		                    stmt.setString(3, Controller_Indoor_Patient.dateID);
-		                    stmt.setString(4, Controller_Indoor_Patient.timeID);
-		                    stmt.setString(5, rs.getString("medicine_ID"));
-		                    int no = stmt.executeUpdate();
-		                    System.out.println("No of rows updated: " + no);
-	                    }
-					}
+						String query = "Update Medication set amount = ? where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;" ;
+	                    stmt = con.prepareStatement(query);
+	                    stmt.setString(1, event.getNewValue());
+	                    stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+	                    stmt.setString(3, Controller_Indoor_Patient.dateID);
+	                    stmt.setString(4, Controller_Indoor_Patient.timeID);
+	                    stmt.setString(5, Controller_Indoor_Patient.medID);
+	                    int no = stmt.executeUpdate();
+	                    System.out.println("No of rows updated: " + no);
+	                }
 					catch(SQLException E)
 					{
 						Dialogs.create()
@@ -390,22 +335,16 @@ public class Controller_Chart implements Initializable
 					PreparedStatement stmt = null;
 					try
 					{
-						String q = "Select medicine_ID from Medicine where medicine_name = ?;";
-						stmt = con.prepareStatement(q);
-						stmt.setString(1, Controller_Indoor_Patient.medName);
-	                    ResultSet rs = stmt.executeQuery();
-	                    while(rs.next())
-	                    {
-		                    String query = "Update Medication set remark = ? where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;" ;
-		                    stmt = con.prepareStatement(query);
-		                    stmt.setString(1, event.getNewValue());
-		                    stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-		                    stmt.setString(3, Controller_Indoor_Patient.dateID);
-		                    stmt.setString(4, Controller_Indoor_Patient.timeID);
-		                    stmt.setString(5, rs.getString("medicine_ID"));
-		                    int no = stmt.executeUpdate();
-		                    System.out.println("No of rows affected: " + no);
-	                    }
+						String query = "Update Medication set remark = ? where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;" ;
+	                    stmt = con.prepareStatement(query);
+	                    stmt.setString(1, event.getNewValue());
+	                    stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+	                    stmt.setString(3, Controller_Indoor_Patient.dateID);
+	                    stmt.setString(4, Controller_Indoor_Patient.timeID);
+	                    stmt.setString(5, Controller_Indoor_Patient.medID);
+	                    int no = stmt.executeUpdate();
+	                    System.out.println("No of rows affected: " + no);
+	                    
 					}
 					catch(SQLException E)
 					{
@@ -418,6 +357,7 @@ public class Controller_Chart implements Initializable
 					}
 	            }
         });
+        med_id_col.setCellFactory(TextFieldTableCell.forTableColumn());
         columnName.setCellFactory(TextFieldTableCell.forTableColumn());
         columnDosage.setCellFactory(TextFieldTableCell.forTableColumn());
         columnRemark.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -484,14 +424,25 @@ public class Controller_Chart implements Initializable
     public static class Meds 
     {
 
-        public Meds(String a, String b, String c) {
+        public Meds(String d, String a, String b, String c) {
+        	this.medid = d;
             this.medname = a;
             this.dosage =b;
             this.remark = c;
             
         }
-            private String medname;
+            private String medname, medid;
 
+        public String getMedid()
+        {
+        	return this.medid;
+        }
+        
+        public void setMedid(String id)
+        {
+        	this.medid = id;
+        }
+         
         public String getMedname() {
             return medname;
         }

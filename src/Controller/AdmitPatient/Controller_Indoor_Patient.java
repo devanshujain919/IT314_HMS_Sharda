@@ -51,7 +51,7 @@ public class Controller_Indoor_Patient implements Initializable
 	private HashMap<String, String> pat_id_name = new HashMap<String, String>();
 	public static Patient_Info pat_info;
 	
-	public static String dateID, timeID, medName, testName, value;
+	public static String dateID, timeID, medName, testName, value, medID;
 	
 	private Main mainApp;
 	private Stage stage;
