@@ -67,7 +67,6 @@ public class AddTestReportController implements Initializable
     
     public void initialize(URL url, ResourceBundle rb) 
     {
-    	//TODO
         textDate.setPromptText("Choose Date");
         textName.setPromptText("Enter Test Name");
         textDetail.setPromptText("Enter Test Report Details ...");

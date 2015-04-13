@@ -214,9 +214,7 @@ public class Controller_Indoor_Patient implements Initializable
 	@FXML
 	private void handle_btn_del()
 	{
-		//TODO
-		//Delete test reports and medication reports
-		
+	
 		if(table_view.getSelectionModel().getSelectedIndex() < 0)
 		{
 			Dialogs.create()
@@ -226,7 +224,49 @@ public class Controller_Indoor_Patient implements Initializable
     		.message("Please select a patient... ")
     		.showWarning();
 			return ;
-		}		
+		}
+		
+		Connection con = Main.getConnection();
+		if(con == null)
+		{
+			Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return ;
+		}
+		else
+		{
+			PreparedStatement stmt = null;
+			try
+			{
+				String query = "DELETE FROM Medication where pat_ID=?";
+				stmt = con.prepareStatement(query);
+				stmt.setString(1, table_view.getSelectionModel().getSelectedItem().getPat_id().getValue());
+				int no = stmt.executeUpdate();
+				System.out.println("Delete from medications: " + no);
+				
+				query = "DELETE FROM Patients_Test where pat_ID=?";
+				stmt = con.prepareStatement(query);
+				stmt.setString(1, table_view.getSelectionModel().getSelectedItem().getPat_id().getValue());
+				no = stmt.executeUpdate();
+				System.out.println("Delete from test results: " + no);
+
+			}
+			catch(SQLException E)
+			{
+				Dialogs.create()
+	    		.owner(stage)
+	    		.title(" ALERT ")
+	    		.masthead(" Database is not setup ")
+	    		.message("Items could not be loaded... ")
+	    		.showWarning();
+				return ;
+			}
+		}
+		
 	}
 	
 	@FXML

@@ -24,7 +24,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btn_edit_profile" layoutX="20.0" layoutY="113.0" mnemonicParsing="false" onAction="#edit_profile" prefHeight="25.0" prefWidth="118.0" text="EDIT PROFILE">
+      <Button fx:id="btn_edit_profile" layoutX="20.0" layoutY="113.0" mnemonicParsing="false" onAction="#handle_btn_edit_profile" prefHeight="25.0" prefWidth="118.0" text="EDIT PROFILE">
          <effect>
             <Lighting>
                <bumpInput>
@@ -39,7 +39,7 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="btn_logout" layoutX="581.0" layoutY="113.0" mnemonicParsing="false" onAction="#logout" prefHeight="25.0" prefWidth="90.0" text="LOGOUT">
+      <Button fx:id="btn_logout" layoutX="581.0" layoutY="113.0" mnemonicParsing="false" onAction="#handle_btn_logout" prefHeight="25.0" prefWidth="90.0" text="LOGOUT">
          <effect>
             <Lighting>
                <bumpInput>
@@ -54,22 +54,16 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <Button fx:id="btn_search_prescription" layoutX="37.0" layoutY="309.0" mnemonicParsing="false" onAction="#search_prescription" text="SEARCH PRESCRIPTION" textFill="#08426b" />
-      <Button fx:id="btn_create_receipt" layoutX="37.0" layoutY="357.0" mnemonicParsing="false" onAction="#create_receipt" prefHeight="25.0" prefWidth="147.0" text="CREATE RECEIPT" textFill="#08426b" />
-      <Button fx:id="btn_add_medication" layoutX="37.0" layoutY="450.0" mnemonicParsing="false" onAction="#add_medication" prefHeight="25.0" prefWidth="147.0" text="ADD MEDICATION" textFill="#08426b" />
-      <Button fx:id="btn_search_medication" layoutX="37.0" layoutY="498.0" mnemonicParsing="false" onAction="#search_medication" text="SEARCH MEDICATION" textFill="#08426b" />
-      <Button fx:id="btn_search_tests" layoutX="37.0" layoutY="591.0" mnemonicParsing="false" onAction="#search_tests" text="SEARCH TEST RESULTS" textFill="#08426b" />
-      <Button fx:id="btn_add_tests" layoutX="37.0" layoutY="542.0" mnemonicParsing="false" onAction="#add_tests" text="ADD TEST RESULTS" textFill="#08426b" />
-      <Button fx:id="btn_search_receipt" layoutX="37.0" layoutY="402.0" mnemonicParsing="false" onAction="#search_receipt" prefHeight="25.0" prefWidth="147.0" text="SEARCH RECEIPT" textFill="#08426b" />
-      <Button fx:id="btn_search_employee" layoutX="511.0" layoutY="308.0" mnemonicParsing="false" onAction="#search_employee" text="SEARCH FOR EMPLOYEE" textFill="#08426b" />
-      <Button fx:id="btn_add_patient" layoutX="259.0" layoutY="475.0" mnemonicParsing="false" onAction="#add_patient" prefHeight="25.0" prefWidth="184.0" text="ADD NEW PATIENT" textFill="#08426b" />
-      <Button fx:id="btn_manage_account" layoutX="253.0" layoutY="306.0" mnemonicParsing="false" onAction="#manage_account" text="MANAGE ACCOUNT DETAILS" textFill="#08426b" />
-      <Button fx:id="btn_add_employee" layoutX="512.0" layoutY="261.0" mnemonicParsing="false" onAction="#add_employee" text="ADD NEW EMPLOYEE" textFill="#08426b" />
-      <Button fx:id="btn_manage_medicines" layoutX="512.0" layoutY="357.0" mnemonicParsing="false" onAction="#manage_medicines" prefHeight="25.0" prefWidth="155.0" text="MANAGE MEDICINES" textFill="#08426b" />
-      <Button fx:id="btn_manage_tests" layoutX="512.0" layoutY="450.0" mnemonicParsing="false" onAction="#manage_tests" text="MANAGE TEST TYPES" textFill="#08426b" />
-      <Button fx:id="btn_manage_fees" layoutX="513.0" layoutY="402.0" mnemonicParsing="false" onAction="#manage_fees" text="MANAGE FEES TYPES" textFill="#08426b" />
-      <Button fx:id="btn_manage_remarks" layoutX="512.0" layoutY="498.0" mnemonicParsing="false" onAction="#manage_remarks" prefHeight="25.0" prefWidth="155.0" text="MANAGE REMARKS" textFill="#08426b" />
-      <Button fx:id="btn_search_patient" layoutX="262.0" layoutY="523.0" mnemonicParsing="false" onAction="#search_patient" prefHeight="25.0" prefWidth="184.0" text="SEARCH FOR PATIENT" textFill="#08426b" />
+      <Button fx:id="btn_manage_receipt" layoutX="37.0" layoutY="380.0" mnemonicParsing="false" onAction="#handle_btn_manage_receipt" prefHeight="25.0" prefWidth="147.0" text="Manage Receipts" textFill="#08426b" />
+      <Button fx:id="btn_manage_indoor_patient" layoutX="37.0" layoutY="492.0" mnemonicParsing="false" onAction="#handle_btn_manage_indoor_patient" prefHeight="54.0" prefWidth="147.0" text="Manage Indoor Patient" textFill="#08426b" wrapText="true" />
+      <Button fx:id="btn_add_patient" layoutX="259.0" layoutY="475.0" mnemonicParsing="false" onAction="#handle_btn_add_new_patient" prefHeight="25.0" prefWidth="184.0" text="ADD NEW PATIENT" textFill="#08426b" />
+      <Button fx:id="btn_manage_account" layoutX="286.0" layoutY="306.0" mnemonicParsing="false" onAction="#handle_btn_manage_account" text="Manage Accounts" textFill="#08426b" />
+      <Button fx:id="btn_manage_employee" layoutX="512.0" layoutY="304.0" mnemonicParsing="false" onAction="#handle_btn_manage_employee" text="Manage Employees" textFill="#08426b" />
+      <Button fx:id="btn_manage_medicines" layoutX="512.0" layoutY="357.0" mnemonicParsing="false" onAction="#handle_btn_manage_medicine" prefHeight="25.0" prefWidth="155.0" text="MANAGE MEDICINES" textFill="#08426b" />
+      <Button fx:id="btn_manage_tests" layoutX="512.0" layoutY="450.0" mnemonicParsing="false" onAction="#handle_btn_manage_test" text="MANAGE TEST TYPES" textFill="#08426b" />
+      <Button fx:id="btn_manage_fees" layoutX="513.0" layoutY="402.0" mnemonicParsing="false" onAction="#handle_btn_manage_fee" text="MANAGE FEES TYPES" textFill="#08426b" />
+      <Button fx:id="btn_manage_remarks" layoutX="512.0" layoutY="498.0" mnemonicParsing="false" onAction="#handle_btn_manage_remark" prefHeight="25.0" prefWidth="155.0" text="MANAGE REMARKS" textFill="#08426b" />
+      <Button fx:id="btn_search_patient" layoutX="262.0" layoutY="523.0" mnemonicParsing="false" onAction="#handle_btn_manage_patient" prefHeight="25.0" prefWidth="184.0" text="Manage Patient" textFill="#08426b" />
       <AnchorPane layoutX="230.0" layoutY="85.0" prefHeight="73.0" prefWidth="75.0">
          <effect>
             <ImageInput />
@@ -111,7 +105,7 @@
             </ImageInput>
          </effect>
       </AnchorPane>
-      <Button fx:id="btn_create_prescription" layoutX="37.0" layoutY="261.0" mnemonicParsing="false" onAction="#create_prescription" text="CREATE PRESCRIPTION" textFill="#08426b" />
+      <Button fx:id="btn_manage_prescription" layoutX="37.0" layoutY="281.0" mnemonicParsing="false" onAction="#handle_btn_manage_prescription" text="Manage Prescriptions" textFill="#08426b" />
       <Separator layoutX="7.0" layoutY="149.0" prefHeight="10.0" prefWidth="709.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="140.0">
          <effect>
             <Lighting>

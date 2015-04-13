@@ -1,5 +1,6 @@
 package Controller.AdmitPatient;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,10 +12,13 @@ import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.Dialogs;
 
+import com.itextpdf.text.DocumentException;
+
 import Controller.Prescription.Controller_Search_Prescription;
 import Model.Patient.Indoor_Patient;
 import Model.Patient.Patient_Info;
 import application.Main;
+import application.Reportpdf;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -106,27 +110,70 @@ public class Controller_Discharge_Patient implements Initializable
 	}
 	
 	@FXML 
-	private void handle_btn_print_med()
+	private void handle_btn_print_med() throws ClassNotFoundException, DocumentException, IOException, SQLException
 	{
-		//TODO: go to print medications
+		try
+		{
+			Reportpdf.createMedication(Reportpdf.Medication, pat_info.getPat_id().getValue());
+			Reportpdf.printPDF(Reportpdf.Medication);
+		}
+		catch(Exception E)
+		{
+			System.out.println("Sorry, could not print..");
+			Dialogs.create()
+			.owner(stage)
+			.title(" ALERT ")
+			.masthead(" Printing Error ")
+			.message("Sorry, Could not print.... ")
+			.showWarning();
+		}
+		
 	}
 	
 	@FXML
 	private void handle_btn_print_test()
 	{
-		//TODO: go to print tests
+		try
+		{
+			Reportpdf.createReport(Reportpdf.Report, pat_info.getPat_id().getValue());
+			Reportpdf.printPDF(Reportpdf.Report);
+		}
+		catch(Exception E)
+		{
+			System.out.println("Sorry, could not print..");
+			Dialogs.create()
+			.owner(stage)
+			.title(" ALERT ")
+			.masthead(" Printing Error ")
+			.message("Sorry, Could not print.... ")
+			.showWarning();
+		}		
 	}
 	
 	@FXML
 	private void handle_btn_save()
 	{
-		//TODO save and go back to search_indoor_patient
 		if(isInputValid())
 		{
 			ind_pat_info.setDate_of_discharge(new SimpleStringProperty(date_discharge.getValue().toString()));
 			ind_pat_info.setTime_of_discharge(new SimpleStringProperty(time_discharge.getText()));
 			storeToDB();
-			
+			try
+			{
+				FXMLLoader loader = new FXMLLoader();
+				System.out.println("1");
+				loader.setLocation(Main.class.getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
+				System.out.println("2");
+				AnchorPane anchor_pane = (AnchorPane) loader.load();
+				Main.getRootLayout().setCenter(anchor_pane);
+				Controller_Indoor_Patient controller = loader.getController();
+				controller.setMainApp(mainApp);
+			}
+			catch(Exception E)
+			{
+				E.printStackTrace();
+				
+			}	
 		}		
 	}
 	
@@ -199,8 +246,21 @@ public class Controller_Discharge_Patient implements Initializable
 	@FXML
 	private void handle_btn_cancel()
 	{
-		//TODO:cancel and go back to search_indoor_patient
-		
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			System.out.println("1");
+			loader.setLocation(Main.class.getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
+			System.out.println("2");
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			Main.getRootLayout().setCenter(anchor_pane);
+			Controller_Indoor_Patient controller = loader.getController();
+			controller.setMainApp(mainApp);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}	
 	}
 	
 	@FXML

@@ -225,8 +225,6 @@ public class Controller_Search_Patient_Admit implements Initializable
 		
 		if(isSaveClicked)
 		{
-			//TODO: reloading the page
-			
 			try
 			{
 				FXMLLoader loader = new FXMLLoader();
@@ -280,7 +278,6 @@ public class Controller_Search_Patient_Admit implements Initializable
 	
 	public void handle_btn_cancel()
 	{
-		//TODO
 		try
 		{
 			FXMLLoader loader = new FXMLLoader();

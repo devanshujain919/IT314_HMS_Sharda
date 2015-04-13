@@ -28,16 +28,16 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Devanshu Jain
+ * @author hppc
  */
-public class Controller_Dashboard implements Initializable 
+public class Controller_Dashboard_Medical_Officer implements Initializable 
 {
 	private Main mainApp;
 	private Stage primaryStage;
 	private Employee_Info employee_info;
 	
     @FXML private Label employee_name;
-    @FXML Image img_logo, img_account, img_search, img_add, img_patient;
+    @FXML Image img_logo;
     @FXML Button btn_edit_profile, btn_logout;
     @FXML Button btn_create_prescription, btn_search_prescription;
     @FXML Button btn_create_receipt, btn_search_receipt;
@@ -47,7 +47,6 @@ public class Controller_Dashboard implements Initializable
     @FXML Button btn_add_patient, btn_search_patient;
     @FXML Button btn_manage_account;
     @FXML Button btn_manage_fees, btn_manage_tests, btn_manage_medicines, btn_manage_remarks;
-    
     
     @FXML
     private void handle_btn_edit_profile() 
@@ -86,6 +85,12 @@ public class Controller_Dashboard implements Initializable
         System.out.println("logout is clicked!!!");
     }
     @FXML
+    private void handle_btn_manage_indoor_patient()
+    {
+    	mainApp.manage_indoor_patient();
+    }
+    
+    @FXML
     private void handle_btn_add_new_patient() 
     {
         System.out.println("add patient is clicked!!!");
@@ -97,12 +102,7 @@ public class Controller_Dashboard implements Initializable
         System.out.println("edit profile is clicked!!!");
         mainApp.showSearchPatient();
     }
-    @FXML
-    private void handle_btn_manage_employee() 
-    {
-        System.out.println("edit profile is clicked!!!");
-        mainApp.manageEmployee();
-    }
+    
     @FXML
     private void handle_btn_manage_fee() 
     {
@@ -126,40 +126,12 @@ public class Controller_Dashboard implements Initializable
     {
         System.out.println("edit profile is clicked!!!");
         mainApp.showRemarks();
-    }
-    @FXML
-    private void handle_btn_manage_account() 
-    {
-        System.out.println("edit profile is clicked!!!");
-        mainApp.manageAccount();
-    }
-    @FXML
-    private void handle_btn_manage_prescription() 
-    {
-        System.out.println("edit profile is clicked!!!");
-        mainApp.managePrescription();
-    }
-    @FXML
-    private void handle_btn_manage_receipt() 
-    {
-        System.out.println("edit profile is clicked!!!");
-        mainApp.manageReceipt();
-    }
-    
-    @FXML
-    private void handle_btn_manage_indoor_patient()
-    {
-    	mainApp.manage_indoor_patient();
-    }
-    
+    }    
+        
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
     	img_logo = new Image("/Resources/img_logo.png");
-    	img_add = new Image("/Resources/img_add.png");
-    	img_patient = new Image("/Resources/img_patient_related_info.png");
-    	img_account = new Image("/Resources/img_account_management.png");
-    	img_search = new Image("/Resources/img_search.png");
     }
     
     public void setMainApp(Main mainApp, Employee_Info employee_info)
@@ -167,11 +139,6 @@ public class Controller_Dashboard implements Initializable
     	this.mainApp = mainApp;
     	this.primaryStage = mainApp.getStage();
     	this.employee_info = employee_info;
-    	String str = "Welcome, " + employee_info.getFirst_name().getValue() + " " + employee_info.getLast_name().getValue();
-    	Text text = new Text(str);
-    	double width = text.getLayoutBounds().getWidth();
-    	employee_name.setMinWidth(width);
-    	employee_name.setText(str);
     }
     
 }

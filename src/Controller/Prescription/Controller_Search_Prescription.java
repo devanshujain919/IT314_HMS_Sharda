@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
+import application.Reportpdf;
 import Model.Patient.Medicine_Prescribed;
 import Model.Patient.Patient_Info;
 import Model.Patient.Prescription;
@@ -66,7 +67,7 @@ public class Controller_Search_Prescription implements Initializable
 	@FXML Button btn_edit_pres = new Button();
 	@FXML Button btn_see_med = new Button();
 	@FXML Button btn_del_pres = new Button();
-	
+	@FXML Button btn_print = new Button();
 	@FXML Button btn_back = new Button();
 	
 	@FXML TextField patient_name = new TextField(), patient_id = new TextField();
@@ -94,6 +95,26 @@ public class Controller_Search_Prescription implements Initializable
 		table_view.setItems(prescriptionList);
 		showSelectedPrescription(null);
 		table_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showSelectedPrescription(newValue));
+	}
+	
+	@FXML
+	private void handle_btn_print()
+	{
+		try
+		{
+			Reportpdf.createPrescription(Reportpdf.Prescription, pat_info.getPat_id().getValue());
+			Reportpdf.printPDF(Reportpdf.Prescription);
+		}
+		catch(Exception E)
+		{
+			System.out.println("Sorry, could not print..");
+			Dialogs.create()
+			.owner(stage)
+			.title(" ALERT ")
+			.masthead(" Printing Error ")
+			.message("Sorry, Could not print.... ")
+			.showWarning();
+		}
 	}
 	
 	@FXML
@@ -331,24 +352,6 @@ public class Controller_Search_Prescription implements Initializable
 
 	private void getFromDB()
 	{
-		//TODO
-//		Prescription p1 = new Prescription();
-//		p1.setDate(LocalDate.of(1994, 10, 18));
-//		p1.setTime(new SimpleStringProperty(Calendar.getInstance().HOUR_OF_DAY + ":" + Calendar.getInstance().MINUTE + ":" + Calendar.getInstance().SECOND));
-//		p1.setDisease(new SimpleStringProperty("Proness"));
-//		p1.setPat_id(new SimpleStringProperty("1"));
-//		p1.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
-//		
-//		Prescription p2 = new Prescription();
-//		p2.setDate(LocalDate.of(2015, 10, 15));
-//		p2.setTime(new SimpleStringProperty(Calendar.getInstance().HOUR_OF_DAY + ":" + Calendar.getInstance().MINUTE + ":" + Calendar.getInstance().SECOND));
-//		p2.setDisease(new SimpleStringProperty("Beemari"));
-//		p2.setPat_id(new SimpleStringProperty("2"));
-//		p2.setRemarks(new SimpleStringProperty("hoolaaaaaa..."));
-//		
-//		prescriptionList.add(p1);
-//		prescriptionList.add(p2);
-		
 		Connection con = Main.getConnection();
 		if(con == null)
 		{
