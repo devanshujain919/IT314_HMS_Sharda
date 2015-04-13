@@ -3,10 +3,12 @@ package application;
 import java.io.IOException;
 import java.sql.Connection;
 
+import Controller.Account.Controller_Account_Info;
 import Controller.AdmitPatient.Controller_Indoor_Patient;
 import Controller.CMS.*;
 import Controller.Employee.Controller_Add_Employee;
 import Controller.Employee.Controller_Search_Employee;
+import Controller.Receipt.Controller_Search_Patient_Receipt;
 import Controller.Root.Controller_Dashboard;
 import Controller.Root.Controller_Root_Layout;
 import Controller.Login.Controller_Login;
@@ -306,6 +308,7 @@ public class Main extends Application
 	public void showAddPatient() 
 	{
 		// TODO:
+		
 	}
 
 	public void showSearchPatient() 
@@ -354,13 +357,25 @@ public class Main extends Application
 
 	public void manageReceipt() 
 	{
-		// TODO Auto-generated method stub
+		System.out.println("Manage Receipt");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/View/Receipt/home.fxml"));
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Search_Patient_Receipt controller = loader.getController();
+			controller.setMainApp(this);
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}	
 		
 	}
 	
 	public void manage_indoor_patient()
 	{
-		//TODO
 		System.out.println("Manage Indoor patient");
 		try
 		{
@@ -385,7 +400,21 @@ public class Main extends Application
 	
 	public void manageAccount() 
 	{
-		// TODO Auto-generated method stub
+		System.out.println("Choose the patient");
+		try
+		{
+			FXMLLoader loader = new FXMLLoader();
+			System.out.println("1");
+			loader.setLocation(Main.class.getResource("/View/Account/Account_Info.fxml"));
+			System.out.println("2");
+			AnchorPane anchor_pane = (AnchorPane) loader.load();
+			root_layout.setCenter(anchor_pane);
+			Controller_Account_Info controller = loader.getController();
+		}
+		catch(Exception E)
+		{
+			E.printStackTrace();
+		}		
 		
 	}
 	
@@ -395,7 +424,6 @@ public class Main extends Application
 
 	public void manageEmployee()
 	{
-		// TODO Auto-generated method stub
 		System.out.println("Manage Employees");
 		try
 		{

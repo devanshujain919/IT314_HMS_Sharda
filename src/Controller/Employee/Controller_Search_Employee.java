@@ -342,6 +342,8 @@ public class Controller_Search_Employee implements Initializable
 			Controller_Add_Employee controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
+			emp_info.setBirth_date(new SimpleStringProperty(LocalDate.now().toString()));
+			emp_info.setDate_of_joining(LocalDate.now());
 			controller.setEmployee(emp_info);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();

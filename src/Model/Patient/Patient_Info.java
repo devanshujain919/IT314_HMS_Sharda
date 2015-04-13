@@ -143,6 +143,24 @@ public class Patient_Info
 	public void setState(StringProperty state) {
 		this.state = state;
 	}
+
+	public static Patient_Info clone(Patient_Info pat_info) 
+	{
+		Patient_Info pat_info_dup = new Patient_Info();
+		pat_info_dup.setFirst_name(pat_info.getFirst_name());
+		pat_info_dup.setPat_id(pat_info.getPat_id());
+		pat_info_dup.setAddress(pat_info.getAddress());
+		pat_info_dup.setBirth_date(pat_info.getBirth_date());
+		pat_info_dup.setCity(pat_info.getCity());
+		pat_info_dup.setEmergency_contact(pat_info.getEmergency_contact());
+		pat_info_dup.setEmergency_name(pat_info.getEmergency_name());
+		pat_info_dup.setEmergency_relation(pat_info.getEmergency_relation());
+		pat_info_dup.setMarital_status(pat_info.getMarital_status());
+		pat_info_dup.setState(pat_info.getState());
+		pat_info_dup.setSex(pat_info.getSex());
+		pat_info_dup.setPhone(pat_info.getPhone());
+		return pat_info_dup;
+	}
 	
 		
 	
