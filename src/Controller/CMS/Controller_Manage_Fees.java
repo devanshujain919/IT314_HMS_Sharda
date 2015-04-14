@@ -235,7 +235,7 @@ public class Controller_Manage_Fees implements Initializable
 			String query = "DELETE FROM Fee_type WHERE fee_id=?;";
 			stmt = con.prepareStatement(query);
 			stmt.setString(1, fee.get_fees_id().getValue());
-			int no = stmt.executeUpdate(query);
+			int no = stmt.executeUpdate();
 			System.out.println("No.of rows deleted: " + no);
 		}
 		catch(SQLException E)

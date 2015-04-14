@@ -79,7 +79,6 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		getFromDB();
 		date.setEditable(false);
 		time.setEditable(false);
 		patient_name.setEditable(false);
@@ -99,7 +98,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 			}
 		});
 		s_no_col.setSortable(false);
-		med_name_col.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().toString()));
+		med_name_col.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMedicine().get_med_name().getValue()));
 		table_view.setItems(prescriptionList);
 		showSelectedPrescription(null);
 		table_view.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> showSelectedPrescription(newValue));		
@@ -113,7 +112,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 		med_pres_info.setDate(pres_info.getDate());
 		med_pres_info.setTime(pres_info.getTime());
 		med_pres_info.setMedicine(new Medicine_Info("", "", ""));
-		boolean isSaveClicked = showDialogAddPrescription(med_pres_info);
+		boolean isSaveClicked = showDialogAddPrescription(med_pres_info, "ADD");
 		
 		if(isSaveClicked)
 		{
@@ -121,7 +120,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 		}
 	}
 	
-	private boolean showDialogAddPrescription(Medicine_Prescribed med_pres_info)
+	private boolean showDialogAddPrescription(Medicine_Prescribed med_pres_info, String mode)
 	{
 		boolean retValue = false;
 		try
@@ -138,7 +137,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 			Controller_Add_Prescribed_Medicines controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);			
-			controller.setPrescription(med_pres_info, pat_info);
+			controller.setPrescription(med_pres_info, pat_info, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 			
@@ -157,7 +156,8 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 		if(selectedIndex >= 0)
 		{
 			Medicine_Prescribed med_pres_info = table_view.getItems().get(selectedIndex);
-			boolean isSaveClicked = showDialogAddPrescription(med_pres_info);
+			System.out.println("Medicine ID: " + med_pres_info.getMedicine().get_med_id().getValue());
+			boolean isSaveClicked = showDialogAddPrescription(med_pres_info, "EDIT");
 			if(isSaveClicked)
 			{
 				refreshTableView();
@@ -228,17 +228,18 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 		PreparedStatement stmt = null;
 		try
 		{
-			String query = "DELETE FROM Medicine_Prescribed WHERE pat_ID=? AND date=? AND time=? AND medicine_id=?;";
+			String query = "DELETE FROM Medicine_prescribed WHERE pat_ID=? AND date=? AND time=? AND medicine_id=?;";
 			stmt = con.prepareStatement(query);
 			stmt.setString(1, med_pres.getPat_id().getValue());
 			stmt.setString(2, med_pres.getDate().toString());
 			stmt.setString(3, med_pres.getTime().getValue());
-			stmt.setString(4, med_pres.getMedicine().toString());
-			int no = stmt.executeUpdate(query);
+			stmt.setString(4, med_pres.getMedicine().get_med_id().getValue());
+			int no = stmt.executeUpdate();
 			System.out.println("No.of rows deleted: " + no);
 		}
 		catch(SQLException E)
 		{
+			E.printStackTrace();
 			Dialogs.create()
     		.owner(stage)
     		.title(" ALERT ")
@@ -303,6 +304,9 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 	{
 		this.pres_info = pres_info;
 		this.pat_info = pat_info;
+		
+		getFromDB();
+
 		System.out.println("Setting");
 		date.setText(pres_info.getDate().toString());
 		time.setText(pres_info.getTime().getValue());
@@ -367,17 +371,20 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 					System.out.println("its 1.2");
 					mp.setTime(new SimpleStringProperty(rs2.getString("time")));
 					mp.setPat_id(new SimpleStringProperty(rs2.getString("pat_ID")));
+					System.out.println("In the database: " + rs2.getString("medicine_ID"));
 					for(Medicine_Info mi : medicineList)
 					{
-						if(mi.get_med_id().equals(rs2.getString("medicine_ID")))
+						if(mi.get_med_id().getValue().equals(rs2.getString("medicine_ID")))
 						{
+							System.out.println(mi.get_med_id().getValue());
+							System.out.println("Its equal!!!");
 							mp.setMedicine(mi);
 						}
 					}
 					System.out.println("its 2");
 					mp.setMorning_amt(new SimpleStringProperty(rs2.getString("morning_amt")));
-					mp.setNoon_amt(new SimpleStringProperty(rs2.getString("noon_amount")));
-					mp.setEvening_amt(new SimpleStringProperty(rs2.getString("evening_amount")));
+					mp.setNoon_amt(new SimpleStringProperty(rs2.getString("noon_amt")));
+					mp.setEvening_amt(new SimpleStringProperty(rs2.getString("evening_amt")));
 					mp.setMorning_meal(new SimpleStringProperty(rs2.getString("is_morning")));
 					mp.setNoon_meal(new SimpleStringProperty(rs2.getString("is_noon")));
 					mp.setEvening_meal(new SimpleStringProperty(rs2.getString("is_evening")));
@@ -386,6 +393,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -409,7 +417,7 @@ public class Controller_Search_Prescribed_Medicines implements Initializable
 		{
 			FXMLLoader loader = new FXMLLoader();
 			System.out.println("1");
-			loader.setLocation(Main.class.getResource("/View/Prescription/Search_Prescribed_Medicines.fxml"));
+			loader.setLocation(Main.class.getResource("/View/Prescription/Search_Prescription.fxml"));
 			System.out.println("2");
 			AnchorPane anchor_pane = (AnchorPane) loader.load();
 			Main.getRootLayout().setCenter(anchor_pane);

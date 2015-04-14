@@ -75,7 +75,9 @@ public class Controller_Search_Prescription implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		getFromDB();
+		patient_name.setEditable(false);
+		patient_id.setEditable(false);
+		
 		pres_date.setEditable(false);
 		pres_follow.setEditable(false);
 		pres_disease.setEditable(false);
@@ -258,7 +260,7 @@ public class Controller_Search_Prescription implements Initializable
 			stmt.setString(1, pres.getPat_id().getValue());
 			stmt.setString(2, pres.getDate().toString());
 			stmt.setString(3, pres.getTime().getValue());
-			int no = stmt.executeUpdate(query);
+			int no = stmt.executeUpdate();
 			System.out.println("No.of rows deleted: " + no);
 		}
 		catch(SQLException E)
@@ -338,6 +340,7 @@ public class Controller_Search_Prescription implements Initializable
 	public void setPatient(Patient_Info pat_info, String incoming)
 	{
 		this.pat_info = pat_info;
+		getFromDB();
 		System.out.println("Setting");
 		patient_id.setText(pat_info.getPat_id().getValue());
 		patient_name.setText(pat_info.getFirst_name().getValue() + ", " + pat_info.getLast_name().getValue());
@@ -368,8 +371,9 @@ public class Controller_Search_Prescription implements Initializable
 			PreparedStatement stmt = null;
 			try
 			{
-				String query = "SELECT * FROM Prescription;";
+				String query = "SELECT * FROM Prescription WHERE pat_ID=?;";
 				stmt = con.prepareStatement(query);
+				stmt.setString(1, pat_info.getPat_id().getValue());
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{

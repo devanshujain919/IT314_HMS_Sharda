@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.paint.*?>
@@ -12,11 +10,16 @@
 
 <AnchorPane fx:id="anchor_pane" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CMS.Controller_Manage_Database">
    <children>
+      <Label text="Connect to Database" AnchorPane.leftAnchor="49.0" AnchorPane.rightAnchor="49.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font size="57.0" />
+         </font>
+      </Label>
       <Separator prefHeight="10.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="110.0" />
       <GridPane layoutX="215.0" layoutY="281.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="200.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="304.0" minWidth="10.0" prefWidth="163.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="457.0" minWidth="10.0" prefWidth="457.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -26,137 +29,24 @@
           <RowConstraints minHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label fx:id="ip_addr_label" prefHeight="50.0" prefWidth="299.0" text="IP address of server">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
-            <Label fx:id="username_label" prefHeight="83.0" prefWidth="310.0" text="User Name" GridPane.rowIndex="3">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
-            <Label fx:id="password_label" prefHeight="112.0" prefWidth="310.0" text="Password" GridPane.rowIndex="4">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
-            <TextArea fx:id="ip_addr" prefHeight="50.0" prefWidth="427.0" GridPane.columnIndex="1" />
+            <Label fx:id="ip_addr_label" prefHeight="97.0" prefWidth="310.0" text="IP address of server" />
+            <Label fx:id="username_label" prefHeight="83.0" prefWidth="310.0" text="User Name" GridPane.rowIndex="3" />
+            <Label fx:id="password_label" prefHeight="112.0" prefWidth="310.0" text="Password" GridPane.rowIndex="4" />
+            <TextArea fx:id="ip_addr" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
             <TextArea fx:id="username" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label fx:id="port_no_label" prefHeight="79.0" prefWidth="310.0" text="Port No." GridPane.rowIndex="1">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
+            <Label fx:id="port_no_label" prefHeight="79.0" prefWidth="310.0" text="Port No." GridPane.rowIndex="1" />
             <TextArea fx:id="port_no" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <PasswordField fx:id="password" prefHeight="89.0" prefWidth="310.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label fx:id="db_name_label" prefHeight="92.0" prefWidth="310.0" text="Database Name" GridPane.rowIndex="2">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
+            <Label fx:id="db_name_label" prefHeight="92.0" prefWidth="310.0" text="Database Name" GridPane.rowIndex="2" />
             <TextArea fx:id="db_name" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
-      <ButtonBar layoutX="183.0" layoutY="518.0" prefHeight="50.0" prefWidth="358.0" AnchorPane.leftAnchor="183.0" AnchorPane.rightAnchor="159.0">
+      <ButtonBar layoutX="259.0" layoutY="513.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="202.0" AnchorPane.rightAnchor="202.0">
         <buttons>
-          <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" prefHeight="25.0" prefWidth="115.0" text="Save">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Lighting diffuseConstant="1.79" specularConstant="0.53" specularExponent="19.07" surfaceScale="1.27">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant color="#8fd7bf" />
-                     </light>
-                  </Lighting>
-               </effect></Button>
-            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" text="Clear">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Lighting diffuseConstant="2.0" surfaceScale="0.57">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant color="#91dac2" />
-                     </light>
-                  </Lighting>
-               </effect></Button>
-            <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Lighting diffuseConstant="2.0" surfaceScale="0.92">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant color="#6d91d0" />
-                     </light>
-                  </Lighting>
-               </effect></Button>
+          <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" text="Save" />
+            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" text="Clear" />
+            <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
         </buttons>
       </ButtonBar>
-      <Label layoutX="133.0" layoutY="35.0" prefHeight="70.0" prefWidth="565.0" text="CONNECT TO THE DATABASE" textFill="#18ad8b">
-         <font>
-            <Font name="Lucida Sans Demibold" size="24.0" />
-         </font>
-      </Label>
-      <Separator layoutX="101.0" layoutY="82.0" opacity="0.7" prefHeight="1.0" prefWidth="460.0">
-         <effect>
-            <Lighting>
-               <bumpInput>
-                  <Shadow />
-               </bumpInput>
-               <light>
-                  <Light.Distant color="#68250e" />
-               </light>
-            </Lighting>
-         </effect>
-      </Separator>
-      <Label layoutX="159.0" layoutY="84.0" prefHeight="17.0" prefWidth="217.0" text="SHARDA MEDICAL NURSING HOME" textFill="#36a8eb">
-         <font>
-            <Font name="Berlin Sans FB" size="12.0" />
-         </font>
-      </Label>
-      <AnchorPane layoutX="348.0" layoutY="80.0" prefHeight="26.0" prefWidth="28.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/504661.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
-      <AnchorPane layoutX="550.0" layoutY="19.0" prefHeight="102.0" prefWidth="102.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/database.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
-      <AnchorPane layoutX="521.0" layoutY="82.0" prefHeight="33.0" prefWidth="37.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/databse.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
    </children>
-   <effect>
-      <Lighting diffuseConstant="2.0">
-         <bumpInput>
-            <Shadow />
-         </bumpInput>
-         <light>
-            <Light.Distant color="#e7f8f5" />
-         </light>
-      </Lighting>
-   </effect>
 </AnchorPane>

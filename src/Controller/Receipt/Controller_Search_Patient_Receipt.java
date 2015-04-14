@@ -10,7 +10,9 @@ import java.util.ResourceBundle;
 import org.controlsfx.dialog.Dialogs;
 
 
+
 import application.Main;
+import Controller.CMS.Controller_Add_Fees;
 //import application.Main;
 import Model.Patient.*;
 
@@ -36,6 +38,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -133,28 +137,40 @@ public class Controller_Search_Patient_Receipt implements Initializable
     public void get_chart() {
 
                 
-                try {
+               
                    if( table_view.getSelectionModel().getSelectedIndex()<0)
                    {
                    
-                   Dialogs.create()
-        .owner(stage)
-        .title("Warning Dialog")
-        .masthead("No patient selected")
-        .message("Please search for a patient and select a patient")
-        .showWarning();
+                	   Dialogs.create()
+				        .owner(stage)
+				        .title("Warning Dialog")
+				        .masthead("No patient selected")
+				        .message("Please search for a patient and select a patient")
+				        .showWarning();
                    }
                    else{
-                     Parent chart = FXMLLoader.load(getClass().getResource("/View/Receipt/FXMLDocument.fxml"));
-				    Scene scene_chart = new Scene(chart);
-				    Stage stage_chart = (Stage) buttonCR.getScene().getWindow();
-				    stage_chart.setScene(scene_chart);
-				    stage_chart.show();
+                	   try
+               		{
+               			FXMLLoader loader = new FXMLLoader();
+               			loader.setLocation(Main.class.getResource("/View/Receipt/FXML_Receipt.fxml"));
+               			AnchorPane page = (AnchorPane) loader.load();
+               			Stage dialogStage = new Stage();
+               			dialogStage.setTitle("Make receipt");
+               			dialogStage.initModality(Modality.WINDOW_MODAL);
+               			dialogStage.initOwner(stage);
+               			Controller_FXML_Receipt controller = loader.getController();
+               			controller.setStage(dialogStage);
+               			Scene scene = new Scene(page);
+               			dialogStage.setScene(scene);
+               			dialogStage.showAndWait();
+               			
+               		}
+               		catch(Exception E)
+               		{
+               			E.printStackTrace();
+               		}
                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(Controller_Search_Patient_Receipt.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
+                
             }    
 		
 	private void refreshTableView() 

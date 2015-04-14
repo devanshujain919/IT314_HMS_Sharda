@@ -119,6 +119,7 @@ public class Controller_Add_Prescription implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -132,15 +133,23 @@ public class Controller_Add_Prescription implements Initializable
 		{
 			try
 			{
-				String query = "UPDATE Fee_type SET follow_up_date=?, disease=?, remarks=? WHERE pat_ID=?, date=?, time=?;";
+				String query = "UPDATE Prescription SET follow_up_date=?, disease=?, remarks=? WHERE pat_ID=? AND date=? AND time=?;";
 				PreparedStatement stmt = con.prepareStatement(query);
+				System.out.println(pres_info.getPat_id().getValue());
 				stmt.setString(4, pres_info.getPat_id().getValue());
+				System.out.println(pres_info.getDate().toString());
 				stmt.setString(5, pres_info.getDate().toString());
+				System.out.println(pres_info.getTime().getValue());
 				stmt.setString(6, pres_info.getTime().getValue());
+				System.out.println(pres_info.getFollow_up_date().toString());
 				stmt.setString(1, pres_info.getFollow_up_date().toString());
+				System.out.println(pres_info.getDisease().getValue());
 				stmt.setString(2, pres_info.getDisease().getValue());
+				System.out.println(pres_info.getRemarks().getValue());
 				stmt.setString(3, pres_info.getRemarks().getValue());
-				int no = stmt.executeUpdate(query);
+				System.out.println("Query: " + stmt.toString());
+				int no = stmt.executeUpdate();
+				System.out.println("hello");
 				original_pres_info.setDisease(pres_info.getDisease());
 				original_pres_info.setFollow_up_date(pres_info.getFollow_up_date());
 				original_pres_info.setRemarks(pres_info.getRemarks());
@@ -149,6 +158,7 @@ public class Controller_Add_Prescription implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")

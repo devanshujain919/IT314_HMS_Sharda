@@ -370,6 +370,10 @@ public class Controller_Add_Employee implements Initializable
 			mode = EDIT;
 			System.out.println("Hello1");
 			this.employee_info = employee_info;
+			if(employee_info == null)
+			{
+				System.out.println("WTF");
+			}
 			
 			emp_name.setText(employee_info.getFirst_name().getValue());
 			

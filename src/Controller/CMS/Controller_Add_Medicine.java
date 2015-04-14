@@ -125,8 +125,12 @@ public class Controller_Add_Medicine implements Initializable
 				stmt.setString(2, medicine_details.get_med_company().getValue());
 				stmt.setString(3, medicine_details.get_med_remarks().getValue());
 				stmt.setString(4, medicine_details.get_med_id().getValue());
+				System.out.println("Statements is : " + stmt);
 				int no = stmt.executeUpdate();
 				original_medicine_details.set_med_name(medicine_details.get_med_name().getValue());
+				original_medicine_details.set_med_cmpy(medicine_details.get_med_company().getValue());
+				original_medicine_details.set_med_remarks(medicine_details.get_med_remarks().getValue());
+				original_medicine_details.set_med_id(medicine_details.get_med_id().getValue());
 				System.out.println("No of rows updated: " + no);
 				stmt.close();
 			}
@@ -151,7 +155,7 @@ public class Controller_Add_Medicine implements Initializable
 
 	private String generateID()
 	{
-		String query = "SELECT mecicine_id FROM Medicine ORDER BY medicine_id;";
+		String query = "SELECT medicine_id FROM Medicine ORDER BY medicine_id;";
 		int i = 1;
 		try
 		{

@@ -76,7 +76,6 @@ public class Controller_Manage_Database implements Initializable
 	@FXML
 	private void handle_btn_cancel()
 	{
-		//TODO
 		stage.close();
 	}
 	
@@ -117,7 +116,7 @@ public class Controller_Manage_Database implements Initializable
 		}
 		try
 		{
-			String query = "jdbc:sqlserver://" + ip_addr.getText() + "\\SQLEXPRESS" + ":" + port_no.getText() + ";databaseName=" + db_name.getText();
+			String query = "jdbc:sqlserver://" + ip_addr.getText() + "\\SEN" + ":" + port_no.getText() + ";databaseName=" + db_name.getText();
 			System.out.println(query);
 			conn = DriverManager.getConnection(query, username.getText(), password.getText());
 			System.out.println("Connected...");

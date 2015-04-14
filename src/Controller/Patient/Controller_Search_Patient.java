@@ -88,10 +88,11 @@ public class Controller_Search_Patient implements Initializable
 					
 					patientList.clear();
 					System.out.println(patientList.size());
-					
+					System.out.println("New value: " + newValue);
 					for(Patient_Info p : allPatients)
 					{
-						if(p.getFirst_name().getValue().contains(newValue))
+						System.out.println(p.getFirst_name().getValue());
+						if(p.getFirst_name().getValue().toLowerCase().contains(newValue.toLowerCase()))
 						{
 							patientList.add(p);
 						}
@@ -120,7 +121,7 @@ public class Controller_Search_Patient implements Initializable
 	private void handle_btn_add()
 	{
 		Patient_Info pat_info = new Patient_Info();
-		boolean isSaveClicked = showDialogAddPatient(pat_info);
+		boolean isSaveClicked = showDialogAddPatient(pat_info, "ADD");
 		
 		if(isSaveClicked)
 		{
@@ -128,7 +129,7 @@ public class Controller_Search_Patient implements Initializable
 		}
 	}
 	
-	private boolean showDialogAddPatient(Patient_Info pat_info)
+	private boolean showDialogAddPatient(Patient_Info pat_info, String mode)
 	{
 		boolean retValue = false;
 		try
@@ -137,7 +138,7 @@ public class Controller_Search_Patient implements Initializable
 			loader.setLocation(Main.class.getResource("/View/Patient/Dialog_Add_Patient.fxml"));
 			AnchorPane page = (AnchorPane) loader.load();
 			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Add New Fees Type");
+			dialogStage.setTitle("Add New Patient");
 			dialogStage.initModality(Modality.WINDOW_MODAL);
 			dialogStage.initOwner(stage);
 			Scene scene = new Scene(page);
@@ -145,7 +146,7 @@ public class Controller_Search_Patient implements Initializable
 			Controller_Add_Patient controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
-			controller.setPatient(pat_info);
+			controller.setPatient(pat_info, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 			
@@ -174,7 +175,7 @@ public class Controller_Search_Patient implements Initializable
 		else
 		{
 			Patient_Info pat_info = table_view.getSelectionModel().getSelectedItem();
-			boolean isSaved = showDialogAddPatient(pat_info);
+			boolean isSaved = showDialogAddPatient(pat_info, "EDIT");
 			if(isSaved)
 			{
 				refreshTableView();
@@ -236,10 +237,10 @@ public class Controller_Search_Patient implements Initializable
 		PreparedStatement stmt = null;
 		try
 		{
-			String query = "DELETE FROM Patient WHERE pat_ID=?;";
+			String query = "DELETE FROM Patient WHERE pat_id=?;";
 			stmt = con.prepareStatement(query);
 			stmt.setString(1, pat.getPat_id().getValue());
-			int no = stmt.executeUpdate(query);
+			int no = stmt.executeUpdate();
 			System.out.println("No.of rows deleted: " + no);
 		}
 		catch(SQLException E)

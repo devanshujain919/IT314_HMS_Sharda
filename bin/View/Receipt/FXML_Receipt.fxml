@@ -9,7 +9,7 @@
 <?import javafx.collections.*?>
 <?import javafx.geometry.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Receipt.FXMLDocumentController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Receipt.Controller_FXML_Receipt">
     <children>
         <Separator layoutX="-8.0" layoutY="53.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="3.0" prefWidth="460.0" AnchorPane.leftAnchor="-8.0" AnchorPane.rightAnchor="-2.0" />
           <Label fx:id="patID" layoutX="14.0" layoutY="68.0" text="Patient ID :">

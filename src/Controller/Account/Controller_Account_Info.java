@@ -45,7 +45,11 @@ import javafx.scene.control.TextField;
  */
 @SuppressWarnings("deprecation")
 public class Controller_Account_Info implements Initializable {    
-    @FXML
+
+	static String seeel=null;
+
+	
+	@FXML
     private Label label; 
     
    @FXML
@@ -71,8 +75,6 @@ public class Controller_Account_Info implements Initializable {
     @FXML
     Stage primarystage;
     @FXML
-    private Button print;
-    @FXML
     private TextField text;
     @FXML
     private Button viewdetails;
@@ -87,7 +89,7 @@ public class Controller_Account_Info implements Initializable {
     
     private void datequery(int s_date,int s_month,int s_year,int e_date,int e_month,int e_year) throws SQLException, ClassNotFoundException {
                 long start=365*s_year+30*s_month+s_date;
-               long end=365*e_year+30*s_month+e_date;
+               long end=365*e_year+30*e_month+e_date;
 		String [] date3 = new String [10000];
                 int [] date2 = new int [10000];
                 int [] month2 = new int [10000];
@@ -130,8 +132,9 @@ public class Controller_Account_Info implements Initializable {
         	                                       {
         	                                	    System.out.println("sds"+date3[i]);
         	                                        String s=date3[i];
-        	                                        
-        	                                        ResultSet ss = stmt.executeQuery("SELECT SUM(rfd.amount) as summ FROM Receipt_fee_distribution rfd, Receipt r WHERE rfd.Receipt_ID = r.Receipt_ID AND r.date='" + s + "';");
+        	                                        String query1 = "SELECT SUM(rfd.amount) as summ FROM Receipt_fee_distribution rfd, Receipt r WHERE rfd.Receipt_ID = r.Receipt_ID AND r.date='" + s + "';";
+        	                                        stmt = con.prepareStatement(query1);
+        	                                        ResultSet ss = stmt.executeQuery();
         	                                        System.out.println(ss);
         	                                    if(ss != null)
         	                                    {
@@ -162,6 +165,7 @@ public class Controller_Account_Info implements Initializable {
         		}
         			catch(SQLException E)
         			{
+        				E.printStackTrace();
         				Dialogs.create()
         	    		.title(" ALERT ")
         	    		.masthead(" Database is not setup ")
@@ -236,12 +240,13 @@ public class Controller_Account_Info implements Initializable {
  		}
     	 else
     	 {
-     Parent add_chart = FXMLLoader.load(getClass().getResource("/View/Details.fxml"));
-            Scene scene_add_chart = new Scene(add_chart);
-            Stage stage_chart = (Stage) viewdetails.getScene().getWindow();
-            stage_chart.setScene(scene_add_chart);
-            stage_chart.setTitle("Details");
-            stage_chart.show();
+             seeel=data.get(selectedIndex).getRID();
+             Parent add_chart = FXMLLoader.load(getClass().getResource("/View/Account/Details.fxml"));
+             Scene scene_add_chart = new Scene(add_chart);
+             Stage stage_chart = (Stage) viewdetails.getScene().getWindow();
+             stage_chart.setScene(scene_add_chart);
+             stage_chart.setTitle("Details");
+             stage_chart.show();
             
     	 }
     }

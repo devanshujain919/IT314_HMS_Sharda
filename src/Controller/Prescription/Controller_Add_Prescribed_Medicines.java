@@ -80,10 +80,16 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 		if(isInputValid())
 		{
 			isDone = true;
+			Medicine_Info m1 = medicine_name_list.getSelectionModel().getSelectedItem();
+			if(m1 == null)
+			{
+				System.out.println("WHY??--------------------");
+			}
+
 			med_pres_info.setMedicine(medicine_name_list.getSelectionModel().getSelectedItem());
-			med_pres_info.setMorning_amt(med_pres_info.getMorning_amt());
-			med_pres_info.setNoon_amt(med_pres_info.getNoon_amt());
-			med_pres_info.setEvening_amt(med_pres_info.getEvening_amt());
+			med_pres_info.setMorning_amt(new SimpleStringProperty(morning_amt.getText()));
+			med_pres_info.setNoon_amt(new SimpleStringProperty(noon_amt.getText()));
+			med_pres_info.setEvening_amt(new SimpleStringProperty(evening_amt.getText()));
 			
 			if(morning_after_meal.selectedProperty().getValue())
 			{
@@ -202,19 +208,19 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 		{
 			try
 			{
-				String query = "INSERT INTO Medicine_Prescribed VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				String query = "INSERT INTO Medicine_prescribed VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, med_pres_info.getPat_id().getValue());
 				stmt.setString(2, med_pres_info.getDate().toString());
 				stmt.setString(3, med_pres_info.getTime().getValue());
-				stmt.setString(4, med_pres_info.getMedicine().get_med_id().toString());
+				stmt.setString(4, med_pres_info.getMedicine().get_med_id().getValue().toString());
 				stmt.setString(5, med_pres_info.getMorning_amt().getValue());
 				stmt.setString(6, med_pres_info.getNoon_amt().getValue());
 				stmt.setString(7, med_pres_info.getEvening_amt().getValue());
 				stmt.setString(8, med_pres_info.getMorning_meal().getValue());
 				stmt.setString(9, med_pres_info.getNoon_meal().getValue());
 				stmt.setString(10, med_pres_info.getEvening_meal().getValue());
-
+				System.out.println("INSERTING........................");
 				int no = stmt.executeUpdate();
 				
 				original_med_pres_info.setMedicine(med_pres_info.getMedicine());
@@ -230,6 +236,7 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -243,20 +250,22 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 		{
 			try
 			{
-				String query = "UPDATE Medicine_Prescribed SET medicine_id=?, morning_amt=?, noon_amt=?, evening_amt=?, is_morning=?, is_noon=?, is_evening=? WHERE pat_ID=?, date=?, time=?;";
+				String query = "UPDATE Medicine_prescribed SET medicine_id=?, morning_amt=?, noon_amt=?, evening_amt=?, is_morning=?, is_noon=?, is_evening=? WHERE pat_ID=? AND date=? AND time=? AND medicine_id=?;";
 				PreparedStatement stmt = con.prepareStatement(query);
+				System.out.println(med_pres_info.getMedicine().get_med_id().getValue());
 				stmt.setString(1, med_pres_info.getMedicine().get_med_id().getValue());
-				stmt.setString(2, med_pres_info.getMorning_amt().toString());
+				stmt.setString(2, med_pres_info.getMorning_amt().getValue());
 				stmt.setString(3, med_pres_info.getNoon_amt().getValue());
-				stmt.setString(4, med_pres_info.getEvening_amt().toString());
+				stmt.setString(4, med_pres_info.getEvening_amt().getValue());
 				stmt.setString(5, med_pres_info.getMorning_meal().getValue());
 				stmt.setString(6, med_pres_info.getNoon_meal().getValue());
 				stmt.setString(7, med_pres_info.getEvening_meal().getValue());
 				stmt.setString(8, med_pres_info.getPat_id().getValue());
 				stmt.setString(9, med_pres_info.getDate().toString());
 				stmt.setString(10, med_pres_info.getTime().getValue());
-
-				int no = stmt.executeUpdate(query);
+				stmt.setString(11, original_med_pres_info.getMedicine().get_med_id().getValue());
+				System.out.println("EDITTING...........................");
+				int no = stmt.executeUpdate();
 
 				original_med_pres_info.setMedicine(med_pres_info.getMedicine());
 				original_med_pres_info.setMorning_amt(med_pres_info.getMorning_amt());
@@ -271,6 +280,7 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -298,9 +308,10 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 		this.stage = dialogStage;
 	}
 
-	public void setPrescription(Medicine_Prescribed med_pres_info, Patient_Info pat_info)
+	public void setPrescription(Medicine_Prescribed med_pres_info, Patient_Info pat_info, String mode)
 	{
-
+		System.out.println("Starting for " + mode);
+		System.out.println("Medicine id: " + med_pres_info.getMedicine().get_med_id().getValue());
 		this.date.setText(med_pres_info.getDate().toString());
 		this.time.setText(med_pres_info.getTime().getValue());
 		
@@ -310,10 +321,12 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 		System.out.println("Setting....");
 		this.original_med_pres_info = med_pres_info;
 		this.med_pres_info = Medicine_Prescribed.clone(original_med_pres_info);
+		System.out.println(med_pres_info.getMedicine().get_med_id().getValue());
 		for(Medicine_Info mi : medicineList)
 		{
-			if(mi.get_med_id().equals(med_pres_info.getMedicine().get_med_id()))
+			if(mi.get_med_id().getValue().equals(med_pres_info.getMedicine().get_med_id().getValue()))
 			{
+				System.out.println("Selecting............................................");
 				this.medicine_name_list.getSelectionModel().select(mi);
 				break;
 			}
@@ -367,13 +380,13 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 			}
 		}
 		
-		if(med_pres_info.getPat_id() == null)
+		if(mode.equals("ADD"))
 		{
-			mode = ADD;
+			this.mode = ADD;
 		}
 		else
 		{
-			mode = EDIT;
+			this.mode = EDIT;
 		}
 		System.out.println("Bye/////");
 	}

@@ -20,7 +20,7 @@ public class Medicine_Prescribed
 		this.pat_id = new SimpleStringProperty("");
 		this.date = LocalDate.now();
 		this.time = new SimpleStringProperty("");
-		this.medicine = new Medicine_Info();
+		this.medicine = new Medicine_Info("", "", "");
 		this.morning_amt = new SimpleStringProperty("");
 		this.noon_amt = new SimpleStringProperty("");
 		this.evening_amt = new SimpleStringProperty("");
@@ -112,6 +112,9 @@ public class Medicine_Prescribed
 	public static Medicine_Prescribed clone(Medicine_Prescribed med_pres)
 	{
 		Medicine_Prescribed med_pres_info = new Medicine_Prescribed();
+		Medicine_Info m1 = new Medicine_Info(med_pres.getMedicine().get_med_name().getValue(), med_pres.getMedicine().get_med_company().getValue(), med_pres.getMedicine().get_med_remarks().getValue());
+		m1.set_med_id(med_pres.getMedicine().get_med_id().getValue());
+		med_pres_info.setMedicine(m1);
 		med_pres_info.setPat_id(med_pres.getPat_id());
 		med_pres_info.setDate(med_pres.getDate());
 		med_pres_info.setTime(med_pres.getTime());

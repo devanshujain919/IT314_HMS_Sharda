@@ -83,7 +83,7 @@ public class Controller_Add_Tests implements Initializable
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(1, tests_info.get_test_id().getValue());
 				stmt.setString(2, tests_info.get_test_name().getValue());
-				int no = stmt.executeUpdate(query);
+				int no = stmt.executeUpdate();
 				original_tests_info.setName(tests_info.get_test_name().getValue());
 				original_tests_info.setID(tests_info.get_test_id().getValue());
 				System.out.println("No of rows updated: " + no);
@@ -108,7 +108,7 @@ public class Controller_Add_Tests implements Initializable
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(2, tests_info.get_test_id().getValue());
 				stmt.setString(1, tests_info.get_test_name().getValue());
-				int no = stmt.executeUpdate(query);
+				int no = stmt.executeUpdate();
 				original_tests_info.setName(tests_info.get_test_name().getValue());
 				System.out.println("No of rows updated: " + no);
 				stmt.close();

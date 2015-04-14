@@ -1,145 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="623.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CMS.Controller_Add_Fees">
+<AnchorPane prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CMS.Controller_Add_Fees">
    <children>
+      <Label text="Add a New Fees Type" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="20.0">
+         <font>
+            <Font size="45.0" />
+         </font>
+      </Label>
       <Separator prefHeight="10.0" prefWidth="700.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="110.0" />
-      <GridPane minHeight="-Infinity" minWidth="-Infinity" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="200.0">
+      <GridPane AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="200.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="245.0" minWidth="10.0" prefWidth="129.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="371.0" minWidth="10.0" prefWidth="371.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Label fx:id="fees_type_label" minHeight="-Infinity" minWidth="-Infinity" prefHeight="164.0" prefWidth="136.0" text="Test Type Name" wrapText="true">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font></Label>
-            <TextArea fx:id="fees_type" minWidth="-Infinity" prefHeight="60.0" prefWidth="257.0" GridPane.columnIndex="1" />
+            <Label fx:id="fees_type_label" prefHeight="164.0" prefWidth="250.0" text="Fees Type Name" wrapText="true" />
+            <TextArea fx:id="fees_type" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
          </children>
       </GridPane>
-      <ButtonBar layoutX="186.0" layoutY="405.0" prefHeight="40.0" prefWidth="349.0" AnchorPane.bottomAnchor="178.0" AnchorPane.leftAnchor="186.0" AnchorPane.rightAnchor="165.0">
+      <ButtonBar prefHeight="40.0" prefWidth="200.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0">
         <buttons>
-          <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" prefHeight="31.0" prefWidth="133.0" text="Save">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Lighting diffuseConstant="2.0">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant color="#72eec5" />
-                     </light>
-                  </Lighting>
-               </effect></Button>
-            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" prefHeight="32.0" text="Clear">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Lighting diffuseConstant="2.0">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant color="#7bf2ca" />
-                     </light>
-                  </Lighting>
-               </effect>
-            </Button>
-            <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" prefHeight="32.0" text="Cancel">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-               <effect>
-                  <Lighting diffuseConstant="1.95">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant color="#91b9ff" />
-                     </light>
-                  </Lighting>
-               </effect></Button>
+          <Button fx:id="btn_save" mnemonicParsing="false" onAction="#handle_btn_save" text="Save" />
+            <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#handle_btn_clear" text="Clear" />
+            <Button fx:id="btn_cancel" mnemonicParsing="false" onAction="#handle_btn_cancel" text="Cancel" />
         </buttons>
       </ButtonBar>
-      <Label layoutX="24.0" layoutY="30.0" prefHeight="70.0" prefWidth="565.0" text="ADD A NEW FEES " textFill="#18ad8b">
-         <font>
-            <Font name="Lucida Sans Demibold" size="24.0" />
-         </font>
-      </Label>
-      <Separator layoutX="21.0" layoutY="78.0" opacity="0.7" prefHeight="3.0" prefWidth="354.0">
-         <effect>
-            <Lighting>
-               <bumpInput>
-                  <Shadow />
-               </bumpInput>
-               <light>
-                  <Light.Distant color="#68250e" />
-               </light>
-            </Lighting>
-         </effect>
-      </Separator>
-      <Label layoutX="24.0" layoutY="83.0" prefHeight="17.0" prefWidth="217.0" text="SHARDA MEDICAL NURSING HOME" textFill="#36a8eb">
-         <font>
-            <Font name="Berlin Sans FB" size="12.0" />
-         </font>
-      </Label>
-      <AnchorPane layoutX="211.0" layoutY="79.0" prefHeight="26.0" prefWidth="28.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/504661.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
-      <AnchorPane layoutX="375.0" layoutY="43.0" prefHeight="70.0" prefWidth="64.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/add_prescription.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
-      <AnchorPane layoutX="439.0" layoutY="43.0" prefHeight="70.0" prefWidth="64.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/medicine.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
-      <AnchorPane layoutX="503.0" layoutY="43.0" prefHeight="70.0" prefWidth="64.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/add_medicine_1.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
-      <AnchorPane layoutX="607.0" layoutY="195.0" prefHeight="70.0" prefWidth="37.0">
-         <effect>
-            <ImageInput>
-               <source>
-                  <Image url="/Resources/doctor.png" />
-               </source>
-            </ImageInput>
-         </effect>
-      </AnchorPane>
    </children>
 </AnchorPane>

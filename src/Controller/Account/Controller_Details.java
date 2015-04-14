@@ -66,7 +66,7 @@ public class Controller_Details {
      
     @FXML
     private void backtomain(ActionEvent event) throws IOException{
-        Parent add_chart = FXMLLoader.load(getClass().getResource("/View/Account_Info.fxml"));
+        Parent add_chart = FXMLLoader.load(getClass().getResource("/View/Account/Account_Info.fxml"));
             Scene scene_add_chart = new Scene(add_chart);
             Stage stage_chart = (Stage) back.getScene().getWindow();
             stage_chart.setScene(scene_add_chart);
@@ -348,7 +348,13 @@ public class Controller_Details {
         String Pat_Name = null;
         String Pat_id = null;
         int x=0,y=0,z=0,w=0,v=0;
-         
+        
+        String r=Controller_Account_Info.seeel;
+        String [] date = new String [10000];
+        date=r.split("/");
+        String q=date[2]+"-"+date[1]+"-"+date[0];
+        System.out.println(q);	
+        
          Connection con = Main.getConnection();
  		if(con == null)
  		{
@@ -369,7 +375,7 @@ public class Controller_Details {
  		PreparedStatement stmt = null;
  		try
  		{
- 			String sql = "SELECT r.date FROM Receipt r;";
+ 			String sql = "SELECT r.date FROM Receipt r WHERE r.date='"+q+"';";
  			stmt = con.prepareStatement(sql);
  			ResultSet rs = stmt.executeQuery();
  			while(rs.next())
@@ -408,7 +414,7 @@ public class Controller_Details {
  	                }
  	            }
  	            TreeItem<TableData> item2 = new TreeItem<TableData>(new TableData("Patient_Name = "+Pat_Name, "","",""));
- 	            item.getChildren().add(item2);
+ 	            item1.getChildren().add(item2);
  	            
  	            sql = "SELECT p.pat_id FROM Receipt r,Patient p WHERE r.Receipt_ID='"+Receipt_id[j]+"' AND r.pat_id=p.pat_id;";
 	            stmt = con.prepareStatement(sql);
@@ -421,7 +427,7 @@ public class Controller_Details {
  	                }
  	            }
  	            item2 = new TreeItem<TableData>(new TableData("Patient_ID = "+Pat_id, "","",""));
- 	            item.getChildren().add(item2);
+ 	            item1.getChildren().add(item2);
  	            
  	            sql = "SELECT f.fee_name FROM Receipt_fee_distribution r,Fee_Type f WHERE r.Receipt_ID='"+Receipt_id[j]+"' AND r.fee_id=f.fee_id;";
 	            stmt = con.prepareStatement(sql);
@@ -465,7 +471,7 @@ public class Controller_Details {
  	                }
  	            }
  	            for(int m=0;m<z;m++){
- 	            TreeItem<TableData> item3 = new TreeItem<TableData>(new TableData("",Fee_Type[m],Amount[m],Time[m]));
+ 	            TreeItem<TableData> item3 = new TreeItem<TableData>(new TableData("",Fee_Type[m],Amount[m],Time[0]));
  	            item1.getChildren().add(item3); 
  	            }
  	          }

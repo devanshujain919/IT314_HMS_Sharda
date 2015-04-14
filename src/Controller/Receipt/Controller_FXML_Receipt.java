@@ -60,10 +60,10 @@ import org.controlsfx.dialog.Dialogs;
  *
  * @author Kshitij
  */
-public class FXMLDocumentController implements Initializable {
+public class Controller_FXML_Receipt implements Initializable {
 
     public static final String Report
-            = "C:\\Users\\Kshitij\\report.pdf";
+            = "report.pdf";
     private final ObservableList<chargesTable> data = FXCollections.observableArrayList();
     @FXML
     private Label patID = new Label();
@@ -99,6 +99,8 @@ public class FXMLDocumentController implements Initializable {
     private TableColumn<chargesTable, String> feeTypeCol = new TableColumn<chargesTable, String>();
     @FXML
     private TableColumn<chargesTable, String> chargesCol = new TableColumn<chargesTable, String>();
+	
+    private Stage stage;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -147,26 +149,37 @@ public class FXMLDocumentController implements Initializable {
     }
 
     public void saveButtonClick() {
-        save.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
+    	
+    			String erroMsg = "";
+    			boolean retValue = true;
+    			if(date.getValue() == null)
+    			{
+    				retValue = false;
+    				erroMsg += "Select a date\n";
+    			}
+            
                 if (data.size() == 0) {
-                    Stage stage = (Stage) save.getScene().getWindow();
-                    Dialogs.create()
-                            .owner(stage)
-                            .title("Warning Dialog")
-                            .masthead("No Data Added")
-                            .message("Please add the data in the table")
-                            .showWarning();
-                } else {
+                	retValue = false;
+    				erroMsg += "Please add some data in table\n";
+                    
+                } 
+                if(!retValue)
+                {
+                	Dialogs.create()
+                    .owner(stage)
+                    .title("Warning Dialog")
+                    .masthead("Error")
+                    .message(erroMsg)
+                    .showWarning();
+                }
+                else {
                     int size = data.size();
                     int i = 0;
                     for (i = 0; i < size; ++i) {
                         System.out.println("fee type" + data.get(i).feeType);
                         System.out.println("charges" + data.get(i).Charges);
                     }
-                    
+                    System.out.println("1111111111111111111111111111111111");
                     Connection con = Main.getConnection();
             		if(con == null)
             		{
@@ -187,23 +200,39 @@ public class FXMLDocumentController implements Initializable {
                             String time = dateFormat.format(cal.getTime()).toString();
                             System.out.println(dateFormat.format(cal.getTime()));
                             String query;
-                            String receipt_id = valueID + "_" + date + time;
-                            query = "INSERT into Receipt Values(" + "'" + valueID + "'" + "," + "'" + date.toString() + "'" + "," + "'" + time + "','" + valueID + "_" + date + time + "');";
-                            stmt.executeUpdate(query);
+                            String receipt_id = valueID.getText() + "_" + date.getValue().toString() + time;
+                            query = "INSERT into Receipt Values(" + "'" + valueID.getText() + "'" + "," + "'" + receipt_id + "','" + date.getValue().toString() + "'" + "," + "'" + time + "');";
+                            
+                            System.out.println(query);
+                            stmt = con.prepareStatement(query);
+                            System.out.println("222222222222222222222222222222222222");
+                            stmt.executeUpdate();
                             for (i = 0; i < size; ++i) {
                                 System.out.println("fee type" + data.get(i).feeType);
                                 System.out.println("charges" + data.get(i).Charges);
-                                query = "Select fee_id,fee_type from Fee_type where fee_type='" + data.get(i).feeType + "'";
-                                ResultSet rs = stmt.executeQuery(query);
-                                String fid = rs.getString("fee_id");
+                                query = "Select fee_ID,fee_name from Fee_type where fee_name='" + data.get(i).feeType.getValue() + "'";
+                                 
+                                System.out.println("1: " + query);
+                                stmt = con.prepareStatement(query);
+                                ResultSet rs = stmt.executeQuery();
+                                System.out.println("333333333333333333333333333333333333333333333333");
+                                String fid = "";
+                                while(rs.next())
+                                {
+                                	fid = rs.getString("fee_ID");
+                                }
                                 int amount;
                                 amount = Integer.parseInt(data.get(i).getCharges());
-                                query = "Insert into Receipt_fee_distribution values('" + receipt_id + "','" + valueID + "','" + fid + "'," + amount + ")";
-
+                                query = "Insert into Receipt_fee_distribution values('" + valueID.getText() + "','" + receipt_id + "','" + fid + "','" + amount + "')";
+                                System.out.println("2  :" + query);
+                                stmt = con.prepareStatement(query);
+                                stmt.executeUpdate();
                             }
+                            stage.close();
             			}
             			catch(SQLException E)
             			{
+            				E.printStackTrace();
             				Dialogs.create()
             	    		.title(" ALERT ")
             	    		.masthead(" Database is not setup ")
@@ -214,8 +243,7 @@ public class FXMLDocumentController implements Initializable {
             		}
                 }
             }
-        });
-    }
+    
 
     public void cancelButton() {
         cancel.setOnAction(new EventHandler<ActionEvent>() {
@@ -230,7 +258,7 @@ public class FXMLDocumentController implements Initializable {
                     stage_chart.setScene(scene_chart);
                     stage_chart.show();
                 } catch (IOException ex) {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -239,9 +267,7 @@ public class FXMLDocumentController implements Initializable {
 
     public void addButtonClick() {
 
-        Add.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent e) {
-                if (CB.getValue() == null || addCharges.getText() == null) {
+       if (CB.getValue() == null || addCharges.getText() == null) {
                     Stage stage = (Stage) Add.getScene().getWindow();
                     Dialogs.create()
                             .owner(stage)
@@ -263,9 +289,14 @@ public class FXMLDocumentController implements Initializable {
                 addCharges.clear();
                 CB.setPromptText("Fee Type");
 
-            }
-        });
+            
+       
         table.setItems(data);
+    }
+    
+    public void setStage(Stage stage)
+    {
+    	this.stage = stage;
     }
 
     public void deletebutton() {
@@ -324,10 +355,10 @@ public class FXMLDocumentController implements Initializable {
                 try {
                     PdfWriter.getInstance(document, new FileOutputStream(filename));
                 } catch (FileNotFoundException ex) {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } catch (DocumentException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
             document.open();
             Font font = new Font(FontFamily.TIMES_ROMAN, 10, Font.BOLD);
@@ -360,22 +391,22 @@ public class FXMLDocumentController implements Initializable {
             try {
                 document.add(header);
             } catch (DocumentException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 document.add(title);
             } catch (DocumentException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 document.add(receiptid);
             } catch (DocumentException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 document.add(Date);
             } catch (DocumentException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
             String DOJ = null;
             String diagnosis = null;
@@ -390,7 +421,7 @@ public class FXMLDocumentController implements Initializable {
             try {
                 document.add(patient_details);
             } catch (DocumentException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
             System.out.println("Chaitanya");
             Object newValue = null;
@@ -407,13 +438,13 @@ public class FXMLDocumentController implements Initializable {
             }
 
             document.close();
-            String pdfFile = "C:\\Users\\Kshitij\\report.pdf";
+            String pdfFile = "report.pdf";
             try {
                 printPDF(pdfFile);
             } catch (IOException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             } catch (PrinterException ex) {
-                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -444,11 +475,11 @@ public class FXMLDocumentController implements Initializable {
                 try {
                     createReceipt(Report, patientid);
                 } catch (DocumentException ex) {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (PrinterException ex) {
-                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Controller_FXML_Receipt.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 

@@ -76,13 +76,7 @@ public class Controller_Manage_Medicine implements Initializable
 		Connection con = Main.getConnection();
 		if(con == null)
 		{
-			Main.setConnection(null);
-			Main.setUsername("");
-			Main.setPort("");
-			Main.setpassword("");
-			Main.setDbName("");
-			Main.setIP("");
-			
+				
 			Dialogs.create()
     		.owner(primaryStage)
     		.title(" ALERT ")
@@ -133,7 +127,7 @@ public class Controller_Manage_Medicine implements Initializable
 			{
 				String query = "SELECT * FROM Medicine;";
 				PreparedStatement stmt = con.prepareStatement(query);
-				ResultSet rs = stmt.executeQuery(query);
+				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{
 					Medicine_Info med_info = new Medicine_Info(rs.getString("medicine_name"), rs.getString("company"), rs.getString("other_remarks"));

@@ -115,8 +115,8 @@ public class Controller_Login implements Initializable {
     
     private boolean isValid()
     {
-    	 String username_field= username.getText();
-         String pass_field=password.getText();
+    	 String username_field = username.getText();
+         String pass_field = password.getText();
          String errorMsg = "";
          boolean validate = true;
          
@@ -177,10 +177,11 @@ public class Controller_Login implements Initializable {
  			while(rs.next())
  			{
 	 			flag = 1;
-	 			String pass_hash = rs.getString("password");
-	 			
-	 			pass_hash = get_SHA_1_SecurePassword(pass_hash, getSalt());
-	 			if(pass_hash.equals(pass_field))
+	 			String pass = rs.getString("password");
+	 			System.out.println("Should be: " + pass);
+	 			String salt = getSalt();
+	 			String pass_hash = get_SHA_1_SecurePassword(pass_field, salt);
+	 			if(pass_hash.equals(pass))
 	 			{
 		 			matches = 1;
 		 			break;
@@ -188,6 +189,7 @@ public class Controller_Login implements Initializable {
  			}
  			if(flag == 1 && matches == 1)
  			{
+ 				System.out.println("Setting employee up...");
  				isDone = true;
 	 			validate_db = true;
  				employee_info = new Employee_Info();
@@ -203,6 +205,8 @@ public class Controller_Login implements Initializable {
 	 			employee_info.setCity(new SimpleStringProperty(rs.getString("city")));
 	 			employee_info.setState(new SimpleStringProperty(rs.getString("state")));
 	 			employee_info.setUsername(new SimpleStringProperty(rs.getString("username")));
+	 			System.out.println(employee_info.getId().getValue());
+	 			Main.setEmployee(employee_info);
  			}
  			else
  			{
@@ -232,6 +236,7 @@ public class Controller_Login implements Initializable {
 	 			employee_info.setCity(new SimpleStringProperty("hi"));
 	 			employee_info.setState(new SimpleStringProperty("hi"));
 	 			employee_info.setUsername(new SimpleStringProperty("hi"));
+	 			Main.setEmployee(employee_info);
  			}
          }
          catch(SQLException E)
@@ -251,10 +256,11 @@ public class Controller_Login implements Initializable {
     
     private static String get_SHA_1_SecurePassword(String passwordToHash, String salt)
     {
+    	System.out.println("original: " + passwordToHash);
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt.getBytes());
+            //md.update(salt.getBytes());
             byte[] bytes = md.digest(passwordToHash.getBytes());
             StringBuilder sb = new StringBuilder();
             for(int i=0; i< bytes.length ;i++)
@@ -262,6 +268,7 @@ public class Controller_Login implements Initializable {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             generatedPassword = sb.toString();
+            System.out.println("Hash is: " + generatedPassword);
         }
         catch (NoSuchAlgorithmException e)
         {

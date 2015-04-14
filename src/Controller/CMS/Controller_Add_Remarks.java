@@ -98,12 +98,12 @@ public class Controller_Add_Remarks implements Initializable
 				stmt.setString(2, remark_info.get_english_text().getValue());
 				stmt.setString(3, remark_info.get_gujarati_text().getValue());
 				stmt.setString(4, remark_info.get_context().getValue());
-				System.out.println(query);
+				System.out.println(stmt);
 				original_remark_info.setEnglishText(remark_info.get_english_text().getValue());
 				original_remark_info.setGujaratiText(remark_info.get_gujarati_text().getValue());
 				original_remark_info.setContext(remark_info.get_context().getValue());
 				original_remark_info.setRemarkID(remark_info.getRemarkID().getValue());
-				int no = stmt.executeUpdate(query);
+				int no = stmt.executeUpdate();
 				System.out.println("No of rows updated: " + no);
 				stmt.close();
 			}
@@ -129,7 +129,7 @@ public class Controller_Add_Remarks implements Initializable
 				stmt.setString(2, remark_info.get_gujarati_text().getValue());
 				stmt.setString(3, remark_info.get_context().getValue());
 				System.out.println(query);
-				int no = stmt.executeUpdate(query);
+				int no = stmt.executeUpdate();
 				original_remark_info.setEnglishText(remark_info.get_english_text().getValue());
 				original_remark_info.setGujaratiText(remark_info.get_gujarati_text().getValue());
 				original_remark_info.setContext(remark_info.get_context().getValue());

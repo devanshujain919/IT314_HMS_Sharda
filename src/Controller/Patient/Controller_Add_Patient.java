@@ -9,8 +9,10 @@ import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
@@ -31,7 +33,9 @@ public class Controller_Add_Patient implements Initializable
 {
 	private Patient_Info pat_info, original_pat_info;
 	private Stage stage;
-	private boolean isDone = false;	
+	private boolean isDone = false;
+	private int ADD=0, EDIT=1, OTHER=2;
+	private int mode = OTHER;
   
     public static String select;
     @FXML
@@ -106,21 +110,12 @@ public class Controller_Add_Patient implements Initializable
 			try
 			{
 				
-				LocalDate date=textbirth.getValue();
-			    LocalDate date1=textdate.getValue();
-			    String c;
-			    String s=textmiddle.getText();
-			  	String[] ary= s.split("");
-			  	String s1=textfirst.getText();
-			  	String[] ary1= s1.split("");
-		  		String s2=textlast.getText();
-			  	String[] ary2= s2.split("");
-			  	c=s1+" "+s2+" "+s;
-			  	int birthdd=date.getDayOfMonth();
-			 	int datt=date1.getDayOfMonth();
-			 	String ID=ary1[0].concat(ary[0]).concat(ary2[0])+birthdd+datt;
-			 	textID.setText(ary1[0].concat(ary[0]).concat(ary2[0])+birthdd+datt);
-		     
+				String ID = generateID(stmt, con);
+			 	textID.setText(ID);
+
+			 	String c;
+			    c = textfirst.getText() + " " + textmiddle.getText() + " " + textlast.getText();
+			 	
 			 	String address=textaddress.getText();
 			 	String phone=textphone.getText();
 			 	String Emergency= textemer.getText();
@@ -139,36 +134,71 @@ public class Controller_Add_Patient implements Initializable
 			 		sex="Female";
 			 	}
 				
-				
-			 	String query="insert into Patient values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-				stmt = con.prepareStatement(query);
-				stmt.setString(1, ID);
-				stmt.setString(2, c);
-				stmt.setString(3, date.toString());
-				stmt.setString(4, marital);
-				stmt.setString(5, emerphone);
-				stmt.setString(6, Emergency);
-				stmt.setString(7, relation);
-				stmt.setString(8, address);
-				stmt.setString(9, city);
-				stmt.setString(10, state);
-				stmt.setString(11, phone);
-				stmt.setString(12, sex);
-				stmt.executeUpdate();
-				
-	    		isDone = true;
-
-	    		original_pat_info.setFirst_name(new SimpleStringProperty(c));
-	    		original_pat_info.setAddress(new SimpleStringProperty(address));
-	    		original_pat_info.setState(new SimpleStringProperty(state));
-	    		original_pat_info.setCity(new SimpleStringProperty(city));
-	    		original_pat_info.setSex(new SimpleStringProperty(sex));
-	    		original_pat_info.setEmergency_contact(new SimpleStringProperty(emerphone));
-	    		original_pat_info.setEmergency_name(new SimpleStringProperty(Emergency));
-	    		original_pat_info.setEmergency_relation(new SimpleStringProperty(relation));
-	    		original_pat_info.setBirth_date(date);
-	    		original_pat_info.setMarital_status(new SimpleStringProperty(marital));
-	    		original_pat_info.setPhone(new SimpleStringProperty(phone));				
+				if(mode == ADD)
+				{
+				 	String query="insert into Patient values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+					stmt = con.prepareStatement(query);
+					stmt.setString(1, ID);
+					stmt.setString(2, c);
+					stmt.setString(3, textbirth.getValue().toString());
+					stmt.setString(4, marital);
+					stmt.setString(5, emerphone);
+					stmt.setString(6, Emergency);
+					stmt.setString(7, relation);
+					stmt.setString(8, address);
+					stmt.setString(9, city);
+					stmt.setString(10, state);
+					stmt.setString(11, phone);
+					stmt.setString(12, sex);
+					stmt.executeUpdate();
+					
+		    		isDone = true;
+	
+		    		original_pat_info.setFirst_name(new SimpleStringProperty(c));
+		    		original_pat_info.setAddress(new SimpleStringProperty(address));
+		    		original_pat_info.setState(new SimpleStringProperty(state));
+		    		original_pat_info.setCity(new SimpleStringProperty(city));
+		    		original_pat_info.setSex(new SimpleStringProperty(sex));
+		    		original_pat_info.setEmergency_contact(new SimpleStringProperty(emerphone));
+		    		original_pat_info.setEmergency_name(new SimpleStringProperty(Emergency));
+		    		original_pat_info.setEmergency_relation(new SimpleStringProperty(relation));
+		    		original_pat_info.setBirth_date(textbirth.getValue());
+		    		original_pat_info.setMarital_status(new SimpleStringProperty(marital));
+		    		original_pat_info.setPhone(new SimpleStringProperty(phone));
+				}
+				else
+				{
+					String query="update Patient set pat_id=?, name=?, Birth_date=?, Marital_status=?, Emergency_contact=?, Emergency_name=?, Emergency_relation=?, Address=?, City=?, State=?, Phone=?,  Sex=?;";
+					stmt = con.prepareStatement(query);
+					stmt.setString(1, ID);
+					stmt.setString(2, c);
+					stmt.setString(3, textbirth.getValue().toString());
+					stmt.setString(4, marital);
+					stmt.setString(5, emerphone);
+					stmt.setString(6, Emergency);
+					stmt.setString(7, relation);
+					stmt.setString(8, address);
+					stmt.setString(9, city);
+					stmt.setString(10, state);
+					stmt.setString(11, phone);
+					stmt.setString(12, sex);
+					stmt.executeUpdate();
+					
+		    		isDone = true;
+	
+		    		original_pat_info.setFirst_name(new SimpleStringProperty(c));
+		    		original_pat_info.setAddress(new SimpleStringProperty(address));
+		    		original_pat_info.setState(new SimpleStringProperty(state));
+		    		original_pat_info.setCity(new SimpleStringProperty(city));
+		    		original_pat_info.setSex(new SimpleStringProperty(sex));
+		    		original_pat_info.setEmergency_contact(new SimpleStringProperty(emerphone));
+		    		original_pat_info.setEmergency_name(new SimpleStringProperty(Emergency));
+		    		original_pat_info.setEmergency_relation(new SimpleStringProperty(relation));
+		    		original_pat_info.setBirth_date(textbirth.getValue());
+		    		original_pat_info.setMarital_status(new SimpleStringProperty(marital));
+		    		original_pat_info.setPhone(new SimpleStringProperty(phone));		
+				}
+	    		stage.close();
 			}
 			catch(SQLException E)
 			{
@@ -176,11 +206,61 @@ public class Controller_Add_Patient implements Initializable
 	    		.owner(stage)
 	    		.title(" ALERT ")
 	    		.masthead(" SQlException encountered ")
-	    		.message("Item could not be deleted ")
+	    		.message("Item could not be added ")
 	    		.showWarning();
 			}        
     	}
     }
+    
+    private String generateID(PreparedStatement stmt, Connection con)
+    {
+    	LocalDate date=textbirth.getValue();
+	    LocalDate date1=textdate.getValue();
+	    String c;
+	    String s=textmiddle.getText();
+	  	String[] ary= s.split("");
+	  	String s1=textfirst.getText();
+	  	String[] ary1= s1.split("");
+  		String s2=textlast.getText();
+	  	String[] ary2= s2.split("");
+	  	c=s1+" "+s2+" "+s;
+	  	int birthdd=date.getDayOfMonth();
+	 	int datt=date1.getDayOfMonth();
+	 	String ID=ary1[0].concat(ary[0]).concat(ary2[0])+birthdd+datt;
+	 	System.out.println("ID is: " + ID);
+	 	int flag = 0, j = 0;
+	 	String ID1 = ID;
+	 	while(flag == 0)
+	 	{
+	 		try
+		 	{
+	 			String query = "SELECT pat_id FROM Patient WHERE pat_id=?;";
+		 		stmt = con.prepareStatement(query);
+		 		stmt.setString(1, ID);
+		 		ResultSet rs = stmt.executeQuery();
+		 		int i = 0;
+		 		while(rs.next())
+		 		{
+		 			ID1 = ID + "_" + j;
+		 			j += 1;
+		 			i = 1;
+		 			break;
+		 		}
+		 		if(i == 0)
+		 		{
+		 			flag = 1;
+		 			ID = ID1;
+		 		}
+		 	}
+		 	catch(SQLException E)
+		 	{
+		 		System.out.println("Can't retrieve the patients");
+		 	}
+	 	}
+	 	System.out.println("ID generated..." + ID);
+	 	return ID;
+    }
+    
     @FXML
     private void handle_btn_cancel(ActionEvent event) throws Exception
     {
@@ -215,6 +295,7 @@ public class Controller_Add_Patient implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+    	textdate.setEditable(false);
         handleButtonAction3();
         img_logo=new Image("/Resources/img_logo.png");
     }
@@ -316,10 +397,18 @@ public class Controller_Add_Patient implements Initializable
 		this.stage = stage;
 	}
 	
-	public void setPatient(Patient_Info pat_info)
+	public void setPatient(Patient_Info pat_info, String mode)
 	{
 		this.original_pat_info = pat_info;
 		this.pat_info = Patient_Info.clone(pat_info);
+		if(mode.equals("ADD"))
+		{
+			this.mode = ADD;
+		}
+		else
+		{
+			this.mode = EDIT;
+		}
 	   
 	    label.setText("");
 	    textID.setText(pat_info.getPat_id().getValue());

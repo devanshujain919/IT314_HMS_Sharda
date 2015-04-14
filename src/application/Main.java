@@ -50,6 +50,10 @@ public class Main extends Application
 	
 	public static void setEmployee(Employee_Info emp_info)
 	{
+		if(emp_info == null)
+		{
+			System.out.println("knwkblblkw");
+		}
 		Main.employee_info = emp_info;
 	}
 	
@@ -427,7 +431,7 @@ public class Main extends Application
 			Scene scene = new Scene(page);
 			dialogStage.setScene(scene);
 			Controller_Add_Patient controller = loader.getController();
-			controller.setPatient(new Patient_Info());
+			controller.setPatient(new Patient_Info(), "ADD");
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
 			dialogStage.showAndWait();
