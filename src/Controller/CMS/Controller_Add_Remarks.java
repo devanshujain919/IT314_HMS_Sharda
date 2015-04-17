@@ -122,7 +122,7 @@ public class Controller_Add_Remarks implements Initializable
 		{
 			try
 			{
-				String query = "UPDATE Remarks SET English=?, Gujarati=?, Context=? WHERE remark_id=?;";
+				String query = "UPDATE Remarks SET English=?, Gujarati=?, Context=? WHERE remark_ID=?;";
 				PreparedStatement stmt = con.prepareStatement(query);
 				stmt.setString(4, remark_info.getRemarkID().getValue());
 				stmt.setString(1, remark_info.get_english_text().getValue());
@@ -213,7 +213,7 @@ public class Controller_Add_Remarks implements Initializable
 		return isDone;
 	}
 	
-	public void setRemark(Remarks_Info remark_info) 
+	public void setRemark(Remarks_Info remark_info, String mode) 
 	{
 		System.out.println("Setting....");
 		this.original_remark_info = remark_info;
@@ -230,13 +230,13 @@ public class Controller_Add_Remarks implements Initializable
 		{
 			remark_context.setText(remark_info.get_context().getValue());
 		}
-		if(remark_info.getRemarkID() == null)
+		if(mode.equals("ADD"))
 		{
-			mode = ADD;
+			this.mode = ADD;
 		}
 		else
 		{
-			mode = EDIT;
+			this.mode = EDIT;
 		}
 	}
 	

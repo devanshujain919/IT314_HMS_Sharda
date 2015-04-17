@@ -6,20 +6,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
-import Controller.Prescription.Controller_Search_Patient_Prescription;
-import Model.CMS.Tests_Info;
 import Model.Patient.Indoor_Patient;
 import Model.Patient.Patient_Info;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,12 +25,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -80,6 +74,7 @@ public class Controller_Indoor_Patient implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources) 
 	{
+		System.out.println("Again in indoor....");
 		getFromDB();
 		pat_id.setEditable(false);
 		date_admit.setEditable(false);
@@ -155,11 +150,10 @@ public class Controller_Indoor_Patient implements Initializable
     				}
     			}
         		
-	        	Parent chart = FXMLLoader.load(getClass().getResource("/View/IndoorPatient/chart.fxml"));
-		        Scene scene_chart = new Scene(chart);
-		        Stage stage_chart = (Stage) btn_chart.getScene().getWindow();
-		        stage_chart.setScene(scene_chart);
-		        stage_chart.show();
+        		FXMLLoader loader = new FXMLLoader();
+	            loader.setLocation(getClass().getResource("/View/AdmitPatient/chart.fxml"));
+	            AnchorPane anchor_pane = loader.load();
+	            Main.getRootLayout().setCenter(anchor_pane);
         	}
         	catch(IOException E)
         	{
@@ -198,11 +192,10 @@ public class Controller_Indoor_Patient implements Initializable
 					}
 				}
 	        	
-	        	Parent chart = FXMLLoader.load(getClass().getResource("/View/IndoorPatient/TestReports.fxml"));
-		        Scene scene_chart = new Scene(chart);
-		        Stage stage_chart = (Stage) btn_chart.getScene().getWindow();
-		        stage_chart.setScene(scene_chart);
-		        stage_chart.show();
+	        	FXMLLoader loader = new FXMLLoader();
+	            loader.setLocation(getClass().getResource("/View/AdmitPatient/TestReports.fxml"));
+	            AnchorPane anchor_pane = loader.load();
+	            Main.getRootLayout().setCenter(anchor_pane);
 	        }
 	        catch(IOException E)
 	        {
@@ -242,21 +235,32 @@ public class Controller_Indoor_Patient implements Initializable
 			PreparedStatement stmt = null;
 			try
 			{
+				// TODO: delete the medications and test results where they lie between the admission and discharge date...
 				String query = "DELETE FROM Medication where pat_ID=?";
 				stmt = con.prepareStatement(query);
 				stmt.setString(1, table_view.getSelectionModel().getSelectedItem().getPat_id().getValue());
 				int no = stmt.executeUpdate();
 				System.out.println("Delete from medications: " + no);
 				
-				query = "DELETE FROM Patients_Test where pat_ID=?";
+				query = "DELETE FROM Patient_Tests where pat_ID=?";
 				stmt = con.prepareStatement(query);
 				stmt.setString(1, table_view.getSelectionModel().getSelectedItem().getPat_id().getValue());
 				no = stmt.executeUpdate();
 				System.out.println("Delete from test results: " + no);
+				
+				query = "DELETE FROM Indoor_patient where pat_ID=?";
+				stmt = con.prepareStatement(query);
+				Indoor_Patient ind_pat = table_view.getSelectionModel().getSelectedItem();
+				stmt.setString(1, ind_pat.getPat_id().getValue());
+				no = stmt.executeUpdate();
+				System.out.println("Delete from test results: " + no);
+				
+				indoorPatientList.remove(ind_pat);
 
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -351,11 +355,11 @@ public class Controller_Indoor_Patient implements Initializable
 			}
 		}
 		
-		showDialogAdmitPatient(ind_pat_info, name);
+		showDialogAdmitPatient(ind_pat_info, name, "EDIT");
 
 	}
 	
-	private boolean showDialogAdmitPatient(Indoor_Patient ind_pat_info, String name)
+	private boolean showDialogAdmitPatient(Indoor_Patient ind_pat_info, String name, String mode)
 	{
 		boolean retValue = false;
 		try
@@ -372,7 +376,7 @@ public class Controller_Indoor_Patient implements Initializable
 			Controller_Admit_Patient controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
-			controller.setDetails(ind_pat_info, name);
+			controller.setDetails(ind_pat_info, name, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 		}
@@ -401,11 +405,12 @@ public class Controller_Indoor_Patient implements Initializable
 			PreparedStatement stmt = null;
 			try
 			{
-				String query = "SELECT * FROM Patient_Info;";
+				String query = "SELECT * FROM Patient;";
 				stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{
+					System.out.println("Some patient");
 					Patient_Info pat_info = new Patient_Info();
 					pat_info.setFirst_name(new SimpleStringProperty(rs.getString("name")));
 	                pat_info.setAddress(new SimpleStringProperty(rs.getString("Address")));
@@ -427,23 +432,28 @@ public class Controller_Indoor_Patient implements Initializable
 				rs = stmt.executeQuery();
 				while(rs.next())
 				{
+					System.out.println("Some indoor");
 					Indoor_Patient pat_info = new Indoor_Patient();
 					pat_info.setPat_id(new SimpleStringProperty(rs.getString("pat_ID")));
 					pat_info.setDate_of_admission(new SimpleStringProperty(rs.getDate("Date_of_admission").toString()));
 					pat_info.setTime_of_admission(new SimpleStringProperty(rs.getTime("Time_of_admission").toString()));
-					pat_info.setDate_of_discharge(new SimpleStringProperty(rs.getDate("Date_of_discharge").toString()));
-					pat_info.setTime_of_discharge(new SimpleStringProperty(rs.getTime("Time_of_discharge").toString()));
-					pat_info.setRoomNo(new SimpleStringProperty(rs.getString(rs.getString("Room_no"))));
+					System.out.println(rs.getString("Date_of_Discharge"));
+					System.out.println("Min val : " + LocalDate.MIN);
+					pat_info.setDate_of_discharge(new SimpleStringProperty(rs.getString("Date_of_discharge")));
+					pat_info.setTime_of_discharge(new SimpleStringProperty(rs.getString("Time_of_discharge")));
+					pat_info.setRoomNo(new SimpleStringProperty(rs.getString("Room_no")));
 					indoorPatientList.add(pat_info);
 				}
 				stmt.close();
-				
+				table_view.setItems(indoorPatientList);
+				System.out.println("Now ");
 				for(Indoor_Patient ind_pat_info : indoorPatientList)
 				{
 					for(Patient_Info pat_info : allPatients)
 					{
-						if(ind_pat_info.getPat_id().equals(pat_info.getPat_id()))
+						if(ind_pat_info.getPat_id().getValue().equals(pat_info.getPat_id().getValue()))
 						{
+							System.out.println("This one's same");
 							pat_id_name.put(ind_pat_info.getPat_id().getValue(), pat_info.getFirst_name().getValue());
 							Controller_Indoor_Patient.pat_info = pat_info;
 							break;
@@ -453,6 +463,7 @@ public class Controller_Indoor_Patient implements Initializable
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")

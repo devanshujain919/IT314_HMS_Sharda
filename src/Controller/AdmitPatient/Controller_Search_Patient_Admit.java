@@ -5,13 +5,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
-import Controller.CMS.Controller_Add_Tests;
 import Model.Patient.Indoor_Patient;
 import Model.Patient.Patient_Info;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -85,14 +86,14 @@ public class Controller_Search_Patient_Admit implements Initializable
 				if(newValue.length() >= 3 || newValue.length() < oldValue.length())
 				{
 					System.out.println("More than 3");
-				
+					
 					patientList.clear();
 					System.out.println(patientList.size());
-					String str1=newValue.toUpperCase();
-                                        
+					System.out.println("New value: " + newValue);
 					for(Patient_Info p : allPatients)
 					{
-						if(p.getFirst_name().getValue().toUpperCase().contains(str1))
+						System.out.println(p.getFirst_name().getValue());
+						if(p.getFirst_name().getValue().toLowerCase().contains(newValue.toLowerCase()))
 						{
 							patientList.add(p);
 						}
@@ -144,16 +145,29 @@ public class Controller_Search_Patient_Admit implements Initializable
 			PreparedStatement stmt = null;
 			try
 			{
-				String query = "SELECT * FROM Patient_Info;";
+				String query = "SELECT * FROM Patient;";
 				stmt = con.prepareStatement(query);
 				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{
+					System.out.println("hello");
 					Patient_Info pat_info = new Patient_Info();
-					pat_info.setPat_id(new SimpleStringProperty(rs.getString("pat_id")));
+					pat_info.setFirst_name(new SimpleStringProperty(rs.getString("name")));
+	                pat_info.setAddress(new SimpleStringProperty(rs.getString("Address")));
+	                pat_info.setBirth_date((rs.getDate("Birth_date").toLocalDate()));
+	                pat_info.setCity(new SimpleStringProperty(rs.getString("City")));
+	                pat_info.setState(new SimpleStringProperty(rs.getString("State")));
+	                pat_info.setEmergency_contact(new SimpleStringProperty(rs.getString("Emergency_contact")));
+	                pat_info.setEmergency_name(new SimpleStringProperty(rs.getString("Emergency_name")));
+	                pat_info.setEmergency_relation(new SimpleStringProperty(rs.getString("Emergency_relation")));
+	                pat_info.setMarital_status(new SimpleStringProperty(rs.getString("Marital_status")));
+	                pat_info.setPhone(new SimpleStringProperty(rs.getString("Phone")));
+	                pat_info.setSex(new SimpleStringProperty(rs.getString("Sex")));
+	                pat_info.setPat_id(new SimpleStringProperty(rs.getString("pat_ID")));
 					allPatients.add(pat_info);
 				}
-				stmt.close();
+				patientList.addAll(allPatients);
+				System.out.println(patientList.size());
 			}
 			catch(SQLException E)
 			{
@@ -221,7 +235,11 @@ public class Controller_Search_Patient_Admit implements Initializable
 		Patient_Info pat_info = table_view.getSelectionModel().getSelectedItem();
 		Indoor_Patient ind_pat_info = new Indoor_Patient();
 		ind_pat_info.setPat_id(pat_info.getPat_id());
-		boolean isSaveClicked = showDialogAdmitPatient(ind_pat_info, pat_info.getFirst_name().getValue());
+		ind_pat_info.setDate_of_admission(new SimpleStringProperty(LocalDate.now().toString()));
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		ind_pat_info.setTime_of_admission(new SimpleStringProperty(sdf.format(cal.getTime())));
+		boolean isSaveClicked = showDialogAdmitPatient(ind_pat_info, pat_info.getFirst_name().getValue(), "ADD");
 		
 		if(isSaveClicked)
 		{
@@ -241,7 +259,7 @@ public class Controller_Search_Patient_Admit implements Initializable
 		}
 	}
 	
-	private boolean showDialogAdmitPatient(Indoor_Patient ind_pat_info, String name)
+	private boolean showDialogAdmitPatient(Indoor_Patient ind_pat_info, String name, String mode)
 	{
 		boolean retValue = false;
 		try
@@ -258,7 +276,7 @@ public class Controller_Search_Patient_Admit implements Initializable
 			Controller_Admit_Patient controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
-			controller.setDetails(ind_pat_info, name);
+			controller.setDetails(ind_pat_info, name, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 			

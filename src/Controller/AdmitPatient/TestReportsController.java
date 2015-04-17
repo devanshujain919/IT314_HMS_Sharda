@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,10 +29,13 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import org.controlsfx.dialog.Dialogs;
 
+import Controller.CMS.Controller_Manage_Database;
 import application.Main;
 
 /**
@@ -43,11 +47,11 @@ import application.Main;
 public class TestReportsController implements Initializable
 {
     @FXML
-    private TableView<test_info> tableChart;
+    private TableView<test_info> tableChart = new TableView<TestReportsController.test_info>();
     @FXML
-    private TableColumn<test_info,String> test_name;
+    private TableColumn<test_info,String> test_name = new TableColumn<TestReportsController.test_info, String>();
     @FXML
-    private TableColumn<test_info,String> test_detail;
+    private TableColumn<test_info,String> test_detail = new TableColumn<TestReportsController.test_info, String>();
     @FXML
     final ObservableList<test_info> data=FXCollections.observableArrayList();
     @FXML
@@ -127,21 +131,19 @@ public class TestReportsController implements Initializable
     @FXML
     public void goHome(ActionEvent e) throws IOException
     {
-            Parent add_chart = FXMLLoader.load(getClass().getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
-            Scene scene_add_chart = new Scene(add_chart);
-            Stage stage_chart = (Stage) buttonNew.getScene().getWindow();
-            stage_chart.setScene(scene_add_chart);
-            stage_chart.show();
+    	FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
+        AnchorPane anchor_pane = loader.load();
+        Main.getRootLayout().setCenter(anchor_pane);
     }
     
     @FXML
     public void newEntry(ActionEvent e) throws IOException
     {
-        Parent add_chart = FXMLLoader.load(getClass().getResource("/View/AdmitPatient/AddTestReport.fxml"));
-        Scene scene_add_chart = new Scene(add_chart);
-        Stage stage_chart = (Stage) buttonNew.getScene().getWindow();
-        stage_chart.setScene(scene_add_chart);
-        stage_chart.show();
+    	FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/View/AdmitPatient/AddTestReport.fxml"));
+        AnchorPane anchor_pane = loader.load();
+        Main.getRootLayout().setCenter(anchor_pane);
     }
     @Override
     public void initialize(URL url, ResourceBundle rb) 
@@ -209,17 +211,14 @@ public class TestReportsController implements Initializable
     								{
     									test_info t = new test_info(rs2.getString("test_name"), rs.getString("test_value"));
     									data.add(t);
+    									System.out.println(data.get(0).getTest_name());
     								}
     							}
     							tableChart.setItems(data);        						
     						}
     						catch(SQLException E)
     						{
-    							Dialogs.create()
-    				    		.title(" ALERT ")
-    				    		.masthead(" SQlException encountered ")
-    				    		.message("Items could not be deleted ")
-    				    		.showWarning();
+    							
     							return ;
     						}    	
     					}

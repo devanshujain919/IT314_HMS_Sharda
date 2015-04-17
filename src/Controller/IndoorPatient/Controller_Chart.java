@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
 import org.controlsfx.dialog.Dialogs;
 
+import Controller.AdmitPatient.Controller_Admit_Patient;
+import Controller.AdmitPatient.Controller_Indoor_Patient;
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,7 +35,9 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -89,12 +94,18 @@ public class Controller_Chart implements Initializable
     @FXML
     private void newEntry(ActionEvent e) throws IOException 
     {
-        Parent add_chart = FXMLLoader.load(getClass().getResource("/View/Indoorpatient/addChart.fxml"));
-        Scene scene_add_chart = new Scene(add_chart);
-        Stage stage_chart = (Stage) buttonNew.getScene().getWindow();
-        stage_chart.setScene(scene_add_chart);
-        stage_chart.show();
-    }
+    	FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource("/View/AdmitPatient/addChart.fxml"));
+		AnchorPane page = (AnchorPane) loader.load();
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Admit Medications");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(buttonNew.getScene().getWindow());
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+		System.out.println("Hi!!\n");
+		dialogStage.showAndWait();
+	}
 
     @FXML
     private void deleteEntry(ActionEvent e) throws IOException
@@ -150,12 +161,12 @@ public class Controller_Chart implements Initializable
     @FXML
     private void goHome(ActionEvent e) throws IOException
     {
-        Parent home = FXMLLoader.load(getClass().getResource("/View/IndoorPatient/home.fxml"));
-        Scene scene_home = new Scene(home);
-        Stage stage_home = (Stage) buttonNew.getScene().getWindow();
-        stage_home.setScene(scene_home);
-        stage_home.show();
-        
+    	FXMLLoader loader = new FXMLLoader();
+		System.out.println("1");
+		loader.setLocation(Main.class.getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
+		System.out.println("2");
+		AnchorPane anchor_pane = (AnchorPane) loader.load();
+		Main.getRootLayout().setCenter(anchor_pane);        
     }
 
     /**

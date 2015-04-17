@@ -33,11 +33,11 @@ public class Main extends Application
 	private static BorderPane root_layout = null;
 	private static Employee_Info employee_info;
 	
-	private static String USER_NAME = "";
-	private static String PASSWORD = "";
-	private static String IP = "";
-	private static String PORT = "";
-	private static String DBNAME = "";
+	private static String USER_NAME = "user";
+	private static String PASSWORD = "password";
+	private static String IP = "10.100.98.54";
+	private static String PORT = "1433";
+	private static String DBNAME = "sharda";
 	
 	private Stage stage;
 	

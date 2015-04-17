@@ -3,6 +3,7 @@ package Controller.AdmitPatient;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -62,30 +63,52 @@ public class Controller_Admit_Patient implements Initializable
 		}
 		
 		if(mode == ADD)
-		{
+		{			
+			ind_pat_info.setDate_of_discharge(new SimpleStringProperty(""));
+			ind_pat_info.setTime_of_discharge(new SimpleStringProperty(""));
 			ind_pat_info.setDate_of_admission(new SimpleStringProperty(date_admit.getValue().toString()));
 			ind_pat_info.setTime_of_admission(new SimpleStringProperty(time_admit.getText()));
 			ind_pat_info.setRoomNo(new SimpleStringProperty(room_no.getText()));
 			try
 			{
-				String query = "INSERT INTO Indoor_patient VALUES(?, ?, ?, ?, ?, ?)";
+				String query = "SELECT pat_ID from Indoor_patient;";
 				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next())
+				{
+					System.out.println("Admiting : " + ind_pat_info.getDate_of_discharge().getValue() + "<<<<<<<<,,");
+					if(rs.getString("pat_ID").equals(ind_pat_info.getPat_id().getValue()) && ind_pat_info.getDate_of_discharge().getValue().length() == 0)
+					{
+						Dialogs.create()
+			    		.owner(stage)
+			    		.title(" ALERT ")
+			    		.masthead(" Patient already is admitted ")
+			    		.message("Can't add him again ")
+			    		.showWarning();
+						return false;
+					}
+				}
+								
+				query = "INSERT INTO Indoor_patient VALUES(?, ?, ?, ?, ?, ?)";
+				stmt = con.prepareStatement(query);
 				stmt.setString(1, ind_pat_info.getPat_id().getValue());
 				stmt.setString(2, ind_pat_info.getDate_of_admission().getValue());
 				stmt.setString(3, ind_pat_info.getTime_of_admission().getValue());
-				stmt.setString(4, ind_pat_info.getDate_of_discharge().getValue());
-				stmt.setString(5, ind_pat_info.getTime_of_discharge().getValue());
+				System.out.println("Date is: " + ind_pat_info.getDate_of_discharge().getValue());
+				stmt.setString(4, null);
+				stmt.setString(5, null);
 				stmt.setString(6, ind_pat_info.getRoomNo().getValue());
 				int no = stmt.executeUpdate();
 				original_ind_pat_info.setPat_id(ind_pat_info.getPat_id());
 				original_ind_pat_info.setDate_of_admission(ind_pat_info.getDate_of_admission());
 				original_ind_pat_info.setTime_of_admission(ind_pat_info.getTime_of_admission());
 				original_ind_pat_info.setRoomNo(ind_pat_info.getRoomNo());
-				System.out.println("No of rows updated: " + no);
+				System.out.println("No of rows inserted: " + no);
 				stmt.close();
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -136,17 +159,17 @@ public class Controller_Admit_Patient implements Initializable
 		return true;
 	}
 	
-	public void setDetails(Indoor_Patient ind_pat_info, String name)
+	public void setDetails(Indoor_Patient ind_pat_info, String name, String mode)
 	{
 		original_ind_pat_info = ind_pat_info;
 		this.ind_pat_info = Indoor_Patient.clone(ind_pat_info);
-		if(ind_pat_info.getDate_of_admission().getValue().length() == 0)
+		if(mode.equals("ADD"))
 		{
-			mode = ADD;
+			this.mode = ADD;
 		}
 		else
 		{
-			mode = EDIT;
+			this.mode = EDIT;
 		}
 		this.ind_pat_info = ind_pat_info;
 		this.pat_name.setText(name);

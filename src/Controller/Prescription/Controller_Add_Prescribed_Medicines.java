@@ -44,6 +44,8 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 	private Integer ADD = 0, EDIT = 1, OTHER = 2;
 	private Integer mode = OTHER;
 
+	private Medicine_Info med_info = new Medicine_Info();
+	
 	private ObservableList<Medicine_Info> medicineList = FXCollections.observableArrayList();
 	private ObservableList<Medicine_Info> medicineShown = FXCollections.observableArrayList();
 	
@@ -86,7 +88,7 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 				System.out.println("WHY??--------------------");
 			}
 
-			med_pres_info.setMedicine(medicine_name_list.getSelectionModel().getSelectedItem());
+			med_pres_info.setMedicine(med_info);
 			med_pres_info.setMorning_amt(new SimpleStringProperty(morning_amt.getText()));
 			med_pres_info.setNoon_amt(new SimpleStringProperty(noon_amt.getText()));
 			med_pres_info.setEvening_amt(new SimpleStringProperty(evening_amt.getText()));
@@ -253,7 +255,7 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 				String query = "UPDATE Medicine_prescribed SET medicine_id=?, morning_amt=?, noon_amt=?, evening_amt=?, is_morning=?, is_noon=?, is_evening=? WHERE pat_ID=? AND date=? AND time=? AND medicine_id=?;";
 				PreparedStatement stmt = con.prepareStatement(query);
 				System.out.println(med_pres_info.getMedicine().get_med_id().getValue());
-				stmt.setString(1, med_pres_info.getMedicine().get_med_id().getValue());
+				stmt.setString(1, med_info.get_med_id().getValue());
 				stmt.setString(2, med_pres_info.getMorning_amt().getValue());
 				stmt.setString(3, med_pres_info.getNoon_amt().getValue());
 				stmt.setString(4, med_pres_info.getEvening_amt().getValue());
@@ -328,6 +330,7 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 			{
 				System.out.println("Selecting............................................");
 				this.medicine_name_list.getSelectionModel().select(mi);
+				med_info = mi;
 				break;
 			}
 		}
@@ -390,6 +393,16 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 		}
 		System.out.println("Bye/////");
 	}
+	
+	@FXML
+	private void handle_mouse_click()
+	{
+		System.out.println("hello");
+		Medicine_Info mi = medicine_name_list.getSelectionModel().getSelectedItem();
+		med_info = mi;
+		medicine_name.setText(mi.get_med_name().getValue());
+		med_remarks.setText(mi.get_med_remarks().getValue());
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -413,61 +426,19 @@ public class Controller_Add_Prescribed_Medicines implements Initializable
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) 
 			{ 
-				ArrayList<Medicine_Info> list = new ArrayList<Medicine_Info> ();
+				medicineShown.clear();
 				for(Medicine_Info mi : medicineList)
 				{
 					if(mi.get_med_name().getValue().contains(newValue))
 					{
-						list.add(mi);
+						medicineShown.add(mi);
 					}
 				}
-				
-				if(medicine_name_list.getSelectionModel().getSelectedIndex() < 0)
-				{
-					System.out.println("Nothing is selected");
-					med_remarks.setText("");
-				}
-				
-				medicineShown.setAll(list);
-				if(flag == 1)
-				{
-					flag = 0;
-					return ;
-				}
-				
 			}
 			
 		});
 		
-		this.medicine_name_list.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Medicine_Info>() 
-		{
-
-			@Override
-			public void changed(ObservableValue<? extends Medicine_Info> observable, Medicine_Info oldValue, Medicine_Info newValue) 
-			{
-				
-				if(flag == 1)
-				{
-					return ;
-				}
-				
-				if(newValue == null)
-				{
-					medicine_name.setText("");
-					med_remarks.setText("");
-				}
-				else
-				{
-					Platform.runLater(() ->
-						{
-							flag = 1;
-							medicine_name.setText(newValue.get_med_name().getValue());
-							med_remarks.setText(newValue.get_med_remarks().getValue());
-						}
-					);
-				}
-			}
-		});
+		
 				
 //		Medicine_Info m1 = new Medicine_Info("paracetamol", "company_a", "beemari");
 //		m1.set_med_id("1");

@@ -78,7 +78,7 @@
                </GridPane.margin>
             </RadioButton>
             <TextField fx:id="medicine_name" GridPane.columnIndex="1" />
-            <ListView fx:id="medicine_name_list" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ListView fx:id="medicine_name_list" onMouseClicked="#handle_mouse_click" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextArea fx:id="med_remarks" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
             <Label prefHeight="54.0" prefWidth="166.0" text="Some remarks about the medicine" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                <GridPane.margin>

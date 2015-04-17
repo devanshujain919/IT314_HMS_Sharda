@@ -82,7 +82,11 @@ public class Controller_Manage_Database implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources) 
 	{
-		
+		this.ip_addr.setText(Main.getIP());
+		this.db_name.setText(Main.getDBName());
+		this.port_no.setText(Main.getPort());
+		this.password.setText(Main.getPassword());
+		this.username.setText(Main.getUserName());
 	}
 	
 	private boolean isInputValid() 

@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
@@ -38,6 +39,7 @@ import javafx.util.Callback;
  * This is Controller for Details Of amount On the Particular date.
  * @author Shahbazz
  */
+@SuppressWarnings("deprecation")
 public class Controller_Details {
     @FXML private Stage primaryStage;
     @FXML
@@ -102,9 +104,17 @@ public class Controller_Details {
                 		{
                 			try
                 			{
-                				String sql="delete from Receipt_fee_distribution where Receipt_ID= '"+recepid+"'and fee_ID=(Select fee_ID from Fee_type where fee_name='"+a+"');";
+                				//String sql="delete from Receipt_fee_distribution where Receipt_ID= '"+recepid+"'and fee_ID=(Select fee_ID from Fee_type where fee_name='"+a+"');";
+                				
+                				String sql="delete from Receipt_fee_distribution where Receipt_ID= '"+recepid+"';";
+                				String sql1="delete from Receipt where Receipt_ID= '"+recepid+"';";
+                				
                 				PreparedStatement stmt = con.prepareStatement(sql);
                 				stmt.executeUpdate();
+                				
+                				stmt = con.prepareStatement(sql1);
+                				stmt.executeUpdate();
+                				
                 				s.getParent().getChildren().remove(s);
                                 treetableview.getSelectionModel().clearSelection();
                                 label.setText("deleted");                        

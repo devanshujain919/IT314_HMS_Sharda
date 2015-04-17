@@ -144,7 +144,7 @@ public class Controller_Manage_Remarks implements Initializable
 	private void handle_btn_add()
 	{
 		Remarks_Info remark_info = new Remarks_Info();
-		boolean isSaveClicked = showDialogAddRemark(remark_info);
+		boolean isSaveClicked = showDialogAddRemark(remark_info, "ADD");
 		
 		if(isSaveClicked)
 		{
@@ -152,7 +152,7 @@ public class Controller_Manage_Remarks implements Initializable
 		}
 	}
 	
-	private boolean showDialogAddRemark(Remarks_Info remark_info) 
+	private boolean showDialogAddRemark(Remarks_Info remark_info, String mode) 
 	{
 		boolean retValue = false;
 		try
@@ -169,7 +169,7 @@ public class Controller_Manage_Remarks implements Initializable
 			Controller_Add_Remarks controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
-			controller.setRemark(remark_info);
+			controller.setRemark(remark_info, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 			
@@ -188,7 +188,7 @@ public class Controller_Manage_Remarks implements Initializable
 		if(selectedIndex >= 0)
 		{
 			Remarks_Info rem_info = table_view.getItems().get(selectedIndex);
-			boolean isSaveClicked = showDialogAddRemark(rem_info);
+			boolean isSaveClicked = showDialogAddRemark(rem_info, "EDIT");
 			if(isSaveClicked)
 			{
 				refreshTableView();

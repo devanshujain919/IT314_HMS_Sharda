@@ -21,7 +21,10 @@ public class Remarks_Info
 	
 	public Remarks_Info()
 	{
-		
+		this.remark_context = new SimpleStringProperty("");
+		this.remark_english = new SimpleStringProperty("");
+		this.remark_gujarati = new SimpleStringProperty("");
+		this.remark_id = new SimpleStringProperty("");
 	}
 	
 	public Remarks_Info(String english, String gujarati, String context)
@@ -96,5 +99,11 @@ public class Remarks_Info
 			rem_info.setRemarkID(remarks_info.getRemarkID().getValue());
 		}
 		return rem_info;
+	}
+	
+	@Override
+	public String toString()
+	{
+		return this.remark_english.getValue();
 	}
 }

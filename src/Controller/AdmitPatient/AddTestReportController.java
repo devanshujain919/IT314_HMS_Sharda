@@ -30,9 +30,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import org.controlsfx.dialog.Dialogs;
+
+import com.oracle.javafx.scenebuilder.kit.editor.panel.util.dialog.TextViewDialog;
 
 import application.Main;
 
@@ -44,7 +47,7 @@ import application.Main;
 public class AddTestReportController implements Initializable 
 {
     @FXML
-    private ListView<String> ls;
+    private ListView<String> ls = new ListView<String> ();
     @FXML
     ObservableList<String> testdata = FXCollections.observableArrayList();
     @FXML
@@ -54,7 +57,7 @@ public class AddTestReportController implements Initializable
     @FXML
     private TextField textName;
     @FXML
-    private TextArea textDetail;
+    private TextField testdetail = new TextField();
     @FXML
     private Button buttonSave;
     @FXML
@@ -69,7 +72,7 @@ public class AddTestReportController implements Initializable
     {
         textDate.setPromptText("Choose Date");
         textName.setPromptText("Enter Test Name");
-        textDetail.setPromptText("Enter Test Report Details ...");
+        testdetail.setPromptText("Enter Test Report Details ...");
         ls.setVisible(false);
         addHandlers();
     } 
@@ -77,6 +80,10 @@ public class AddTestReportController implements Initializable
     @FXML
     public void saveEntry(ActionEvent e) throws IOException
     {
+    	if(!isValid())
+    	{
+    		return ;
+    	}
     	Connection con = Main.getConnection();
 		if(con == null)
 		{
@@ -103,37 +110,86 @@ public class AddTestReportController implements Initializable
 	        stmt = con.prepareStatement(q);
 	        stmt.setString(1, textName.getText());
 	        ResultSet rs = stmt.executeQuery();
+	        int flag = 0;
             while(rs.next())
             {
+            	flag = 1;
                 String q1 = "Insert into Patient_Tests values(?, ?, ?, ?, ?);";
                 stmt = con.prepareStatement(q1);
-                stmt.setString(1, rs.getString("test_ID"));
-                stmt.setString(2, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-                stmt.setString(3, textDetail.getText());
+                stmt.setString(2, rs.getString("test_ID"));
+                stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+                System.out.println("Detail: " + testdetail.getText());
+                stmt.setString(3, testdetail.getText());
                 stmt.setString(4, date);
                 stmt.setString(5, textTime.getText());
+                System.out.println("executing..................");
                 int no = stmt.executeUpdate();
                 System.out.println("No of rows affected: " + no);
+            }
+            if(flag == 0)
+            {
+            	Dialogs.create()
+        		.title(" ALERT ")
+        		.masthead(" Error ")
+        		.message("Test name is not a valid test ")
+        		.showWarning();
+    			return ;
             }
             home();
 		}
 		catch(SQLException E)
 		{
+			E.printStackTrace();
 			Dialogs.create()
     		.title(" ALERT ")
     		.masthead(" SQlException encountered ")
-    		.message("Items could not be deleted ")
+    		.message("Items could not be saved ")
     		.showWarning();
 			return ;
 		}
     }
-    public void home() throws IOException
+    private boolean isValid() 
     {
-        Parent home = FXMLLoader.load(getClass().getResource("/View/AdmitPatient/TestReports.fxml"));
-        Scene scene_home = new Scene(home);
-        Stage stage_home = (Stage) buttonCancel.getScene().getWindow();
-        stage_home.setScene(scene_home);
-        stage_home.show();
+    	boolean retValue = true;
+    	String errorMsg = "";
+    	
+    	if(textDate.getValue() == null)
+    	{
+    		errorMsg += "Please enter a date..\n";
+    		retValue = false;
+    	}
+    	if(textTime.getText() == "")
+    	{
+    		errorMsg += "Please enter a time..\n";
+    		retValue = false;
+    	}
+    	if(testdetail.getText() == "")
+    	{
+    		errorMsg += "Please enter a test value..\n";
+    		retValue = false;
+    	}
+    	if(textName.getText() == "")
+    	{
+    		errorMsg += "Please enter a test name..\n";
+    		retValue = false;
+    	}
+    	if(!retValue)
+    	{
+    		Dialogs.create()
+    		.title(" ALERT ")
+    		.masthead(" Error  ")
+    		.message(errorMsg)
+    		.showWarning();
+    	}
+		return retValue;
+	}
+
+	public void home() throws IOException
+    {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/View/AdmitPatient/TestReports.fxml"));
+        AnchorPane anchor_pane = loader.load();
+        Main.getRootLayout().setCenter(anchor_pane);
     }
 
     public void addHandlers()
@@ -150,13 +206,6 @@ public class AddTestReportController implements Initializable
     				Connection con = Main.getConnection();
     				if(con == null)
     				{
-    					Main.setConnection(null);
-    					Main.setUsername("");
-    					Main.setPort("");
-    					Main.setpassword("");
-    					Main.setDbName("");
-    					Main.setIP("");
-    					
     					Dialogs.create()
     		    		.title(" ALERT ")
     		    		.masthead(" Database is not setup ")
@@ -167,12 +216,16 @@ public class AddTestReportController implements Initializable
     				PreparedStatement stmt = null;
     				try
     				{
-    					String query = "select test_name from Test_Info where test_name like '%?%'";
+    					System.out.println("llllllll");
+    					System.out.println(newValue);
+    					String query = "select test_name from Test_Info where test_name like '%" + newValue + "%'";
     					stmt = con.prepareStatement(query);
-    					stmt.setString(1, newValue);
+    					System.out.println("Hello111");
     					ResultSet rs = stmt.executeQuery();
+    					System.out.println("geee");
                         while(rs.next())
                         {
+                        	System.out.println("hello");
                             testdata.add(rs.getString("test_name"));
                         }
                         ls.setItems(testdata);
@@ -182,7 +235,7 @@ public class AddTestReportController implements Initializable
     					Dialogs.create()
     		    		.title(" ALERT ")
     		    		.masthead(" SQlException encountered ")
-    		    		.message("Items could not be deleted ")
+    		    		.message("Items could not be added ")
     		    		.showWarning();
     					return ;
     				}

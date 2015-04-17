@@ -1,6 +1,8 @@
 package Model.Patient;
 
 import java.time.LocalDate;
+
+import Model.CMS.Remarks_Info;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -9,7 +11,8 @@ public class Prescription
 	private StringProperty pat_id;
 	private LocalDate date, follow_up_date;
 	private StringProperty time;
-	private StringProperty disease, remarks;
+	private StringProperty disease;
+	private StringProperty remarks;
 	
 	public Prescription()
 	{

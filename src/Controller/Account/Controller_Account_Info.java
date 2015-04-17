@@ -141,11 +141,16 @@ public class Controller_Account_Info implements Initializable {
         	                                        while(ss.next())
         	                                        {  
         	                                           int sum=ss.getInt("summ");
-        	                                           Table tbl = new Table(date2[i]+"/"+month2[i]+"/"+year2[i],Integer.toString(sum));
+        	                                           
+        	                                           Table tbl;
+        	                                           if(sum > 0)
+        	                                           {
+        	                                        	   tbl = new Table(date2[i]+"/"+month2[i]+"/"+year2[i],Integer.toString(sum));
+        	                                        	   data.add(tbl);
+        	                                        	   total_amount+=sum;
+        	                                           }
         	                                           System.out.println(sum);
-        	                                           data.add(tbl);
-        	                                           total_amount+=sum;
-        	                                       
+        	                                           
         	                                          }
         	                                    }}
         	                      }

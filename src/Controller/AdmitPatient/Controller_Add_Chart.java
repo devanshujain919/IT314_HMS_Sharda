@@ -99,14 +99,16 @@ public class Controller_Add_Chart implements Initializable
 		try
 		{
 			String date =  Integer.toString(textDate.getValue().getYear()) + "-" + Integer.toString(textDate.getValue().getMonthValue()) + "-" + Integer.toString(textDate.getValue().getDayOfMonth());
-			String[] arr = textMed.getText().split(" ");
-	    	System.out.println(arr[0]);
+			String[] arr = textMed.getText().split("\\s+");
+	    	System.out.println(arr[1]);
+	    	String med_id = arr[1].substring(1, arr[1].length()-1);
+	    	System.out.println(med_id);
 	    	String query = "Insert Into Medication values (?, ?, ?, ?, ?, ?);";
 	        stmt = con.prepareStatement(query);
 	        stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-	        stmt.setString(2, date);
+	        stmt.setString(2, textDate.getValue().toString());
 	        stmt.setString(3, textTime.getText());
-	        stmt.setString(4, arr[1]);
+	        stmt.setString(4, med_id);
 	        stmt.setString(5, textDosage.getText());
 	        stmt.setString(6, textRemark.getText());
         	
@@ -117,6 +119,7 @@ public class Controller_Add_Chart implements Initializable
 		}
 		catch(SQLException E)
 		{
+			E.printStackTrace();
 			Dialogs.create()
     		.title(" ALERT ")
     		.masthead(" SQlException encountered ")
@@ -128,11 +131,8 @@ public class Controller_Add_Chart implements Initializable
     }
     public void home() throws IOException
     {
-        Parent home = FXMLLoader.load(getClass().getResource("/View/AdmitPatient/chart.fxml"));
-        Scene scene_home = new Scene(home);
         Stage stage_home = (Stage) buttonBack.getScene().getWindow();
-        stage_home.setScene(scene_home);
-        stage_home.show();
+        stage_home.close();
     }
    
     @Override
@@ -178,9 +178,8 @@ public class Controller_Add_Chart implements Initializable
             		try
             		{
             			ls.setVisible(true);
-                        String query = "select medicine_name, medicine_ID from Medicine where medicine_name like '%?%'";
+                        String query = "select medicine_name, medicine_ID from Medicine where medicine_name like '%" + newValue + "%'";
                         stmt = con.prepareStatement(query);
-                        stmt.setString(1, newValue);
                         ResultSet rs = stmt.executeQuery();
                         while(rs.next())
                         {

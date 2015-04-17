@@ -294,6 +294,8 @@ public class Controller_Login implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+    	username.setText("user");
+    	password.setText("password");
     	img_logo = new Image("/Resources/img_logo.png");
     }    
     

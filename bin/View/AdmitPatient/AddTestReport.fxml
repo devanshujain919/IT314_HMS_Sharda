@@ -1,128 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="612.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sen.AddTestReportController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AdmitPatient.AddTestReportController">
    <children>
-      <SplitPane dividerPositions="0.18875502008032127" layoutX="-1.0" layoutY="50.0" orientation="VERTICAL" prefHeight="482.0" prefWidth="612.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.18875502008032127" layoutX="252.0" layoutY="50.0" orientation="VERTICAL" prefHeight="500.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="68.0" prefWidth="660.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Label layoutX="54.0" layoutY="30.0" text="ADD TEST REPORT" textFill="#18ad8b">
+                  <Label layoutX="44.0" layoutY="34.0" text="Add Test Report">
                      <font>
-                        <Font name="Lucida Sans Demibold" size="24.0" />
+                        <Font size="24.0" />
                      </font>
                   </Label>
-                  <Button fx:id="buttonCancel" layoutX="440.0" layoutY="57.0" mnemonicParsing="false" onAction="#goHome" prefHeight="28.0" prefWidth="92.0" text="Cancel">
-                     <effect>
-                        <Lighting diffuseConstant="1.73" specularConstant="0.53" specularExponent="19.7" surfaceScale="1.27">
-                           <bumpInput>
-                              <Shadow />
-                           </bumpInput>
-                           <light>
-                              <Light.Distant color="#91b9ff" />
-                           </light>
-                        </Lighting>
-                     </effect>
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font></Button>
-                  <Label fx:id="labelMSG" layoutX="358.0" layoutY="34.0" prefHeight="20.0" prefWidth="204.0">
+                  <Button fx:id="buttonCancel" layoutX="574.0" layoutY="39.0" mnemonicParsing="false" onAction="#goHome" text="Cancel" />
+                  <Label fx:id="labelMSG" layoutX="304.0" layoutY="43.0" prefHeight="20.0" prefWidth="204.0">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Separator layoutX="89.0" layoutY="69.0" prefHeight="17.0" prefWidth="262.0">
-                     <effect>
-                        <ColorInput paint="#6b0f03" />
-                     </effect>
-                  </Separator>
-                  <Separator layoutX="54.0" layoutY="56.0" opacity="0.7" prefHeight="4.0" prefWidth="254.0">
-                     <effect>
-                        <Lighting>
-                           <bumpInput>
-                              <Shadow />
-                           </bumpInput>
-                           <light>
-                              <Light.Distant color="#68250e" />
-                           </light>
-                        </Lighting>
-                     </effect>
-                  </Separator>
-                  <Label layoutX="54.0" layoutY="61.0" prefHeight="17.0" prefWidth="217.0" text="SHARDA MEDICAL NURSING HOME" textFill="#36a8eb">
-                     <font>
-                        <Font name="Berlin Sans FB" size="12.0" />
-                     </font>
-                  </Label>
-                  <AnchorPane layoutX="-6.0" layoutY="25.0" prefHeight="58.0" prefWidth="67.0">
-                     <effect>
-                        <ImageInput>
-                           <source>
-                              <Image url="file:/C:/Users/hppc/Desktop/medicare_sen/add_test_report.png" />
-                           </source>
-                        </ImageInput>
-                     </effect>
-                  </AnchorPane>
-                  <AnchorPane layoutX="238.0" layoutY="57.0" prefHeight="28.0" prefWidth="28.0">
-                     <effect>
-                        <ImageInput>
-                           <source>
-                              <Image url="file:/C:/Users/hppc/Desktop/medicare_sen/504661.png" />
-                           </source>
-                        </ImageInput>
-                     </effect>
-                  </AnchorPane>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="385.0" prefWidth="593.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Label layoutX="43.0" layoutY="82.0" text="Time">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font></Label>
-                  <Button fx:id="buttonSave" layoutX="443.0" layoutY="344.0" mnemonicParsing="false" onAction="#saveEntry" prefHeight="28.0" prefWidth="92.0" text="Save">
-                     <effect>
-                        <Lighting diffuseConstant="1.73" specularConstant="0.53" specularExponent="19.7" surfaceScale="2.08">
-                           <bumpInput>
-                              <Shadow />
-                           </bumpInput>
-                           <light>
-                              <Light.Distant color="#a7fbdf" />
-                           </light>
-                        </Lighting>
-                     </effect>
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font></Button>
-                  <TextField fx:id="textName" layoutX="91.0" layoutY="147.0" prefHeight="25.0" prefWidth="174.0" />
-                  <TextField fx:id="textTime" layoutX="91.0" layoutY="78.0" prefHeight="25.0" prefWidth="174.0" promptText="hh:mm:ss" />
-                  <DatePicker fx:id="textDate" layoutX="91.0" layoutY="39.0" />
-                  <ListView fx:id="ls" layoutX="91.0" layoutY="193.0" prefHeight="58.0" prefWidth="174.0" />
-                  <Label layoutX="43.0" layoutY="43.0" text="Date">
-                     <font>
-                        <Font name="System Bold" size="12.0" />
-                     </font>
-                  </Label>
-                  <AnchorPane layoutX="514.0" layoutY="139.0" prefHeight="34.0" prefWidth="36.0">
-                     <effect>
-                        <ImageInput>
-                           <source>
-                              <Image url="file:/C:/Users/hppc/Desktop/medicare_sen/add_chart.png" />
-                           </source>
-                        </ImageInput>
-                     </effect>
-                  </AnchorPane>
-                  <Label layoutX="9.0" layoutY="152.0" prefHeight="16.0" prefWidth="75.0" text="Test Name" />
-                  <TextField fx:id="testdetail" layoutX="311.0" layoutY="147.0" prefHeight="26.0" prefWidth="184.0" />
+                  <Label layoutX="108.0" layoutY="82.0" text="Time" />
+                  <Button fx:id="buttonSave" layoutX="260.0" layoutY="346.0" mnemonicParsing="false" onAction="#saveEntry" prefHeight="25.0" prefWidth="68.0" text="Save" />
+                  <TextField fx:id="textName" layoutX="71.0" layoutY="158.0" />
+                  <TextArea fx:id="textDetail" layoutX="266.0" layoutY="155.0" prefHeight="174.0" prefWidth="254.0" />
+                  <TextField fx:id="textTime" layoutX="179.0" layoutY="78.0" promptText="hh:mm:ss" />
+                  <DatePicker fx:id="textDate" layoutX="101.0" layoutY="39.0" />
+                  <ListView fx:id="ls" layoutX="71.0" layoutY="183.0" prefHeight="75.0" prefWidth="149.0" />
                </children>
-               <effect>
-                  <ColorAdjust contrast="-0.02" hue="0.02" />
-               </effect>
             </AnchorPane>
         </items>
       </SplitPane>

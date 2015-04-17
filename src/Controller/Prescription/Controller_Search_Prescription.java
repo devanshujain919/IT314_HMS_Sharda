@@ -16,6 +16,7 @@ import org.controlsfx.dialog.Dialogs;
 
 import application.Main;
 import application.Reportpdf;
+import Model.CMS.Remarks_Info;
 import Model.Patient.Medicine_Prescribed;
 import Model.Patient.Patient_Info;
 import Model.Patient.Prescription;
@@ -383,13 +384,15 @@ public class Controller_Search_Prescription implements Initializable
 					p.setTime(new SimpleStringProperty(rs.getTime("time").toString()));
 					p.setFollow_up_date(rs.getDate("follow_up_date").toLocalDate());
 					p.setDisease(new SimpleStringProperty(rs.getString("disease")));
-					p.setRemarks(new SimpleStringProperty(rs.getString("remarks")));
+					String remarks = rs.getString("remarks");
+					p.setRemarks(new SimpleStringProperty(remarks));
 					prescriptionList.add(p);
 				}
 				stmt.close();
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
