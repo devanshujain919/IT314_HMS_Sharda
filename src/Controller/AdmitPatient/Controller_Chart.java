@@ -84,7 +84,7 @@ public class Controller_Chart implements Initializable
     @FXML
     private Button buttonBack;
     @FXML
-    private Label labelPatient;
+    private Label labelName;
     @FXML
     private TreeView<String> treeviewDate;
     @FXML
@@ -106,6 +106,11 @@ public class Controller_Chart implements Initializable
 		Scene scene = new Scene(page);
 		dialogStage.setScene(scene);
 		dialogStage.showAndWait();
+		
+		loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/View/AdmitPatient/chart.fxml"));
+        AnchorPane anchor_pane = loader.load();
+        Main.getRootLayout().setCenter(anchor_pane);
     }
 
     @FXML
@@ -131,22 +136,45 @@ public class Controller_Chart implements Initializable
 		PreparedStatement stmt = null;
 		try
 		{
-            String query = "Delete From Medication Where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;";
-            stmt = con.prepareStatement(query);
-            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
-            stmt.setString(2, Controller_Indoor_Patient.dateID);
-            stmt.setString(3, Controller_Indoor_Patient.timeID);
-            stmt.setString(4, Controller_Indoor_Patient.medID);
-            handle();
+			TreeItem<String> item1 = treeviewDate.getSelectionModel().getSelectedItem();
+			String query = "";
+			if(item1.getParent().getParent() == treeviewDate.getRoot() && tableChart.getSelectionModel().getSelectedIndex() < 0)
+			{
+				System.out.println("tree view time");
+				query = "Delete From Medication Where pat_ID = ? and date = ? and time = ?;";
+				stmt = con.prepareStatement(query);
+	            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+	            stmt.setString(2, Controller_Indoor_Patient.dateID);
+	            stmt.setString(3, Controller_Indoor_Patient.timeID);
+			}
+			
+			else if(item1.getParent() == treeviewDate.getRoot() && tableChart.getSelectionModel().getSelectedIndex() < 0)
+			{
+				System.out.println("tree view date");
+				query = "Delete From Medication Where pat_ID = ? and date = ?;";
+				stmt = con.prepareStatement(query);
+	            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+	            stmt.setString(2, Controller_Indoor_Patient.dateID);
+			}
+			else 
+			{
+				System.out.println("Table chart");
+			    query = "Delete From Medication Where pat_ID = ? and date = ? and time = ? and medicine_ID = ?;";
+			    stmt = con.prepareStatement(query);
+	            stmt.setString(1, Controller_Indoor_Patient.pat_info.getPat_id().getValue());
+	            stmt.setString(2, Controller_Indoor_Patient.dateID);
+	            stmt.setString(3, Controller_Indoor_Patient.timeID);
+	            stmt.setString(4, Controller_Indoor_Patient.medID);
+	            handle();
+			}
+			
             int no = stmt.executeUpdate();
             System.out.println("Number of affected rows: " + no);
             
-            Parent chart = FXMLLoader.load(getClass().getResource("/View/IndoorPatient/chart.fxml"));
-	        Scene scene_chart = new Scene(chart);
-	        Stage stage_chart = (Stage) buttonBack.getScene().getWindow();
-	        stage_chart.setScene(scene_chart);
-	        stage_chart.show();	            
-	            
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/AdmitPatient/chart.fxml"));
+            AnchorPane anchor_pane = loader.load();
+            Main.getRootLayout().setCenter(anchor_pane);	            
 		}
 		catch(SQLException E)
 		{
@@ -164,7 +192,7 @@ public class Controller_Chart implements Initializable
     {
     	FXMLLoader loader = new FXMLLoader();
 		System.out.println("1");
-		loader.setLocation(getClass().getResource("/View/AdmitPatient/Controller_Indoor_Patient.fxml"));
+		loader.setLocation(getClass().getResource("/View/AdmitPatient/Search_Indoor_Patient.fxml"));
 		System.out.println("2");
 		AnchorPane anchor_pane = (AnchorPane) loader.load();
 		Main.getRootLayout().setCenter(anchor_pane);        
@@ -181,6 +209,8 @@ public class Controller_Chart implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb)
     {
+    	labelName.setText(Controller_Indoor_Patient.pat_info.getFirst_name().getValue());
+    	
     	columnName.setEditable(false);
     	med_id_col.setEditable(false);
     	
@@ -189,12 +219,15 @@ public class Controller_Chart implements Initializable
             @Override
             public void handle(MouseEvent mouseEvent)
             {            
-                if(mouseEvent.getClickCount() == 2)
+                if(mouseEvent.getClickCount() >= 1)
                 {
-                    
-                    data.clear();
+                	data.clear();
                   //  tableChart.setItems(data);
                     TreeItem<String> selected_time = treeviewDate.getSelectionModel().getSelectedItem();
+                    if(selected_time == treeviewDate.getRoot() || selected_time.getParent() == treeviewDate.getRoot())
+                    {
+                    	return ;
+                    }
                     TreeItem<String>  selected_date = selected_time.getParent();
                     Controller_Indoor_Patient.dateID = selected_date.getValue();
                     Controller_Indoor_Patient.timeID = selected_time.getValue();
@@ -258,7 +291,7 @@ public class Controller_Chart implements Initializable
             @Override
             public void handle(MouseEvent event) 
             {
-                if(event.getClickCount() > 1)
+                if(event.getClickCount() >= 1)
                 {
                    Meds m = tableChart.getSelectionModel().getSelectedItem();
                    Controller_Indoor_Patient.medName = m.medname;

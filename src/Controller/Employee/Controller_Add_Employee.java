@@ -11,6 +11,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
@@ -120,10 +122,7 @@ public class Controller_Add_Employee implements Initializable
     		this.employee_info.setUsername(new SimpleStringProperty(emp_username.getText()));
     		this.employee_info.setPassword(new SimpleStringProperty(emp_password.getText()));
     		
-    		String id = generateID();
-    		
-    		this.employee_info.setId(new SimpleStringProperty(id));
-    		
+    		System.out.println("STORING...");
     		boolean isDone = storeToDB();
     		
     		stage.close();
@@ -132,17 +131,85 @@ public class Controller_Add_Employee implements Initializable
     
     private String generateID() 
     {
-    	//TODO: get the id
+    	Connection con = Main.getConnection();
+    	if(con == null)
+    	{
+    		Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("Please set up the connection ")
+    		.showWarning();
+			return null;
+    	}
+    	try
+    	{
+    		String query = "SELECT emp_id FROM Employee ORDER BY emp_id";
+    		PreparedStatement stmt = con.prepareStatement(query);
+    		ResultSet rs = stmt.executeQuery();
+    		int i = 1;
+    		while(rs.next())
+    		{
+    			String ID = rs.getString("emp_id");
+    			if(ID.equals(Integer.toString(i)))
+    			{
+    				i += 1;
+    			}
+    			else
+    			{
+    				break;
+    			}
+    		}
+    		query = "SELECT username FROM Employee where username=?;";
+    		stmt = con.prepareStatement(query);
+    		stmt.setString(1, emp_username.getText());
+    		rs = stmt.executeQuery();
+    		int flag = 0;
+    		while(rs.next())
+    		{
+    			flag = 1;
+    			break;
+    		}
+    		if(flag == 1)
+    		{
+    			Dialogs.create()
+        		.owner(stage)
+        		.title(" ALERT ")
+        		.masthead(" Error ")
+        		.message("Username exeists.. Choose another one")
+        		.showWarning();
+    			return null;
+    		}
+    		return Integer.toString(i);
+    	}
+    	catch(SQLException E)
+    	{
+    		E.printStackTrace();
+    		Dialogs.create()
+    		.owner(stage)
+    		.title(" ALERT ")
+    		.masthead(" Database is not setup ")
+    		.message("ID could not be generated.. ")
+    		.showWarning();
+    	}
     	return null;
 	}
 
 	private boolean storeToDB()
     {
-    	String id = employee_info.getId().getValue();
+		String id = employee_info.getId().getValue();
+		if(mode == ADD)
+		{
+			id = generateID();
+			if(id == null)
+			{
+				return false;
+			}
+			employee_info.setId(new SimpleStringProperty(id));
+		}
+		
 		String category = employee_info.getCategory().getValue();
 		String First_Name = employee_info.getFirst_name().getValue();
-		String Last_Name = employee_info.getLast_name().getValue();
-		String Middle_Name = employee_info.getMiddle_name().getValue();
 		String Birth_Date = employee_info.getBirth_date().getValue();
 		String Marital_status = employee_info.getMarital_status().getValue();
 		String salary = employee_info.getSalary().getValue();
@@ -196,15 +263,13 @@ public class Controller_Add_Employee implements Initializable
 				stmt.setString(12, emp_post);
 				stmt.setString(13, username);
 				
-				String salt = getSalt();
-				password = get_SHA_1_SecurePassword(password, salt);
-				
 				stmt.setString(14, password);
 				
 				stmt.executeUpdate();
 			}
 			catch(Exception E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -217,7 +282,7 @@ public class Controller_Add_Employee implements Initializable
     	}
 		else if(mode == EDIT)
 		{
-			String insertEmployee_query = "UPDATE Employee SET 	category=?, Name=?, Birth_Date=?, Marital_status=?, salary=?, date_of_joining=?, phone=?, address=?, city=?, state=?, emp_post=?, username=?, password=? WHERE emp_id=?);";
+			String insertEmployee_query = "UPDATE Employee SET category=?, Name=?, Birth_Date=?, Marital_status=?, salary=?, date_of_joining=?, phone=?, address=?, city=?, state=?, emp_post=?, username=?, password=? WHERE emp_id=?;";
 			
 			System.out.println("query is: " + insertEmployee_query);
 			
@@ -273,6 +338,7 @@ public class Controller_Add_Employee implements Initializable
 			}
 			catch(Exception E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -358,27 +424,27 @@ public class Controller_Add_Employee implements Initializable
 		this.stage = dialogStage;
 	}
 
-	public void setEmployee(Employee_Info employee_info)
+	public void setEmployee(Employee_Info employee_info, String mode)
 	{
 		
-		if(employee_info == null)
+		if(mode.equals("ADD"))
 		{
-			mode = ADD;
+			this.mode = ADD;
 		}
 		else
 		{
-			mode = EDIT;
+			this.mode = EDIT;
 			System.out.println("Hello1");
 			this.employee_info = employee_info;
 			if(employee_info == null)
 			{
 				System.out.println("WTF");
 			}
-			
+			System.out.println(employee_info.getFirst_name());
 			emp_name.setText(employee_info.getFirst_name().getValue());
 			
 			emp_username.setText(employee_info.getUsername().getValue());
-			emp_password.setText("");
+			emp_password.setText(employee_info.getPassword().getValue());
 			
 			emp_salary.setText(employee_info.getSalary().getValue());
 			emp_category.setValue(employee_info.getCategory().getValue());
@@ -397,10 +463,11 @@ public class Controller_Add_Employee implements Initializable
 	
 	private static String get_SHA_1_SecurePassword(String passwordToHash, String salt)
     {
+    	System.out.println("original: " + passwordToHash);
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt.getBytes());
+            //md.update(salt.getBytes());
             byte[] bytes = md.digest(passwordToHash.getBytes());
             StringBuilder sb = new StringBuilder();
             for(int i=0; i< bytes.length ;i++)
@@ -408,6 +475,7 @@ public class Controller_Add_Employee implements Initializable
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             generatedPassword = sb.toString();
+            System.out.println("Hash is: " + generatedPassword);
         }
         catch (NoSuchAlgorithmException e)
         {
@@ -415,20 +483,19 @@ public class Controller_Add_Employee implements Initializable
         }
         return generatedPassword;
     }
-    private static String getSalt()
+    private static String getSalt() 
     {
-    	try
-    	{
-	        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-	        byte[] salt = new byte[16];
+        try
+        {
+        	SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+            byte[] salt = new byte[16];
 	        sr.nextBytes(salt);
 	        return salt.toString();
-    	}
-    	catch(NoSuchAlgorithmException E)
-    	{
-    		E.printStackTrace();
-    	}
-    	return null;
+        }
+        catch(NoSuchAlgorithmException E)
+        {
+        	return null;
+        }
     }
 
 	public boolean isSaveClicked() 

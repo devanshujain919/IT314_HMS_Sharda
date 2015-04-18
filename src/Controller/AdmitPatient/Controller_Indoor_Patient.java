@@ -143,9 +143,10 @@ public class Controller_Indoor_Patient implements Initializable
         	{
         		for(Patient_Info pi : allPatients)
     			{
-    				if(pi.getPat_id().equals(table_view.getSelectionModel().getSelectedItem().getPat_id()))
+    				if(pi.getPat_id().getValue().equals(table_view.getSelectionModel().getSelectedItem().getPat_id().getValue()))
     				{
     					Controller_Indoor_Patient.pat_info = pi;
+    					System.out.println("hooooooooooooooooooooooooooooooooooooooooooo    " + pi.getFirst_name() + "<<<<<<<");
     					break;
     				}
     			}
@@ -153,7 +154,7 @@ public class Controller_Indoor_Patient implements Initializable
         		FXMLLoader loader = new FXMLLoader();
 	            loader.setLocation(getClass().getResource("/View/AdmitPatient/chart.fxml"));
 	            AnchorPane anchor_pane = loader.load();
-	            Main.getRootLayout().setCenter(anchor_pane);
+	            Main.getRootLayout().setCenter(anchor_pane);	
         	}
         	catch(IOException E)
         	{

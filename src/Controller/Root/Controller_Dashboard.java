@@ -70,7 +70,7 @@ public class Controller_Dashboard implements Initializable
 			controller.setStage(dialogStage);
 			employee_info.setBirth_date(new SimpleStringProperty(LocalDate.now().toString()));
 			employee_info.setDate_of_joining(LocalDate.now());
-			controller.setEmployee(employee_info);
+			controller.setEmployee(employee_info, "EDIT");
 			dialogStage.showAndWait();			
 		}
 		catch(Exception E)

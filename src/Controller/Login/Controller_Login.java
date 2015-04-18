@@ -178,10 +178,7 @@ public class Controller_Login implements Initializable {
  			{
 	 			flag = 1;
 	 			String pass = rs.getString("password");
-	 			System.out.println("Should be: " + pass);
-	 			String salt = getSalt();
-	 			String pass_hash = get_SHA_1_SecurePassword(pass_field, salt);
-	 			if(pass_hash.equals(pass))
+	 			if(pass_field.equals(pass))
 	 			{
 		 			matches = 1;
 		 			break;
@@ -205,6 +202,7 @@ public class Controller_Login implements Initializable {
 	 			employee_info.setCity(new SimpleStringProperty(rs.getString("city")));
 	 			employee_info.setState(new SimpleStringProperty(rs.getString("state")));
 	 			employee_info.setUsername(new SimpleStringProperty(rs.getString("username")));
+	 			employee_info.setPassword(new SimpleStringProperty(rs.getString("password")));
 	 			System.out.println(employee_info.getId().getValue());
 	 			Main.setEmployee(employee_info);
  			}

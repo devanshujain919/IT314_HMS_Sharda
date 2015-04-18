@@ -161,6 +161,7 @@ public class Controller_Search_Employee implements Initializable
 			emp_marital.setText(emp_info.getMarital_status().getValue());
 			emp_salary.setText(emp_info.getSalary().getValue());
 			emp_username.setText(emp_info.getUsername().getValue());
+			System.out.println(emp_info.getPassword().getValue());
 		}
 	}
 
@@ -183,7 +184,7 @@ public class Controller_Search_Employee implements Initializable
 			{
 				String query = "SELECT * FROM Employee;";
 				PreparedStatement stmt = con.prepareStatement(query);
-				ResultSet rs = stmt.executeQuery(query);
+				ResultSet rs = stmt.executeQuery();
 				while(rs.next())
 				{
 					Employee_Info emp_info = new Employee_Info();
@@ -199,12 +200,14 @@ public class Controller_Search_Employee implements Initializable
 					emp_info.setCity(new SimpleStringProperty(rs.getString("city")));
 					emp_info.setState(new SimpleStringProperty(rs.getString("state")));
 					emp_info.setUsername(new SimpleStringProperty(rs.getString("username")));
+					emp_info.setPassword(new SimpleStringProperty(rs.getString("password")));
 					employeeList.add(emp_info);
 				}
 				stmt.close();
 			}
 			catch(SQLException E)
 			{
+				E.printStackTrace();
 				Dialogs.create()
 	    		.owner(stage)
 	    		.title(" ALERT ")
@@ -220,7 +223,7 @@ public class Controller_Search_Employee implements Initializable
 	private void handle_btn_add()
 	{
 		Employee_Info emp_info = new Employee_Info();
-		boolean isSaveClicked = showDialogAddEmployee(emp_info);
+		boolean isSaveClicked = showDialogAddEmployee(emp_info, "ADD");
 		if(isSaveClicked)
 		{
 			employeeList.add(emp_info);
@@ -244,7 +247,7 @@ public class Controller_Search_Employee implements Initializable
 		else
 		{
 			Employee_Info emp_info = table_view.getItems().get(selectedIndex);
-			boolean isSaveClicked = showDialogAddEmployee(emp_info);
+			boolean isSaveClicked = showDialogAddEmployee(emp_info, "EDIT");
 			if(isSaveClicked)
 			{
 				refreshTableView();
@@ -325,7 +328,7 @@ public class Controller_Search_Employee implements Initializable
 		return true;
 	}
 
-	private boolean showDialogAddEmployee(Employee_Info emp_info)
+	private boolean showDialogAddEmployee(Employee_Info emp_info, String mode)
 	{
 		boolean retValue = false;
 		try
@@ -342,9 +345,7 @@ public class Controller_Search_Employee implements Initializable
 			Controller_Add_Employee controller = loader.getController();
 			System.out.println("Hi!!\n");
 			controller.setStage(dialogStage);
-			emp_info.setBirth_date(new SimpleStringProperty(LocalDate.now().toString()));
-			emp_info.setDate_of_joining(LocalDate.now());
-			controller.setEmployee(emp_info);
+			controller.setEmployee(emp_info, mode);
 			dialogStage.showAndWait();
 			return controller.isSaveClicked();
 			
